@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KI × Jugaad AI — Bangalore Education Sales Engine</title>
+<meta name="description" content="AI-powered sales intelligence dashboard for Krueger International Furniture Systems. Built by Jugaad AI.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ── HEADER ── -->
+  <header class="app-header">
+    <div class="header-logo-zone">
+      <div class="header-logo">🪑</div>
+    </div>
+    <div class="header-titles">
+      <div class="header-project-name">Krueger International × Jugaad AI</div>
+      <div class="header-project-sub">Bangalore Education Sales Engine</div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-chip accent"><span class="val">50</span> Leads</div>
+      <div class="stat-chip green"><span class="val">4</span> AI Agents</div>
+      <div class="stat-chip gold"><span class="val">₹15Cr+</span> Pipeline</div>
+      <div class="stat-chip"><span class="val">200+</span> Institutions</div>
+    </div>
+    <div class="header-credit">
+      <div class="dot"></div>
+      Built by <strong style="color:var(--color-text-primary);margin:0 3px;">Vasu Ranganathan</strong> · Jugaad AI &nbsp;·&nbsp; For KI India
+    </div>
+  </header>
+
+  <div class="app-body">
+
+    <!-- ── SIDEBAR ── -->
+    <nav class="sidebar">
+      <div class="nav-item active" data-tab="0" data-tooltip="Agent Playbook" onclick="switchTab(0)">
+        <span class="nav-icon">🤖</span>
+      </div>
+      <div class="nav-item" data-tab="1" data-tooltip="50 Leads Database" onclick="switchTab(1)">
+        <span class="nav-icon">🎯</span>
+      </div>
+      <div class="nav-item" data-tab="2" data-tooltip="Procurement Guide" onclick="switchTab(2)">
+        <span class="nav-icon">🏛</span>
+      </div>
+      <div class="nav-item" data-tab="3" data-tooltip="Intel Checklist" onclick="switchTab(3)">
+        <span class="nav-icon">🔍</span>
+      </div>
+      <div class="nav-item" data-tab="4" data-tooltip="Strategy Pivot" onclick="switchTab(4)">
+        <span class="nav-icon">⚡</span>
+      </div>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-bottom">
+        <div class="sidebar-bottom-text">KI India<br>2025</div>
+      </div>
+    </nav>
+
+    <!-- ── MAIN ── -->
+    <main class="main-content">
+
+      <!-- Tour Banner -->
+      <div class="tour-banner" id="tour-banner">
+        <span class="tour-icon">🗺</span>
+        <div class="tour-text">
+          <strong id="tour-tab-name">Tab 1 of 5 · Agent Playbook</strong>
+          — <span id="tour-desc">Your 4-agent AI system: CEO, Scout, Intel, Outreach. See roles, lead targets, product mapping, outreach scripts &amp; 12-week timeline.</span>
+        </div>
+        <div class="tour-progress">
+          <div class="tour-dot active" id="td-0"></div>
+          <div class="tour-dot" id="td-1"></div>
+          <div class="tour-dot" id="td-2"></div>
+          <div class="tour-dot" id="td-3"></div>
+          <div class="tour-dot" id="td-4"></div>
+        </div>
+        <button class="tour-btn" onclick="tourNext()">Next Tab →</button>
+        <span class="tour-close" onclick="closeTour()">✕</span>
+      </div>
+
+      <div class="pages-container">
+
+        <!-- ════════════════════════════════════════
+             PAGE 0 — AGENT PLAYBOOK
+             ════════════════════════════════════════ -->
+        <div class="page active" id="page-0">
+          <div class="page-header">
+            <div class="page-header-left">
+              <div class="page-tab-number">Tab 01 · Strategy</div>
+              <div class="page-title">Agent Playbook</div>
+              <div class="page-subtitle">Your 4-agent AI system for Bangalore education outreach — roles, targets, products, scripts &amp; timeline.</div>
+            </div>
+            <div class="page-badge">🤖 4 Agents Active</div>
+          </div>
+          <div class="page-content" id="pc-0"></div>
+        </div>
+
+        <!-- ════════════════════════════════════════
+             PAGE 1 — 50 LEADS
+             ════════════════════════════════════════ -->
+        <div class="page" id="page-1">
+          <div class="page-header">
+            <div class="page-header-left">
+              <div class="page-tab-number">Tab 02 · Intelligence</div>
+              <div class="page-title">50 Leads Database</div>
+              <div class="page-subtitle">Filterable reference of every Bangalore education target — click any row for full contact strategy &amp; agent tips.</div>
+            </div>
+            <div class="page-badge">🎯 Filterable · Searchable · Interactive</div>
+          </div>
+          <div class="page-content" id="pc-1"></div>
+        </div>
+
+        <!-- ════════════════════════════════════════
+             PAGE 2 — PROCUREMENT GUIDE
+             ════════════════════════════════════════ -->
+        <div class="page" id="page-2">
+          <div class="page-header">
+            <div class="page-header-left">
+              <div class="page-tab-number">Tab 03 · Knowledge</div>
+              <div class="page-title">Procurement Intelligence Guide</div>
+              <div class="page-subtitle">Who controls the furniture purchase, how decisions move through the system, GeM portal, NAAC leverage &amp; budget cycles.</div>
+            </div>
+            <div class="page-badge">🏛 6 Topic Areas</div>
+          </div>
+          <div class="page-content" id="pc-2"></div>
+        </div>
+
+        <!-- ════════════════════════════════════════
+             PAGE 3 — INTEL CHECKLIST
+             ════════════════════════════════════════ -->
+        <div class="page" id="page-3">
+          <div class="page-header">
+            <div class="page-header-left">
+              <div class="page-tab-number">Tab 04 · Research Tool</div>
+              <div class="page-title">Intel Agent Checklist</div>
+              <div class="page-subtitle">42-question interactive research tool. Enter an institution name, score each signal, and get an outreach readiness verdict.</div>
+            </div>
+            <div class="page-badge">🔍 42 Questions · Live Scoring</div>
+          </div>
+          <div class="page-content" id="pc-3"></div>
+        </div>
+
+        <!-- ════════════════════════════════════════
+             PAGE 4 — STRATEGY PIVOT
+             ════════════════════════════════════════ -->
+        <div class="page" id="page-4">
+          <div class="page-header">
+            <div class="page-header-left">
+              <div class="page-tab-number">Tab 05 · Decision Framework</div>
+              <div class="page-title">Strategy Pivot</div>
+              <div class="page-subtitle">Import brand vs local Bangalore manufacturer — what changes, what stays, new advantages, risks &amp; updated agent briefs.</div>
+            </div>
+            <div class="page-badge">⚡ Strategic Analysis</div>
+          </div>
+          <div class="page-content" id="pc-4"></div>
+        </div>
+
+      </div><!-- /pages-container -->
+    </main>
+  </div>
+</div>
+
+<script>
+/* ── Fragment sources ── */
+const FRAGMENTS = [
+  'krueger_international_bangalore_edu_agent_plan.html',
+  'bangalore_50_edu_leads_KI.html',
+  'bangalore_edu_procurement_guide.html',
+  'intel_agent_research_checklist.html',
+  'KI_strategy_pivot_local_manufacturer.html'
+];
+
+const TOUR_DATA = [
+  { name: 'Tab 1 of 5 · Agent Playbook',      desc: 'Your 4-agent AI system: CEO, Scout, Intel, Outreach. See roles, lead targets, product mapping, outreach scripts & 12-week timeline.' },
+  { name: 'Tab 2 of 5 · 50 Leads Database',   desc: 'Filter by institution type, search by name, click any row for the full contact strategy, budget estimate & agent tip.' },
+  { name: 'Tab 3 of 5 · Procurement Guide',   desc: '6 deep-dive topics: who decides, how the process works, GeM portal tactics, NAAC leverage, budget calendar & common traps.' },
+  { name: 'Tab 4 of 5 · Intel Checklist',     desc: '42 research questions across 7 modules. Rate each signal Cold/Warm/Hot and get a live outreach-readiness score out of 100.' },
+  { name: 'Tab 5 of 5 · Strategy Pivot',      desc: 'Local manufacturer vs import brand comparison — 9 changes, 12 things that stay, 6 new advantages, 5 risks & updated agent briefs.' }
+];
+
+let currentTab = 0;
+const loaded = {};
+
+/* ── Load fragment into page content div ── */
+async function loadFragment(idx) {
+  if (loaded[idx]) return;
+  loaded[idx] = true;
+  const container = document.getElementById('pc-' + idx);
+  container.innerHTML = '<div class="page-loader"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div>';
+  try {
+    const res = await fetch(FRAGMENTS[idx]);
+    const html = await res.text();
+    container.innerHTML = html;
+    // Re-run any scripts in the fragment
+    container.querySelectorAll('script').forEach(old => {
+      const s = document.createElement('script');
+      s.textContent = old.textContent;
+      old.parentNode.replaceChild(s, old);
+    });
+  } catch(e) {
+    container.innerHTML = '<p style="color:var(--color-text-secondary);padding:2rem;">Could not load fragment. Open via a local server (e.g. Live Server).</p>';
+  }
+}
+
+/* ── Switch tab ── */
+function switchTab(idx) {
+  document.getElementById('page-' + currentTab).classList.remove('active');
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+  currentTab = idx;
+  document.getElementById('page-' + idx).classList.add('active');
+  document.querySelector('.nav-item[data-tab="' + idx + '"]').classList.add('active');
+
+  updateTour(idx);
+  loadFragment(idx);
+}
+
+/* ── Tour ── */
+function updateTour(idx) {
+  const d = TOUR_DATA[idx];
+  document.getElementById('tour-tab-name').textContent = d.name;
+  document.getElementById('tour-desc').textContent = d.desc;
+  document.querySelectorAll('.tour-dot').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+}
+
+function tourNext() {
+  const next = (currentTab + 1) % FRAGMENTS.length;
+  switchTab(next);
+}
+
+function closeTour() {
+  document.getElementById('tour-banner').classList.add('hidden');
+}
+
+/* ── Init ── */
+loadFragment(0);
+</script>
+
+</body>
+</html>

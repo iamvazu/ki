@@ -1,0 +1,305 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:13px;}
+.top-bar{display:flex;gap:10px;align-items:center;margin-bottom:1.2rem;flex-wrap:wrap;}
+.inst-input{flex:1;min-width:180px;padding:7px 12px;border-radius:8px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary);font-size:13px;}
+.inst-input:focus{outline:none;border-color:var(--color-border-primary);}
+.score-pill{display:flex;align-items:center;gap:6px;background:var(--color-background-secondary);border-radius:999px;padding:5px 14px;font-size:12px;font-weight:500;white-space:nowrap;}
+.score-num{font-size:18px;font-weight:500;}
+.progress-bar{height:5px;border-radius:3px;background:var(--color-border-tertiary);overflow:hidden;margin-top:3px;}
+.progress-fill{height:100%;border-radius:3px;transition:width 0.3s;}
+.module{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden;}
+.module-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;user-select:none;}
+.module-header:hover{background:var(--color-background-secondary);}
+.mod-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.mod-title{font-size:13px;font-weight:500;flex:1;}
+.mod-score{font-size:11px;color:var(--color-text-secondary);white-space:nowrap;}
+.mod-chevron{font-size:10px;color:var(--color-text-secondary);transition:transform 0.2s;flex-shrink:0;}
+.mod-chevron.open{transform:rotate(180deg);}
+.module-body{display:none;border-top:0.5px solid var(--color-border-tertiary);}
+.module-body.open{display:block;}
+.q-item{padding:10px 14px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;gap:12px;align-items:flex-start;}
+.q-item:last-child{border-bottom:none;}
+.q-left{flex:1;}
+.q-text{font-size:12px;font-weight:500;margin-bottom:3px;color:var(--color-text-primary);}
+.q-why{font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:6px;}
+.q-source{font-size:10px;color:var(--color-text-tertiary);font-style:italic;}
+.q-right{display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex-shrink:0;padding-top:2px;}
+.rating-row{display:flex;gap:3px;}
+.r-btn{width:22px;height:22px;border-radius:5px;border:0.5px solid var(--color-border-secondary);cursor:pointer;font-size:10px;font-weight:500;background:transparent;color:var(--color-text-secondary);display:flex;align-items:center;justify-content:center;}
+.r-btn.sel-red{background:#FCEBEB;color:#A32D2D;border-color:#F09595;}
+.r-btn.sel-amber{background:#FAEEDA;color:#854F0B;border-color:#EF9F27;}
+.r-btn.sel-green{background:#EAF3DE;color:#3B6D11;border-color:#97C459;}
+.r-btn.sel-blue{background:#E6F1FB;color:#185FA5;border-color:#85B7EB;}
+.note-input{font-size:11px;padding:4px 8px;border-radius:6px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary);width:180px;resize:vertical;min-height:32px;}
+.note-input:focus{outline:none;border-color:var(--color-border-primary);}
+.signal-badge{display:inline-block;font-size:10px;font-weight:500;padding:1px 6px;border-radius:4px;margin-right:3px;margin-bottom:2px;}
+.sig-hot{background:#FAECE7;color:#993C1D;}
+.sig-warm{background:#FAEEDA;color:#854F0B;}
+.sig-cold{background:#E6F1FB;color:#185FA5;}
+.summary-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1.2rem;}
+.scard{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;text-align:center;}
+.scard-num{font-size:20px;font-weight:500;}
+.scard-lbl{font-size:10px;color:var(--color-text-secondary);margin-top:2px;}
+.action-strip{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px;border-top:0.5px solid var(--color-border-tertiary);}
+.act-btn{font-size:11px;padding:5px 12px;border-radius:999px;border:0.5px solid var(--color-border-secondary);cursor:pointer;background:transparent;color:var(--color-text-secondary);}
+.act-btn:hover{background:var(--color-background-secondary);}
+.readiness-banner{padding:10px 14px;font-size:12px;border-top:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:10px;}
+</style>
+
+<div style="padding:1rem 0;">
+
+<div class="top-bar">
+  <input class="inst-input" id="inst-name" placeholder="Enter institution name (e.g. RVCE)..." oninput="updateTitle()">
+  <div class="score-pill">
+    <span style="font-size:12px;color:var(--color-text-secondary);">Readiness score</span>
+    <span class="score-num" id="total-score">0</span>
+    <span style="font-size:12px;color:var(--color-text-secondary);">/100</span>
+  </div>
+</div>
+
+<div class="summary-bar">
+  <div class="scard"><div class="scard-num" id="s-answered">0</div><div class="scard-lbl">Answered</div></div>
+  <div class="scard"><div class="scard-num" id="s-total">42</div><div class="scard-lbl">Total questions</div></div>
+  <div class="scard"><div class="scard-num" id="s-hot" style="color:var(--color-text-danger);">0</div><div class="scard-lbl">Hot signals</div></div>
+  <div class="scard"><div class="scard-num" id="s-ready">—</div><div class="scard-lbl">Outreach ready</div></div>
+</div>
+
+<div id="modules-container"></div>
+
+<div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-top:10px;">
+  <div class="readiness-banner" id="readiness-banner">
+    <span style="font-size:20px;">—</span>
+    <span style="font-size:12px;color:var(--color-text-secondary);">Fill in the checklist to get an outreach readiness verdict.</span>
+  </div>
+  <div class="action-strip">
+    <button class="act-btn" onclick="generateBrief()">Generate outreach brief ↗</button>
+    <button class="act-btn" onclick="sendPrompt('Based on Intel Agent research, write a cold email outreach for KI furniture to the institution entered in the checklist')">Draft cold email ↗</button>
+    <button class="act-btn" onclick="clearAll()">Clear & reset</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const modules = [
+  {
+    id:'identity',
+    title:'Institution identity & scale',
+    icon:'🏫',
+    color:'#E6F1FB',
+    iconColor:'#185FA5',
+    weight:12,
+    questions:[
+      {id:'i1',text:'What type of institution is it?',why:'Determines procurement route — government college needs GeM, private uses committee. Shapes your entire approach.',source:'Institution website, AICTE/UGC portal',signals:['govt-aided','deemed university','autonomous']},
+      {id:'i2',text:'How many students are enrolled?',why:'Student count drives furniture volume — a 10,000-student campus needs 10x more chairs than a 600-student institute.',source:'Institution website, NIRF data',signals:['10000+','5000–10000','below 2000']},
+      {id:'i3',text:'How many campuses / buildings does it operate in Bangalore?',why:'Multi-campus institutions = multiple purchase cycles. One relationship unlocks all campuses.',source:'Official website, Google Maps',signals:['multiple campuses','new campus announced']},
+      {id:'i4',text:'Is it part of a larger institution group?',why:'Group procurement means one deal can cascade to 5–14 campuses (e.g. Dayananda Sagar, Christ, Jain). Hugely multiplies deal value.',source:'Management trust website',signals:['group of colleges','trust manages multiple']},
+      {id:'i5',text:'What is the institution\'s NAAC grade and when was the last cycle?',why:'NAAC grade and cycle timing is your single most important urgency signal. B+ institution due for re-accreditation in 12 months = infrastructure spend is imminent.',source:'naac.gov.in',signals:['B+ seeking upgrade','cycle due in 1-2 yrs','A++ maintained']},
+    ]
+  },
+  {
+    id:'financial',
+    title:'Financial health & budget signals',
+    icon:'₹',
+    color:'#E1F5EE',
+    iconColor:'#0F6E56',
+    weight:18,
+    questions:[
+      {id:'f1',text:'What is the institution\'s approximate annual revenue / fee collection?',why:'Higher fee-paying students = better campus spending culture. ₹2L+ per student per year = institution can afford quality furniture.',source:'News, annual reports, fee disclosures',signals:['premium fees','₹2L+ per student','international intake']},
+      {id:'f2',text:'Has there been any new building, expansion, or renovation announced?',why:'Construction completion = immediate, budgeted furniture requirement. The single hottest trigger in the entire checklist.',source:'Institution website news, local press, LinkedIn',signals:['new block inaugurated','renovation in progress','campus expansion 2024-25']},
+      {id:'f3',text:'Is there an active tender or RFP for furniture on GeM or CPP portal?',why:'An open tender means the budget is already approved and the timeline is fixed. You must respond or you miss the cycle entirely.',source:'gem.gov.in, cppp.nic.in, institution e-procurement portal',signals:['furniture tender live','closing in 30 days']},
+      {id:'f4',text:'What funding sources does the institution rely on?',why:'Government-funded institutions follow GFR rules and GeM. UGC/AICTE-grant recipients have specific capex windows. CSR-funded institutions move faster with fewer approvals.',source:'Annual report, UGC disclosures, Wikipedia',signals:['CSR funded','UGC grant recipient','self-financed']},
+      {id:'f5',text:'What is the financial year end and budget utilisation pattern?',why:'Government-adjacent institutions must spend budget by 31 March or lose it. Approaching in Jan–Mar with a ready quote can close a deal in days.',source:'Known pattern for govt institutions; ask Admin Officer directly for private',signals:['Q4 budget pressure','underspent on capex']},
+      {id:'f6',text:'Has the institution received any recent awards, grants, or ranking improvements?',why:'New NIRF ranking improvement or NBA accreditation = management pride + increased capex willingness. Congratulate them; then pitch.',source:'LinkedIn, institution press releases, NIRF website',signals:['NIRF rank improved','new NBA accreditation','govt grant received']},
+    ]
+  },
+  {
+    id:'infra',
+    title:'Infrastructure & space intelligence',
+    icon:'🏗',
+    color:'#FAEEDA',
+    iconColor:'#854F0B',
+    weight:20,
+    questions:[
+      {id:'n1',text:'What spaces currently exist on campus that need furniture?',why:'Maps which KI product lines to pitch. A campus with a hostel needs residence hall furniture; one with a makerspace needs collaborative tables.',source:'Campus visit, virtual tour on website, Google Street View',signals:['hostel on campus','auditorium listed','library renovation']},
+      {id:'n2',text:'What is the visible condition of existing classroom furniture?',why:'Old, broken, mismatched furniture = near-term replacement need. This is your strongest opening hook in the outreach email.',source:'Campus visit, student review sites (Shiksha.com), college YouTube channels',signals:['students complaining','10+ year old furniture','mismatched chairs visible']},
+      {id:'n3',text:'Are smart classrooms or NEP 2020 active learning spaces being implemented?',why:'Smart classroom rollouts always include new flexible furniture. If a college is digitising classrooms, they need movable tables, writable surfaces, and collaborative seating.',source:'Institution website, AICTE NEP compliance reports',signals:['smart classroom project','NEP 2020 implementation','digital-first campus']},
+      {id:'n4',text:'Does the campus have outdoor spaces that could use furniture?',why:'KI\'s new Outspan outdoor collection is a differentiator — almost no Indian furniture vendor has a campus-grade outdoor line. Strong upsell.',source:'Google Maps satellite view, campus photos',signals:['open courtyard','garden seating area','outdoor amphitheatre']},
+      {id:'n5',text:'Is there a hostel / residence hall on campus?',why:'Hostel furniture is a large, recurring purchase. Mattress replacements, dorm tables, and wardrobes get purchased every 5–7 years. Separate budget from academic furniture.',source:'Institution website admissions page',signals:['hostel capacity 500+','hostel construction announced']},
+      {id:'n6',text:'Does the campus have a central library with a reading room?',why:'Libraries are a NAAC Criteria 4 showcase space — institutions invest heavily in them before peer visits. KI\'s library furniture range is a natural fit.',source:'Institution website, NAAC SSR documents',signals:['library renovation','new library building','NAAC peer visit soon']},
+    ]
+  },
+  {
+    id:'people',
+    title:'Decision maker mapping',
+    icon:'👤',
+    color:'#EEEDFE',
+    iconColor:'#534AB7',
+    weight:22,
+    questions:[
+      {id:'p1',text:'Who is the Principal / Director / Vice Chancellor — and can you find their LinkedIn?',why:'You need to know their background to tailor the pitch. An academician-Principal responds to NAAC framing; a corporate-background director responds to ROI.',source:'Institution website, LinkedIn',signals:['active on LinkedIn','recently appointed','alumni of IIT/IIM']},
+      {id:'p2',text:'Who is the Registrar or Admin / Estate Officer — name and email?',why:'This is your primary first contact at most institutions. Getting a named person is worth 5x more than a generic enquiry email.',source:'Institution website staff directory, LinkedIn, calling reception',signals:['name found','email verified','direct number found']},
+      {id:'p3',text:'Who is the IQAC Coordinator?',why:'The IQAC Coordinator is uniquely motivated by infrastructure improvement — they are responsible for the NAAC annual report. Frame your pitch as a NAAC Criteria 4 solution.',source:'NAAC website (IQAC listed in SSR), institution website',signals:['name and email found','AQAR submitted recently','IQAC actively active']},
+      {id:'p4',text:'Which HODs are most relevant — CSE, ECE, Mech, or library/admin?',why:'HODs raise the purchase indent. If you brief an HOD on KI products before the indent is written, you get spec\'d in. CSE/ECE labs are highest spend.',source:'Institution website faculty listing',signals:['HOD contact found','department lab expansion noted']},
+      {id:'p5',text:'Is there a purchase committee? Who are its members?',why:'One unknown committee member can block a deal. Map the committee and prepare for objections from finance, academic, and external trust members.',source:'Institution governance documents, NAAC SSR Criterion 6',signals:['committee composition known','finance officer identified']},
+      {id:'p6',text:'Do any of the decision makers have connections to your network — alumni, LinkedIn mutual, industry event?',why:'A warm introduction converts 5–10x better than cold outreach. Even a second-degree LinkedIn connection is worth identifying and activating.',source:'LinkedIn, mutual contacts, Bangalore education WhatsApp groups',signals:['mutual connection found','attended same conference','alumni of same institution']},
+    ]
+  },
+  {
+    id:'timing',
+    title:'Timing & urgency triggers',
+    icon:'⏱',
+    color:'#FAECE7',
+    iconColor:'#993C1D',
+    weight:16,
+    questions:[
+      {id:'t1',text:'When is the institution\'s NAAC re-accreditation cycle due?',why:'This is the single most powerful urgency driver. An institution 12–18 months from a peer visit is actively spending on Criteria 4 (infrastructure).',source:'naac.gov.in accreditation status page',signals:['cycle due 2025-26','peer visit scheduled','currently in SSR preparation']},
+      {id:'t2',text:'Is there a new academic year intake expansion planned?',why:'More students = more seats, desks, and lab stations needed. Intake expansion is always accompanied by a purchase order.',source:'AICTE approval letters, institution press releases',signals:['intake increased','new batch starting','additional section approved']},
+      {id:'t3',text:'Has a new Principal or Registrar recently been appointed?',why:'New leadership = new priorities and willingness to change vendors. The first 6 months of a new Principal\'s tenure is when major decisions get made.',source:'LinkedIn, institution news page',signals:['new principal 2024','leadership change recent']},
+      {id:'t4',text:'Is the institution preparing for NBA program accreditation?',why:'NBA (National Board of Accreditation) for individual engineering programs evaluates lab and classroom quality. Departments preparing for NBA are active furniture buyers.',source:'Institution website, AICTE portal',signals:['NBA pending for CSE','NBA renewal due','applied for NBA accreditation']},
+      {id:'t5',text:'Has the institution recently participated in NIRF rankings?',why:'NIRF submission window (Jan–March) creates urgency to improve infrastructure indicators. Institutions climbing the NIRF ladder invest in visible improvements.',source:'nirfindia.org',signals:['NIRF rank improved','submitted NIRF 2024','targeting top 100']},
+      {id:'t6',text:'Is there a convocation, anniversary, or high-profile event upcoming?',why:'Institutions renovate key spaces (auditorium, common areas) before visible events. A campus that has a 50th anniversary event in 6 months is actively upgrading.',source:'Institution website events calendar, LinkedIn',signals:['silver jubilee','convocation in 3 months','ministry visit planned']},
+    ]
+  },
+  {
+    id:'competitive',
+    title:'Competitive & vendor landscape',
+    icon:'⚔',
+    color:'#F1EFE8',
+    iconColor:'#5F5E5A',
+    weight:6,
+    questions:[
+      {id:'c1',text:'Who is the institution\'s current furniture vendor?',why:'If they use a cheap local vendor, you pitch quality upgrade. If they use a mid-tier vendor, you pitch KI\'s TCO advantage. If they already use premium furniture, you pitch KI as a superior alternative.',source:'Campus visit, procurement tender history on GeM',signals:['local vendor','no standard vendor','premium vendor incumbent']},
+      {id:'c2',text:'Has the institution had any bad experiences with furniture quality or delivery?',why:'A previous delivery failure or quality complaint = openness to a new vendor. This is your strongest opening if you can surface it from reviews or conversation.',source:'Student reviews on Shiksha/CollegeDunia, HOD conversations',signals:['student complaints about furniture','tender re-floated after rejection']},
+      {id:'c3',text:'Are competing furniture vendors already pitching this institution?',why:'If competitors are already in conversations, you need to move fast or differentiate on spec. Being second with a better proposal still wins in committee evaluation.',source:'GeM bid participation records, industry network',signals:['competing bids visible on GeM','vendor already visited']},
+    ]
+  },
+  {
+    id:'digital',
+    title:'Digital & social signals',
+    icon:'📡',
+    color:'#E1F5EE',
+    iconColor:'#0F6E56',
+    weight:6,
+    questions:[
+      {id:'d1',text:'What does the institution post on LinkedIn/Instagram about campus life?',why:'Posts showing old furniture, cramped labs, or renovation in progress are direct evidence of need. Engagement patterns show how reachable the decision-maker is digitally.',source:'LinkedIn institution page, Instagram, Facebook',signals:['posts about renovation','new building inauguration photos','faculty hiring spree']},
+      {id:'d2',text:'Are there any recent news articles or press releases about the institution?',why:'New campus announcement, ranking achievement, or major partnership = institution is in an investment phase. News from the past 6 months is the most valuable.',source:'Google News, Times of India Education, Deccan Herald',signals:['new campus news','expansion announced','₹50Cr investment mentioned']},
+      {id:'d3',text:'Has the institution posted any job openings for Admin, Facilities, or Purchase roles?',why:'A job posting for a Facilities Manager or Purchase Officer signals active procurement activity. The current person may be overwhelmed — perfect time to offer a streamlined buying process.',source:'Naukri, LinkedIn Jobs, institution careers page',signals:['admin hiring','facilities manager vacancy','purchase officer job post']},
+    ]
+  }
+];
+
+const answers = {};
+const notes = {};
+
+function updateTitle(){}
+
+function calcScore(){
+  let total=0,answered=0,hot=0;
+  modules.forEach(m=>{
+    let mScore=0,mMax=0;
+    m.questions.forEach(q=>{
+      mMax+=3;
+      const v=answers[q.id];
+      if(v!==undefined){answered++;mScore+=v;}
+      if(v===3)hot++;
+    });
+    const pct=mMax>0?mScore/mMax:0;
+    const contrib=Math.round(pct*m.weight);
+    total+=contrib;
+    const el=document.getElementById('mod-score-'+m.id);
+    if(el)el.textContent=Math.round(pct*100)+'%';
+    const bar=document.getElementById('mod-bar-'+m.id);
+    if(bar){bar.style.width=Math.round(pct*100)+'%';bar.style.background=pct>0.66?'#639922':pct>0.33?'#BA7517':'#185FA5';}
+  });
+  document.getElementById('total-score').textContent=total;
+  document.getElementById('s-answered').textContent=answered;
+  document.getElementById('s-hot').textContent=hot;
+  const allQ=modules.reduce((a,m)=>a+m.questions.length,0);
+  const ready=answered>=Math.round(allQ*0.6)&&total>=50;
+  document.getElementById('s-ready').textContent=ready?'Yes':'No';
+  document.getElementById('s-ready').style.color=ready?'var(--color-text-success)':'var(--color-text-danger)';
+  const banner=document.getElementById('readiness-banner');
+  if(total>=70){banner.innerHTML='<span style="font-size:18px;color:var(--color-text-success);">&#10003;</span><span style="font-size:12px;"><strong>Ready to outreach.</strong> Strong intel collected — proceed to personalised email and audit offer.</span>';}
+  else if(total>=40){banner.innerHTML='<span style="font-size:18px;color:var(--color-text-warning);">&#9711;</span><span style="font-size:12px;"><strong>Partial intel.</strong> Enough to send initial contact, but fill financial and people sections before the audit offer.</span>';}
+  else if(answered>0){banner.innerHTML='<span style="font-size:18px;color:var(--color-text-danger);">&#9679;</span><span style="font-size:12px;"><strong>Not ready.</strong> More research needed before outreach — especially on decision makers and budget triggers.</span>';}
+  else{banner.innerHTML='<span style="font-size:20px;">—</span><span style="font-size:12px;color:var(--color-text-secondary);">Fill in the checklist to get an outreach readiness verdict.</span>';}
+}
+
+function setAnswer(qid,val,btn){
+  answers[qid]=val;
+  document.querySelectorAll('.r-btn[data-qid="'+qid+'"]').forEach(b=>b.className='r-btn');
+  const classes=['sel-red','sel-amber','sel-green','sel-blue'];
+  btn.classList.add(classes[val]);
+  calcScore();
+}
+
+function generateBrief(){
+  const name=document.getElementById('inst-name').value||'the institution';
+  const score=document.getElementById('total-score').textContent;
+  const hot=document.getElementById('s-hot').textContent;
+  sendPrompt('Based on an Intel Agent research score of '+score+'/100 with '+hot+' hot signals for '+name+', generate a one-page outreach brief for KI furniture sales including: key pain points identified, recommended first contact role, suggested outreach hook, best timing, and top 3 KI products to lead with.');
+}
+
+function clearAll(){
+  Object.keys(answers).forEach(k=>delete answers[k]);
+  Object.keys(notes).forEach(k=>delete notes[k]);
+  document.querySelectorAll('.r-btn').forEach(b=>b.className='r-btn');
+  document.querySelectorAll('.note-input').forEach(i=>i.value='');
+  document.getElementById('inst-name').value='';
+  calcScore();
+}
+
+function toggleModule(id){
+  const body=document.getElementById('body-'+id);
+  const chev=document.getElementById('chev-'+id);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function renderModules(){
+  const c=document.getElementById('modules-container');
+  c.innerHTML='';
+  modules.forEach(m=>{
+    const div=document.createElement('div');
+    div.className='module';
+    const qs=m.questions.map(q=>`
+      <div class="q-item">
+        <div class="q-left">
+          <div class="q-text">${q.text}</div>
+          <div class="q-why">${q.why}</div>
+          <div class="q-source">Where to find: ${q.source}</div>
+          <div style="margin-top:5px;">${q.signals.map(s=>`<span class="signal-badge sig-warm">${s}</span>`).join('')}</div>
+        </div>
+        <div class="q-right">
+          <div class="rating-row">
+            <button class="r-btn" data-qid="${q.id}" title="No info / not relevant" onclick="setAnswer('${q.id}',0,this)">—</button>
+            <button class="r-btn" data-qid="${q.id}" title="Cold signal" onclick="setAnswer('${q.id}',1,this)">C</button>
+            <button class="r-btn" data-qid="${q.id}" title="Warm signal" onclick="setAnswer('${q.id}',2,this)">W</button>
+            <button class="r-btn" data-qid="${q.id}" title="Hot signal — urgent need identified" onclick="setAnswer('${q.id}',3,this)">H</button>
+          </div>
+          <textarea class="note-input" placeholder="Notes..." oninput="notes['${q.id}']=this.value" rows="2"></textarea>
+        </div>
+      </div>
+    `).join('');
+    div.innerHTML=`
+      <div class="module-header" onclick="toggleModule('${m.id}')">
+        <div class="mod-icon" style="background:${m.color};color:${m.iconColor};">${m.icon}</div>
+        <div class="mod-title">${m.title}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;min-width:80px;">
+          <span class="mod-score" id="mod-score-${m.id}">0%</span>
+          <div class="progress-bar" style="width:80px;"><div class="progress-fill" id="mod-bar-${m.id}" style="width:0%;background:#185FA5;"></div></div>
+        </div>
+        <span class="mod-chevron" id="chev-${m.id}">&#9660;</span>
+      </div>
+      <div class="module-body" id="body-${m.id}">${qs}</div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+renderModules();
+calcScore();
+</script>

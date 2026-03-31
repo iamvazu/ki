@@ -1,0 +1,227 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); font-size: 13px; color: var(--color-text-primary); }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; }
+.filter-btn { padding: 5px 12px; border-radius: 999px; font-size: 11px; font-weight: 500; border: 0.5px solid var(--color-border-secondary); cursor: pointer; color: var(--color-text-secondary); background: transparent; white-space: nowrap; }
+.filter-btn.active { background: var(--color-background-info); color: var(--color-text-info); border-color: transparent; }
+.search-box { flex: 1; min-width: 160px; padding: 6px 12px; border-radius: 8px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); color: var(--color-text-primary); font-size: 12px; }
+.search-box:focus { outline: none; border-color: var(--color-border-primary); }
+.count-label { font-size: 11px; color: var(--color-text-secondary); white-space: nowrap; }
+table { width: 100%; border-collapse: collapse; }
+thead th { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-align: left; padding: 6px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); white-space: nowrap; }
+tbody tr { border-bottom: 0.5px solid var(--color-border-tertiary); cursor: pointer; }
+tbody tr:hover { background: var(--color-background-secondary); }
+td { padding: 8px 8px; vertical-align: top; font-size: 12px; }
+.inst-name { font-weight: 500; font-size: 12px; color: var(--color-text-primary); }
+.inst-loc { font-size: 11px; color: var(--color-text-secondary); margin-top: 1px; }
+.badge { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+.t-eng { background: #E6F1FB; color: #185FA5; }
+.t-univ { background: #EEEDFE; color: #534AB7; }
+.t-med { background: #FAECE7; color: #993C1D; }
+.t-mgmt { background: #E1F5EE; color: #0F6E56; }
+.t-school { background: #FAEEDA; color: #BA7517; }
+.t-other { background: #F1EFE8; color: #5F5E5A; }
+.p-high { color: var(--color-text-success); font-weight: 500; }
+.p-med { color: var(--color-text-warning); font-weight: 500; }
+.p-low { color: var(--color-text-secondary); }
+.budget-bar { height: 4px; border-radius: 2px; margin-top: 3px; }
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 16px; padding: 1.5rem; width: 90%; max-width: 520px; max-height: 80vh; overflow-y: auto; }
+.modal-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.modal-sub { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 1rem; }
+.modal-row { display: flex; gap: 8px; margin-bottom: 8px; font-size: 12px; }
+.modal-label { min-width: 120px; color: var(--color-text-secondary); flex-shrink: 0; }
+.modal-val { color: var(--color-text-primary); line-height: 1.5; }
+.modal-close { float: right; font-size: 18px; cursor: pointer; color: var(--color-text-secondary); line-height: 1; }
+.modal-actions { margin-top: 1rem; display: flex; gap: 8px; flex-wrap: wrap; }
+.action-btn { font-size: 11px; padding: 6px 12px; border-radius: 999px; border: 0.5px solid var(--color-border-secondary); cursor: pointer; background: transparent; color: var(--color-text-secondary); }
+.action-btn:hover { background: var(--color-background-secondary); }
+</style>
+
+<div style="padding: 1rem 0;">
+  <div style="margin-bottom: 1rem;">
+    <div style="font-size: 17px; font-weight: 500; margin-bottom: 3px;">50 Bangalore Education Leads — KI Furniture</div>
+    <div style="font-size: 12px; color: var(--color-text-secondary);">Click any row for full contact strategy. Filter by type or search by name.</div>
+  </div>
+
+  <div class="controls">
+    <input class="search-box" type="text" placeholder="Search institution..." oninput="applyFilters()" id="search-input">
+    <button class="filter-btn active" onclick="setFilter('all',this)">All 50</button>
+    <button class="filter-btn" onclick="setFilter('Engineering',this)">Engineering</button>
+    <button class="filter-btn" onclick="setFilter('University',this)">University</button>
+    <button class="filter-btn" onclick="setFilter('Medical',this)">Medical</button>
+    <button class="filter-btn" onclick="setFilter('Management',this)">Management</button>
+    <button class="filter-btn" onclick="setFilter('School',this)">K-12</button>
+    <button class="filter-btn" onclick="setFilter('Other',this)">Other</button>
+    <span class="count-label" id="count-label">Showing 50</span>
+  </div>
+
+  <div style="overflow-x:auto;">
+  <table id="leads-table">
+    <thead>
+      <tr>
+        <th style="width:22px;">#</th>
+        <th>Institution</th>
+        <th>Type</th>
+        <th>Priority</th>
+        <th>Est. Budget</th>
+        <th>First Contact Role</th>
+      </tr>
+    </thead>
+    <tbody id="leads-body"></tbody>
+  </table>
+  </div>
+</div>
+
+<div id="modal-container"></div>
+
+<script>
+const leads = [
+  {n:"Indian Institute of Science (IISc)",loc:"Malleshwaram",type:"University",priority:"A+",budget:"₹2–5 Cr",budgetV:5,contact:"Registrar / Estate Officer",contactRole:"Chief Administrative Officer",naac:"A++",students:5000,tip:"Central government institution — GeM portal mandatory. Research lab furniture, faculty offices, student commons. Budget cycles in Q1 (Apr–Jun). Approach via Registrar's office with sustainability credentials.",spaces:"Labs, offices, student lounges, library, hostels",gems:true},
+  {n:"IIM Bangalore",loc:"Bannerghatta Road",type:"Management",priority:"A+",budget:"₹1–3 Cr",budgetV:4,contact:"Director of Admin / Facilities Head",contactRole:"Registrar",naac:"A++",students:1800,tip:"Autonomous institution with large discretionary budget. Heavy focus on aesthetics — executive lounge, case study rooms, seminar halls. Decision is committee-based with management trust approval.",spaces:"Executive lounges, seminar rooms, cafeteria, library, residences",gems:false},
+  {n:"IIIT Bangalore",loc:"Electronics City",type:"Engineering",priority:"A+",budget:"₹80L–2 Cr",budgetV:3,contact:"Registrar",contactRole:"Registrar / Admin Officer",naac:"A+",students:3000,tip:"Top NIRF-ranked private engineering institution. Research-focused — lab furniture, collaborative study spaces. Industry-funded expansions create irregular but large purchase windows.",spaces:"Research labs, classrooms, student commons, hostel",gems:false},
+  {n:"RV College of Engineering (RVCE)",loc:"Jayanagar / Mysore Road",type:"Engineering",priority:"A+",budget:"₹1–2 Cr",budgetV:4,contact:"Principal / Admin Officer",contactRole:"HOD + Purchase Committee",naac:"A+",students:7000,tip:"NIRF Rank 99. NBA accredited. 52-acre campus. Large annual capex. New block expansions every 2–3 years. Decision via purchase committee — get HOD buy-in first. Strong alumni network is a warm intro path.",spaces:"Classrooms, labs, library, auditorium, cafeteria, hostel",gems:false},
+  {n:"MS Ramaiah Institute of Technology (MSRIT)",loc:"MSR Nagar, Hebbal",type:"Engineering",priority:"A+",budget:"₹1–2 Cr",budgetV:4,contact:"Principal / Admin Officer",contactRole:"Admin Officer + Purchase Committee",naac:"A+",students:8000,tip:"₹5 Cr+ annual scholarship budget signals strong financial health. Consistent NIRF top-20 ranking. Large campus with frequent departmental upgrades. Approach Admin Officer with NAAC Criteria 4 framing.",spaces:"Classrooms, labs, library, sports complex, cafeteria",gems:false},
+  {n:"BMS College of Engineering (BMSCE)",loc:"Bull Temple Road",type:"Engineering",priority:"A",budget:"₹80L–1.5 Cr",budgetV:3,contact:"Principal",contactRole:"HOD Civil / Admin Officer",naac:"A",students:7500,tip:"One of Bangalore's oldest and most prestigious engineering colleges. Heritage campus with ongoing modernisation. Principal is active decision-maker. Strong management trust support for capex.",spaces:"Classrooms, library, labs, common areas",gems:false},
+  {n:"PES University",loc:"Banashankari",type:"University",priority:"A+",budget:"₹1–2 Cr",budgetV:4,contact:"Registrar",contactRole:"VP Administration",naac:"A+",students:12000,tip:"Deemed university with multiple campuses. Strong industry connections. Large student population means high furniture wear — replacement cycles are shorter. Approach VP Admin with TCO (total cost of ownership) data.",spaces:"Classrooms, library, innovation lab, student lounge, hostel, outdoor",gems:false},
+  {n:"Christ University (Kengeri Campus)",loc:"Kengeri",type:"University",priority:"A+",budget:"₹1.5–3 Cr",budgetV:4,contact:"VP Operations",contactRole:"Director of Administration",naac:"A++",students:25000,tip:"A++ NAAC. One of Bangalore's largest campuses. Multi-faculty — law, commerce, science, engineering, management. Multiple independent budget pools by faculty. Approach VP Operations centrally; then HODs per faculty.",spaces:"Classrooms across 5+ faculties, library, auditorium, hostels, outdoor commons",gems:false},
+  {n:"Manipal Institute of Technology (MIT Bangalore)",loc:"HAL Airport Road",type:"Engineering",priority:"A",budget:"₹60L–1.2 Cr",budgetV:3,contact:"Campus Director",contactRole:"Admin Officer",naac:"A",students:5000,tip:"Manipal group campus in Bangalore. Purchasing decisions often need Manipal HQ approval for large orders. Build relationship with campus Admin Officer first. Hostel furniture is a strong entry point.",spaces:"Classrooms, labs, hostel, cafeteria",gems:false},
+  {n:"Dayananda Sagar College of Engineering (DSCE)",loc:"Kumaraswamy Layout",type:"Engineering",priority:"A",budget:"₹60L–1 Cr",budgetV:2,contact:"Principal",contactRole:"Admin Officer / Purchase Officer",naac:"A",students:7000,tip:"DSCE is part of the large Dayananda Sagar group with 14 institutions. Group-level procurement is possible — if you win DSCE, pitch the group buying angle to unlock all 14 campuses.",spaces:"Classrooms, labs, library, cafeteria",gems:false},
+  {n:"New Horizon College of Engineering (NHCE)",loc:"Marathahalli",type:"Engineering",priority:"B",budget:"₹40L–80L",budgetV:2,contact:"Principal",contactRole:"Admin Officer",naac:"A",students:6500,tip:"VTU-affiliated. Strong placement record. NAAC A grade. Active expansion near Whitefield corridor. Approach before year-end (Jan–Mar) when budget utilisation pressure is high.",spaces:"Classrooms, labs, library",gems:false},
+  {n:"CMR Institute of Technology (CMRIT)",loc:"Kundalahalli",type:"Engineering",priority:"B",budget:"₹40L–80L",budgetV:2,contact:"Principal",contactRole:"Admin Officer",naac:"A+",students:6000,tip:"NAAC A+ and NIRF rank 156. Located in Whitefield tech corridor — strong industry tie-ups. Admin Officer manages procurement. Good target for smart classroom furniture tied to NEP 2020.",spaces:"Classrooms, labs, common areas",gems:false},
+  {n:"Nitte Meenakshi Institute of Technology (NMIT)",loc:"Yelahanka",type:"Engineering",priority:"B",budget:"₹50L–90L",budgetV:2,contact:"Principal / Registrar",contactRole:"Purchase Committee",naac:"A",students:6000,tip:"NIRF ranked. Yelahanka campus. Growing institution with regular capex. Decision via purchase committee. Budget sanction needs trust management approval.",spaces:"Classrooms, labs, student centre",gems:false},
+  {n:"Bangalore Institute of Technology (BIT)",loc:"VV Puram",type:"Engineering",priority:"B",budget:"₹30L–60L",budgetV:1,contact:"Principal",contactRole:"Admin Officer",naac:"B+",students:4000,tip:"Government-aided college — GeM portal is the correct procurement route. Funding from state government education budget. Apply in Q4 (Jan–Mar) when budget utilisation pressure is highest.",spaces:"Classrooms, labs, library",gems:true},
+  {n:"University Visvesvaraya College of Engineering (UVCE)",loc:"KR Circle",type:"Engineering",priority:"B",budget:"₹20L–50L",budgetV:1,contact:"Principal",contactRole:"Admin Officer (state procurement)",naac:"B+",students:3500,tip:"The oldest engineering college in Karnataka — government institution under Bangalore University. Budget is state government allocated. Must go through GeM and tender process. Contact Principal's PA for appointment.",spaces:"Classrooms, labs, library, seminar halls",gems:true},
+  {n:"Dr. Ambedkar Institute of Technology (AIT)",loc:"Mallathahalli",type:"Engineering",priority:"B",budget:"₹25L–50L",budgetV:1,contact:"Principal",contactRole:"Admin Officer",naac:"A",students:3500,tip:"Government-aided, NAAC A. Affordable education focus. Budget constrained but has annual state capex allocation. GeM registration required. Good for classroom and lab furniture bundles.",spaces:"Classrooms, labs, library",gems:true},
+  {n:"Sir M. Visvesvaraya Institute of Technology (MVIT)",loc:"Hunasamaranahalli",type:"Engineering",priority:"B",budget:"₹40L–70L",budgetV:2,contact:"Principal / Admin Officer",contactRole:"Purchase Committee",naac:"A",students:5500,tip:"VTU-affiliated. North Bangalore. NAAC A. Growing campus with hostel facilities. Contact Admin Officer — purchase committee approvals above ₹10L.",spaces:"Classrooms, labs, hostel, cafeteria",gems:false},
+  {n:"East Point College of Engineering (EPCE)",loc:"Virgo Nagar",type:"Engineering",priority:"C",budget:"₹20L–40L",budgetV:1,contact:"Principal",contactRole:"Admin Officer",naac:"B+",students:3000,tip:"Tier 2 engineering college. Budget is moderate. Good entry target for volume classroom furniture. East Bangalore cluster — cover alongside CMRIT and NHCE visits.",spaces:"Classrooms, labs",gems:false},
+  {n:"RNS Institute of Technology (RNSIT)",loc:"Channasandra",type:"Engineering",priority:"B",budget:"₹40L–80L",budgetV:2,contact:"Principal",contactRole:"Admin Officer",naac:"A+",students:5000,tip:"NAAC A+, 98% placement rate. Healthy institutional finances. Admin Officer manages purchase indents. Approach with classroom flexibility angle — active learning + NEP 2020.",spaces:"Classrooms, labs, library",gems:false},
+  {n:"Jain University (Engineering)",loc:"Jayanagar",type:"University",priority:"A",budget:"₹80L–1.5 Cr",budgetV:3,contact:"VP Administration",contactRole:"Registrar",naac:"A++",students:15000,tip:"Deemed university, NAAC A++. Multi-campus with strong management. VP Administration controls capex. Jain group has multiple institutions — winning one opens doors across the group.",spaces:"Classrooms, library, student lounge, hostel, outdoor",gems:false},
+  {n:"Reva University",loc:"Rukmini Knowledge Park",type:"University",priority:"A",budget:"₹80L–1.5 Cr",budgetV:3,contact:"Registrar",contactRole:"Director of Facilities",naac:"A+",students:10000,tip:"Large private university in North Bangalore. Growing campus with new blocks. Multiple faculties. Approach Registrar — decision via academic council and management for large orders.",spaces:"Classrooms, labs, library, student commons, outdoor",gems:false},
+  {n:"MS Ramaiah University of Applied Sciences",loc:"MSR Nagar",type:"University",priority:"A",budget:"₹1–2 Cr",budgetV:3,contact:"Registrar",contactRole:"Admin Head",naac:"A+",students:8000,tip:"Separate from MSRIT — a full deemed university. Strong research and design programs. Design schools need high-quality collaborative furniture — excellent KI fit. Approach Registrar.",spaces:"Design studios, classrooms, labs, student lounge",gems:false},
+  {n:"Presidency University",loc:"Rajanakunte",type:"University",priority:"B",budget:"₹50L–1 Cr",budgetV:2,contact:"Registrar",contactRole:"Director of Operations",naac:"A",students:8000,tip:"Growing private university. New campus north of Bangalore. Regular infrastructure investment. Approach Director of Operations — they coordinate all campus development.",spaces:"Classrooms, library, cafeteria, hostel, outdoor",gems:false},
+  {n:"Alliance University",loc:"Anekal",type:"University",priority:"B",budget:"₹60L–1.2 Cr",budgetV:2,contact:"Registrar / COO",contactRole:"Director Admin",naac:"A",students:7000,tip:"Known for MBA and law programs. Expanding campus. International student population — higher quality expectation. COO/Director Admin controls large purchases.",spaces:"Classrooms, executive suites, library, student commons",gems:false},
+  {n:"Garden City University",loc:"Belathur, KR Puram",type:"University",priority:"C",budget:"₹30L–60L",budgetV:1,contact:"Registrar",contactRole:"Admin Officer",naac:"B+",students:5000,tip:"Growing multi-faculty university in east Bangalore. Budget is moderate. Regular annual infrastructure upgrades. Good target for volume library and classroom furniture.",spaces:"Classrooms, library, student lounge",gems:false},
+  {n:"Indian Institute of Management (IIM-B Executive Ed)",loc:"Bannerghatta Road",type:"Management",priority:"A+",budget:"₹50L–1.5 Cr",budgetV:3,contact:"Programme Administrator",contactRole:"Executive Education Director",naac:"N/A",students:500,tip:"Executive education facilities require premium lounge, collaborative, and seminar furniture. High budget, high standards. Decision-maker is Programme Admin + Finance. Approach via alumni network or LinkedIn.",spaces:"Executive lounges, seminar rooms, breakout spaces",gems:false},
+  {n:"Indian School of Business (ISB Mohali feeder cohorts)",loc:"Koramangala hub",type:"Management",priority:"A",budget:"₹30L–80L",budgetV:2,contact:"Facilities Manager",contactRole:"Operations Head",naac:"N/A",students:400,tip:"ISB runs cohorts and prep programs via partner institutions in Bangalore. Collaborative furniture for case-method classrooms. Budget decisions at program director level.",spaces:"Seminar rooms, collaborative study spaces",gems:false},
+  {n:"Xavier Institute of Management & Entrepreneurship (XIME)",loc:"Electronic City",type:"Management",priority:"B",budget:"₹20L–50L",budgetV:1,contact:"Director",contactRole:"Admin Officer",naac:"A",students:600,tip:"NAAC A MBA institution. Budget moderate but consistent. Excellent fit for collaborative lounge and case study room furniture. Approach Director directly — small institution, flat hierarchy.",spaces:"Seminar rooms, library, faculty offices, student lounge",gems:false},
+  {n:"Institute of Management (Christ University)",loc:"Hosur Road",type:"Management",priority:"A",budget:"₹50L–1 Cr",budgetV:2,contact:"Director / Admin Head",contactRole:"VP Operations (Christ group)",naac:"A++",students:2000,tip:"Part of Christ University group with A++ NAAC. Premium management programs. Approach via VP Operations of the Christ group — decision-making is centralised.",spaces:"Seminar rooms, executive lounge, library, collaborative spaces",gems:false},
+  {n:"Symbiosis Centre for Management (Bangalore campus)",loc:"Whitefield",type:"Management",priority:"B",budget:"₹30L–60L",budgetV:1,contact:"Campus Director",contactRole:"Admin Officer",naac:"A",students:500,tip:"Symbiosis group campus. Procurement needs Pune HQ alignment for large orders. Campus Director can approve smaller purchases independently. Good entry with pilot order strategy.",spaces:"Classrooms, seminar rooms, library",gems:false},
+  {n:"St. John's Medical College",loc:"Koramangala",type:"Medical",priority:"A+",budget:"₹1–2 Cr",budgetV:3,contact:"Registrar / Administrative Officer",contactRole:"Director",naac:"A++",students:1500,tip:"One of Bangalore's premier medical colleges. A++ NAAC. Hospital + college campus. Large infrastructure budget. Decision requires Registrar + trust board. Hostel and library furniture are strong entry points.",spaces:"Classrooms, library, auditorium, hostel, resident doctor quarters",gems:false},
+  {n:"MS Ramaiah Medical College",loc:"MSR Nagar",type:"Medical",priority:"A",budget:"₹80L–1.5 Cr",budgetV:3,contact:"Principal / Admin Officer",contactRole:"Admin Officer",naac:"A+",students:1200,tip:"Part of Ramaiah group. Coordinating with MSRIT on shared group procurement is efficient. Principal controls academic infrastructure; Admin Officer controls operations furniture.",spaces:"Classrooms, labs, library, hostel, common rooms",gems:false},
+  {n:"Kempegowda Institute of Medical Sciences (KIMS)",loc:"BSK 2nd Stage",type:"Medical",priority:"A",budget:"₹60L–1.2 Cr",budgetV:2,contact:"Principal",contactRole:"Admin Officer",naac:"A+",students:1500,tip:"Central Bangalore location. Consistent NAAC high grades. Medical college + hospital campus. Patient waiting areas and faculty offices are additional KI product fit beyond classrooms.",spaces:"Classrooms, library, waiting areas, faculty offices, hostel",gems:false},
+  {n:"Rajarajeshwari Medical College",loc:"Mysore Road",type:"Medical",priority:"B",budget:"₹50L–1 Cr",budgetV:2,contact:"Principal",contactRole:"Admin Officer",naac:"B+",students:1200,tip:"1300-bed hospital campus. Large physical footprint. Healthcare seating for patient/visitor areas is a strong secondary pitch alongside education furniture.",spaces:"Classrooms, library, waiting/patient areas, hostel",gems:false},
+  {n:"Bangalore Medical College & Research Institute (BMCRI)",loc:"Fort Road",type:"Medical",priority:"B",budget:"₹30L–60L",budgetV:1,contact:"Principal",contactRole:"Admin Officer (state procurement)",naac:"B+",students:2500,tip:"Government medical college under Karnataka Health & Family Welfare. GeM portal mandatory. State budget allocation. Target for Jan–Mar year-end budget utilisation push.",spaces:"Classrooms, library, common rooms",gems:true},
+  {n:"National Public School (NPS Group)",loc:"Multiple campuses",type:"School",priority:"A+",budget:"₹50L–1.5 Cr",budgetV:3,contact:"Director of Operations",contactRole:"Group Facilities Head",naac:"N/A",students:20000,tip:"Chain of 8+ campuses across Bangalore. Central decision-maker for furniture — Director of Operations. One deal covers multiple campuses. New campuses open regularly. Premium K-12 school with high standards.",spaces:"Classrooms, libraries, cafeteria, staff rooms, auditoriums",gems:false},
+  {n:"Bangalore International School (BIS)",loc:"Geddalahalli",type:"School",priority:"A",budget:"₹30L–60L",budgetV:2,contact:"Director / Business Manager",contactRole:"Director",naac:"N/A",students:1200,tip:"IB/IGCSE international school. High willingness to pay for quality. Small hierarchy — Director approves directly. Modern flexible classroom furniture is the pitch — learning pods, collaborative tables.",spaces:"Classrooms, library, arts room, cafeteria",gems:false},
+  {n:"Inventure Academy",loc:"Whitefield",type:"School",priority:"A",budget:"₹25L–50L",budgetV:2,contact:"Head of School",contactRole:"Director",naac:"N/A",students:1400,tip:"IB World School with emphasis on innovation and design. Premium brand consciousness — KI's design credentials are a strong selling point. Head of School makes purchase decisions.",spaces:"Classrooms, maker space, library, cafeteria",gems:false},
+  {n:"The Valley School",loc:"Kanakapura Road",type:"School",priority:"A",budget:"₹20L–40L",budgetV:1,contact:"Principal",contactRole:"Administrative Head",naac:"N/A",students:800,tip:"Krishnamurti Foundation school. Values-driven institution emphasising quality over cost. Long decision cycle but loyal buyer. Approach through Krishnamurti Foundation network.",spaces:"Classrooms, library, arts, outdoor areas",gems:false},
+  {n:"Greenwood High International School",loc:"Sarjapur Road",type:"School",priority:"A",budget:"₹30L–60L",budgetV:2,contact:"Director of Operations",contactRole:"Facilities Manager",naac:"N/A",students:3500,tip:"One of Bangalore's fastest-growing international school chains. New campuses regularly. Strong demand for flexible modern furniture. Facilities Manager handles vendor shortlisting.",spaces:"Classrooms, library, labs, cafeteria, auditorium",gems:false},
+  {n:"Vidya Niketan School (CBSE)",loc:"Rajajinagar",type:"School",priority:"B",budget:"₹15L–30L",budgetV:1,contact:"Principal",contactRole:"Admin Officer",naac:"N/A",students:2500,tip:"Established CBSE school in central Bangalore. Long-standing institution with periodic renovation cycles. Principal + management trust approval for larger purchases.",spaces:"Classrooms, library, staff rooms",gems:false},
+  {n:"VIBGYOR High School",loc:"Multiple campuses",type:"School",priority:"A",budget:"₹40L–80L",budgetV:2,contact:"Regional Facilities Head",contactRole:"Director of Operations",naac:"N/A",students:10000,tip:"Fast-growing premium K-12 chain. 4 campuses in Bangalore. Central procurement decision. Regional Facilities Head is the right contact. New campuses under development — large upcoming furniture requirements.",spaces:"Classrooms, labs, cafeteria, auditorium",gems:false},
+  {n:"BYJU'S Tuition Centres (Bangalore ops)",loc:"Multiple locations",type:"Other",priority:"A",budget:"₹50L–1.5 Cr",budgetV:3,contact:"Head of Facilities",contactRole:"VP Operations",naac:"N/A",students:50000,tip:"Physical learning centres across Bangalore. Premium student experience is core to BYJU'S brand. Comfortable, modern seating and study tables are critical. Approach Head of Facilities at Bangalore HQ.",spaces:"Study pods, seating areas, reception, staff zones",gems:false},
+  {n:"NIIT University (Bangalore Learning Centre)",loc:"Koramangala",type:"Other",priority:"B",budget:"₹20L–50L",budgetV:1,contact:"Centre Director",contactRole:"Operations Head",naac:"N/A",students:2000,tip:"Tech-focused skill institute. Modern study spaces. Centre Director controls budget. Collaborative and lounge furniture match the brand image.",spaces:"Classrooms, collaborative areas, reception",gems:false},
+  {n:"IISc Society for Innovation & Development (SID)",loc:"IISc Campus",type:"Other",priority:"A",budget:"₹30L–60L",budgetV:2,contact:"Executive Director",contactRole:"Admin Head",naac:"N/A",students:200,tip:"IISc's innovation and incubation arm. High-end collaborative and innovation lab furniture. Budget tied to grants and industry sponsorships — purchasing can be faster than government processes.",spaces:"Innovation lab, co-working, meeting rooms",gems:false},
+  {n:"FLAME University (Bangalore Centre)",loc:"Indiranagar",type:"University",priority:"B",budget:"₹25L–50L",budgetV:1,contact:"Campus Head",contactRole:"Admin Officer",naac:"N/A",students:500,tip:"Liberal arts university with Bangalore outpost. Small campus. Campus Head approves budget. Premium lounge and library furniture fit the FLAME brand.",spaces:"Classrooms, library, collaborative lounge",gems:false},
+  {n:"Azim Premji University",loc:"Sarjapur Road",type:"University",priority:"A+",budget:"₹80L–2 Cr",budgetV:3,contact:"Registrar",contactRole:"VP Administration",naac:"A+",students:1500,tip:"Endowment-funded by Wipro's Azim Premji Foundation. No budget constraints for quality purchases. Strong sustainability focus — KI's eco-certified products are a natural fit. Approach Registrar directly.",spaces:"Classrooms, library, student commons, hostel, outdoor, faculty offices",gems:false},
+  {n:"Indian Statistical Institute (ISI Bangalore)",loc:"Rajaji Nagar",type:"University",priority:"A",budget:"₹30L–70L",budgetV:2,contact:"Director / Admin Officer",contactRole:"Registrar",naac:"N/A",students:600,tip:"Central government autonomous institution — GeM portal required. Research institute. Faculty offices and seminar rooms are primary spaces. Decision via Registrar with director approval.",spaces:"Seminar rooms, offices, library, student hostel",gems:true},
+  {n:"National Law School of India University (NLSIU)",loc:"Nagarbhavi",type:"University",priority:"A+",budget:"₹50L–1.5 Cr",budgetV:3,contact:"Registrar",contactRole:"Finance Officer",naac:"A++",students:700,tip:"India's top law school — A++ NAAC. Premier institution with strong alumni funding. Moot court, library, student housing — all high-quality spaces. Approach Registrar with institutional prestige angle.",spaces:"Moot court, classrooms, library, student housing, faculty offices",gems:false},
+  {n:"ISRO / VSSC Training Centre (Bangalore)",loc:"Peenya / Yelhanka",type:"Other",priority:"A",budget:"₹1–3 Cr",budgetV:4,contact:"Admin Officer",contactRole:"Section Head (Stores & Purchase)",naac:"N/A",students:2000,tip:"Government research and training institution. GeM portal mandatory. Very large infrastructure budget. Training rooms, conference rooms, offices. Procurement is through Section Head (Stores). Long tender cycles but very high value.",spaces:"Training rooms, conference rooms, offices, labs",gems:true},
+];
+
+let activeFilter = 'all';
+
+function typeClass(t) {
+  if(t==='Engineering') return 't-eng';
+  if(t==='University') return 't-univ';
+  if(t==='Medical') return 't-med';
+  if(t==='Management') return 't-mgmt';
+  if(t==='School') return 't-school';
+  return 't-other';
+}
+
+function priorityClass(p) {
+  if(p==='A+') return 'p-high';
+  if(p==='A') return 'p-med';
+  return 'p-low';
+}
+
+function barColor(v) {
+  if(v>=4) return 'var(--color-text-success)';
+  if(v>=2) return 'var(--color-text-warning)';
+  return 'var(--color-border-secondary)';
+}
+
+function renderTable() {
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const body = document.getElementById('leads-body');
+  let count = 0;
+  body.innerHTML = '';
+  leads.forEach((l, i) => {
+    const matchType = activeFilter === 'all' || l.type === activeFilter;
+    const matchSearch = l.n.toLowerCase().includes(search) || l.loc.toLowerCase().includes(search) || l.contact.toLowerCase().includes(search);
+    if(!matchType || !matchSearch) return;
+    count++;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--color-text-secondary);font-size:11px;">${i+1}</td>
+      <td><div class="inst-name">${l.n}${l.gems ? ' <span title="GeM required" style="font-size:10px;color:var(--color-text-info);">🏛</span>' : ''}</div><div class="inst-loc">${l.loc}</div></td>
+      <td><span class="badge ${typeClass(l.type)}">${l.type}</span></td>
+      <td><span class="${priorityClass(l.priority)}">${l.priority}</span></td>
+      <td><div style="white-space:nowrap;">${l.budget}</div><div class="budget-bar" style="width:${l.budgetV*20}%;background:${barColor(l.budgetV)};"></div></td>
+      <td style="color:var(--color-text-secondary);">${l.contact}</td>
+    `;
+    tr.onclick = () => showModal(l, i+1);
+    body.appendChild(tr);
+  });
+  document.getElementById('count-label').textContent = `Showing ${count}`;
+}
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function applyFilters() { renderTable(); }
+
+function showModal(l, num) {
+  const c = document.getElementById('modal-container');
+  c.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+      <div class="modal">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+          <div>
+            <div class="modal-title">${num}. ${l.n}</div>
+            <div class="modal-sub">${l.loc} &nbsp;·&nbsp; <span class="badge ${typeClass(l.type)}">${l.type}</span></div>
+          </div>
+          <span class="modal-close" onclick="closeModal()">×</span>
+        </div>
+        <div style="border-top:0.5px solid var(--color-border-tertiary);padding-top:12px;">
+          <div class="modal-row"><div class="modal-label">Priority tier</div><div class="modal-val"><strong class="${priorityClass(l.priority)}">${l.priority}</strong></div></div>
+          <div class="modal-row"><div class="modal-label">Est. furniture budget</div><div class="modal-val">${l.budget} per cycle</div></div>
+          <div class="modal-row"><div class="modal-label">Student population</div><div class="modal-val">${l.students.toLocaleString()}</div></div>
+          <div class="modal-row"><div class="modal-label">NAAC grade</div><div class="modal-val">${l.naac}</div></div>
+          <div class="modal-row"><div class="modal-label">First contact</div><div class="modal-val"><strong>${l.contact}</strong></div></div>
+          <div class="modal-row"><div class="modal-label">Decision maker</div><div class="modal-val">${l.contactRole}</div></div>
+          <div class="modal-row"><div class="modal-label">GeM required</div><div class="modal-val">${l.gems ? '✅ Yes — GeM portal mandatory' : 'Not required (private institution)'}</div></div>
+          <div class="modal-row"><div class="modal-label">Key spaces</div><div class="modal-val">${l.spaces}</div></div>
+          <div class="modal-row" style="margin-top:4px;"><div class="modal-label">Agent tip</div><div class="modal-val" style="font-style:italic;color:var(--color-text-secondary);">${l.tip}</div></div>
+        </div>
+        <div class="modal-actions">
+          <button class="action-btn" onclick="sendPrompt('Write a personalised cold outreach email for KI furniture targeting ${l.n} in Bangalore — contact: ${l.contact}')">Draft outreach email ↗</button>
+          <button class="action-btn" onclick="sendPrompt('What is the procurement process at ${l.n} and who are the key decision makers I need to reach?')">Research this institution ↗</button>
+          <button class="action-btn" onclick="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function closeModal() {
+  document.getElementById('modal-container').innerHTML = '';
+}
+
+renderTable();
+</script>

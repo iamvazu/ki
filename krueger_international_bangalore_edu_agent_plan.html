@@ -1,0 +1,305 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); color: var(--color-text-primary); }
+  .section { margin-bottom: 2rem; }
+  .section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; padding-bottom: 6px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .agent-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .agent-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 0.9rem; }
+  .agent-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 8px; }
+  .agent-name { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .agent-desc { font-size: 11px; color: var(--color-text-secondary); line-height: 1.5; }
+  .flow-row { display: flex; align-items: center; gap: 0; margin-bottom: 10px; }
+  .flow-step { flex: 1; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 8px; padding: 8px 10px; font-size: 12px; text-align: center; }
+  .flow-arrow { color: var(--color-text-secondary); font-size: 14px; padding: 0 4px; flex-shrink: 0; }
+  .inst-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .inst-item { background: var(--color-background-secondary); border-radius: 8px; padding: 10px 12px; font-size: 12px; }
+  .inst-name { font-weight: 500; font-size: 13px; margin-bottom: 2px; }
+  .inst-type { font-size: 11px; color: var(--color-text-secondary); }
+  .edu-track { display: flex; flex-direction: column; gap: 8px; }
+  .edu-step { display: flex; gap: 12px; align-items: flex-start; }
+  .edu-num { width: 24px; height: 24px; border-radius: 50%; background: var(--color-background-info); color: var(--color-text-info); font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .edu-content { flex: 1; }
+  .edu-title { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+  .edu-body { font-size: 11px; color: var(--color-text-secondary); line-height: 1.5; }
+  .product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .product-pill { background: var(--color-background-secondary); border-radius: 8px; padding: 8px 10px; font-size: 11px; }
+  .product-name { font-weight: 500; font-size: 12px; margin-bottom: 2px; }
+  .product-use { color: var(--color-text-secondary); font-size: 11px; }
+  .msg-preview { background: var(--color-background-secondary); border-radius: 10px; padding: 10px 14px; font-size: 12px; line-height: 1.6; color: var(--color-text-secondary); border-left: 3px solid var(--color-border-info); margin-bottom: 8px; }
+  .msg-preview strong { color: var(--color-text-primary); font-weight: 500; }
+  .metric-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .metric { background: var(--color-background-secondary); border-radius: 8px; padding: 10px; text-align: center; }
+  .metric-num { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+  .metric-label { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+  .tab-bar { display: flex; gap: 4px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .tab { padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 0.5px solid var(--color-border-tertiary); cursor: pointer; color: var(--color-text-secondary); background: transparent; }
+  .tab.active { background: var(--color-background-info); color: var(--color-text-info); border-color: transparent; }
+  .pane { display: none; }
+  .pane.active { display: block; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+  .badge-blue { background: var(--color-background-info); color: var(--color-text-info); }
+  .badge-green { background: var(--color-background-success); color: var(--color-text-success); }
+  .badge-amber { background: var(--color-background-warning); color: var(--color-text-warning); }
+  .timeline-item { display: flex; gap: 12px; margin-bottom: 14px; }
+  .tl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .tl-line-wrap { display: flex; flex-direction: column; align-items: center; }
+  .tl-vline { width: 1px; flex: 1; background: var(--color-border-tertiary); margin-top: 4px; }
+  .tl-content { flex: 1; padding-bottom: 4px; }
+  .tl-title { font-size: 13px; font-weight: 500; }
+  .tl-body { font-size: 11px; color: var(--color-text-secondary); line-height: 1.5; margin-top: 2px; }
+  .ask-btn { font-size: 12px; border: 0.5px solid var(--color-border-secondary); border-radius: 999px; padding: 5px 12px; cursor: pointer; color: var(--color-text-secondary); background: transparent; margin-top: 8px; }
+  .ask-btn:hover { background: var(--color-background-secondary); }
+</style>
+
+<div style="padding: 1rem 0;">
+
+  <div style="margin-bottom: 1.5rem;">
+    <div style="font-size: 18px; font-weight: 500; margin-bottom: 4px;">Krueger International — Bangalore Education Outreach</div>
+    <div style="font-size: 13px; color: var(--color-text-secondary);">AI agent strategy for lead generation & sales across Bangalore's educational institutions</div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="showTab('agents')">Agent Roles</button>
+    <button class="tab" onclick="showTab('leads')">Lead Targets</button>
+    <button class="tab" onclick="showTab('products')">Product Mapping</button>
+    <button class="tab" onclick="showTab('educate')">Education Plan</button>
+    <button class="tab" onclick="showTab('outreach')">Outreach Scripts</button>
+    <button class="tab" onclick="showTab('timeline')">Execution Timeline</button>
+  </div>
+
+  <!-- AGENTS TAB -->
+  <div id="pane-agents" class="pane active">
+    <div class="section">
+      <div class="section-title">Your 4-Agent System</div>
+      <div class="agent-grid">
+        <div class="agent-card" style="border-top: 3px solid #534AB7;">
+          <div class="agent-icon" style="background:#EEEDFE;color:#534AB7;">👑</div>
+          <div class="agent-name">CEO Agent</div>
+          <div class="agent-desc">Orchestrates all agents. Sets weekly targeting priorities, approves outreach campaigns, reviews pipeline health & closes loop on decisions.</div>
+        </div>
+        <div class="agent-card" style="border-top: 3px solid #0F6E56;">
+          <div class="agent-icon" style="background:#E1F5EE;color:#0F6E56;">🔍</div>
+          <div class="agent-name">Scout Agent</div>
+          <div class="agent-desc">Discovers new leads. Scrapes school directories, LinkedIn, college websites, Google Maps. Classifies institution type, size, decision-maker hierarchy.</div>
+        </div>
+        <div class="agent-card" style="border-top: 3px solid #185FA5;">
+          <div class="agent-icon" style="background:#E6F1FB;color:#185FA5;">🧠</div>
+          <div class="agent-name">Intel Agent</div>
+          <div class="agent-desc">Deep-dives each lead. Finds budget cycles, infrastructure plans, NAAC/NBA accreditation needs, recent tenders, social signals, and pain points.</div>
+        </div>
+        <div class="agent-card" style="border-top: 3px solid #993C1D;">
+          <div class="agent-icon" style="background:#FAECE7;color:#993C1D;">📨</div>
+          <div class="agent-name">Outreach Agent</div>
+          <div class="agent-desc">Executes personalized email, LinkedIn, and WhatsApp sequences. Tracks opens, schedules follow-ups, books demos, hands warm leads to sales.</div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Agent workflow loop</div>
+      <div class="flow-row">
+        <div class="flow-step" style="border-color:#534AB7;color:#534AB7;">CEO sets priorities</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Scout discovers leads</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Intel enriches data</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Outreach contacts</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="border-color:#0F6E56;color:#0F6E56;">Demo booked</div>
+      </div>
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-top:4px;">Loop repeats weekly. CEO agent reviews conversion data and re-weights targeting each cycle.</div>
+    </div>
+    <div class="metric-row">
+      <div class="metric"><div class="metric-num">4</div><div class="metric-label">AI agents</div></div>
+      <div class="metric"><div class="metric-num">200+</div><div class="metric-label">Target institutions</div></div>
+      <div class="metric"><div class="metric-num">5</div><div class="metric-label">Touchpoints/lead</div></div>
+      <div class="metric"><div class="metric-num">3x</div><div class="metric-label">Pipeline multiplier</div></div>
+    </div>
+  </div>
+
+  <!-- LEADS TAB -->
+  <div id="pane-leads" class="pane">
+    <div class="section">
+      <div class="section-title">Tier 1 — Higher Education (Priority)</div>
+      <div class="inst-grid">
+        <div class="inst-item"><div class="inst-name">IIM Bangalore <span class="badge badge-blue">High value</span></div><div class="inst-type">Management Institute · ~2,000 students · Decision maker: Director of Admin / Infrastructure Head</div></div>
+        <div class="inst-item"><div class="inst-name">IISc Bangalore <span class="badge badge-blue">High value</span></div><div class="inst-type">Research University · ~4,000 students · Decision maker: Registrar / Dept Chairs</div></div>
+        <div class="inst-item"><div class="inst-name">RV College of Engineering</div><div class="inst-type">Engineering · ~7,000 students · Decision maker: Principal / Admin Officer</div></div>
+        <div class="inst-item"><div class="inst-name">BMS College of Engineering</div><div class="inst-type">Engineering · ~6,500 students · Decision maker: Principal / Purchase Dept</div></div>
+        <div class="inst-item"><div class="inst-name">Christ University</div><div class="inst-type">Deemed University · ~25,000 students · Decision maker: VP Operations</div></div>
+        <div class="inst-item"><div class="inst-name">Manipal Institute (Bangalore)</div><div class="inst-type">Engineering · ~5,000 students · Decision maker: Campus Director</div></div>
+        <div class="inst-item"><div class="inst-name">PES University</div><div class="inst-type">Deemed University · ~12,000 students · Decision maker: Registrar</div></div>
+        <div class="inst-item"><div class="inst-name">MS Ramaiah Institute</div><div class="inst-type">Engineering · ~8,000 students · Decision maker: Principal / HOD Facilities</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Tier 2 — CBSE / ICSE K-12 Schools</div>
+      <div class="inst-grid">
+        <div class="inst-item"><div class="inst-name">National Public School (NPS)</div><div class="inst-type">CBSE chain · Multiple campuses · Decision maker: Director of Ops</div></div>
+        <div class="inst-item"><div class="inst-name">Bangalore International School</div><div class="inst-type">IB / IGCSE · ~1,200 students · Decision maker: Director</div></div>
+        <div class="inst-item"><div class="inst-name">Inventure Academy</div><div class="inst-type">IB World School · Decision maker: Head of School</div></div>
+        <div class="inst-item"><div class="inst-name">The Valley School</div><div class="inst-type">K-12 · Jiddu Krishnamurti trust · Decision maker: Principal</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Tier 3 — Coaching / Skill Institutes</div>
+      <div class="inst-grid">
+        <div class="inst-item"><div class="inst-name">BYJU'S HQ (Bangalore)</div><div class="inst-type">EdTech / Physical centres · Decision maker: Head of Facilities</div></div>
+        <div class="inst-item"><div class="inst-name">TIME Institute Bangalore</div><div class="inst-type">Coaching chain · Decision maker: Regional Manager</div></div>
+      </div>
+    </div>
+    <button class="ask-btn" onclick="sendPrompt('Give me a full list of 50 Bangalore educational institutions to target for KI furniture, with contact roles and estimated budget size')">Get full list of 50 targets ↗</button>
+  </div>
+
+  <!-- PRODUCTS TAB -->
+  <div id="pane-products" class="pane">
+    <div class="section">
+      <div class="section-title">KI product lines matched to education spaces</div>
+      <div class="product-grid">
+        <div class="product-pill"><div class="product-name">Student Seating</div><div class="product-use">Classrooms, lecture halls, tutorial rooms</div></div>
+        <div class="product-pill"><div class="product-name">Tablet Arm Chairs</div><div class="product-use">Seminar rooms, exam halls</div></div>
+        <div class="product-pill"><div class="product-name">Auditorium & Lecture Hall</div><div class="product-use">Auditoriums, convocation halls</div></div>
+        <div class="product-pill"><div class="product-name">Student Desks</div><div class="product-use">Labs, individual study spaces</div></div>
+        <div class="product-pill"><div class="product-name">Training Tables</div><div class="product-use">Computer labs, training rooms</div></div>
+        <div class="product-pill"><div class="product-name">Library Furniture</div><div class="product-use">Central libraries, reading rooms</div></div>
+        <div class="product-pill"><div class="product-name">Collaborative Tables</div><div class="product-use">Group study pods, innovation labs</div></div>
+        <div class="product-pill"><div class="product-name">Residence Hall Furniture</div><div class="product-use">Hostels, dorms, student accommodation</div></div>
+        <div class="product-pill"><div class="product-name">Lounge Seating</div><div class="product-use">Common areas, student lounges</div></div>
+        <div class="product-pill"><div class="product-name">Height-Adjustable Tables</div><div class="product-use">Modern classrooms, STEM labs</div></div>
+        <div class="product-pill"><div class="product-name">Pods</div><div class="product-use">Quiet study, faculty offices</div></div>
+        <div class="product-pill"><div class="product-name">Outdoor Furniture (Outspan)</div><div class="product-use">Campus courtyards, open-air spaces</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Space-to-product matrix</div>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;">
+        <div class="card"><div style="font-size:12px;font-weight:500;margin-bottom:6px;">🏛 Lecture Hall / Auditorium</div><div style="font-size:11px;color:var(--color-text-secondary);line-height:1.6;">Fixed tiered seating, Tablet arm chairs, Lecterns, AV-integrated tables</div></div>
+        <div class="card"><div style="font-size:12px;font-weight:500;margin-bottom:6px;">📚 Library</div><div style="font-size:11px;color:var(--color-text-secondary);line-height:1.6;">Library furniture, Lounge seating, Collaborative tables, Pods for quiet study</div></div>
+        <div class="card"><div style="font-size:12px;font-weight:500;margin-bottom:6px;">💻 Computer / STEM Lab</div><div style="font-size:11px;color:var(--color-text-secondary);line-height:1.6;">Training tables, Height-adjustable tables, Task seating, Cable-management systems</div></div>
+        <div class="card"><div style="font-size:12px;font-weight:500;margin-bottom:6px;">🛋 Student Lounge / Commons</div><div style="font-size:11px;color:var(--color-text-secondary);line-height:1.6;">MyPlace lounge seating, Collaborative tables, C-Tables, Clamber tiered seating</div></div>
+        <div class="card"><div style="font-size:12px;font-weight:500;margin-bottom:6px;">🏠 Hostel / Residence Hall</div><div style="font-size:11px;color:var(--color-text-secondary);line-height:1.6;">Dorm room furniture, Loft beds, Desk systems, Storage credenzas</div></div>
+        <div class="card"><div style="font-size:12px;font-weight:500;margin-bottom:6px;">🌿 Outdoor Campus</div><div style="font-size:11px;color:var(--color-text-secondary);line-height:1.6;">Outspan outdoor tables & seating, Weather-resistant, modular, campus-grade</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDUCATION PLAN TAB -->
+  <div id="pane-educate" class="pane">
+    <div class="section">
+      <div class="section-title">How to educate prospects at educational institutions — 6-step plan</div>
+      <div class="edu-track">
+        <div class="edu-step">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#534AB7;"></div><div class="tl-vline"></div></div>
+          <div class="edu-content">
+            <div class="edu-title">Step 1 — Problem-first cold outreach <span class="badge badge-blue">Week 1–2</span></div>
+            <div class="edu-body">Don't lead with product. Intel agent identifies each institution's pain: overcrowded labs, outdated library, hostel renovation tender, new campus phase. Outreach agent personalises message around that specific problem. Subject line: "How [Institution Name] can modernise its [specific space]".</div>
+          </div>
+        </div>
+        <div class="edu-step">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#0F6E56;"></div><div class="tl-vline"></div></div>
+          <div class="edu-content">
+            <div class="edu-title">Step 2 — Send a "Space Insight Report" <span class="badge badge-green">Week 2–3</span></div>
+            <div class="edu-body">A one-page PDF or microsite tailored to the institution type (e.g. "Designing the Modern Engineering Campus"). Show peer institutions globally that used KI — case studies from IITs, US universities, etc. Include KI's Classroom Planner tool and link to it. This is not a brochure — it is genuinely educational content.</div>
+          </div>
+        </div>
+        <div class="edu-step">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#185FA5;"></div><div class="tl-vline"></div></div>
+          <div class="edu-content">
+            <div class="edu-title">Step 3 — Virtual "Space Design Workshop" invite <span class="badge badge-blue">Week 3–4</span></div>
+            <div class="edu-body">Host a 45-min online session: "Future-Ready Campus Design for Bangalore Institutions". Invite facilities heads, principals, and admin officers. Cover active learning research, space flexibility, sustainability (KI's LEED-certified products), and show real-time layouts using KI's Classroom Planner. No hard sell — pure education with KI as the expert host.</div>
+          </div>
+        </div>
+        <div class="edu-step">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#BA7517;"></div><div class="tl-vline"></div></div>
+          <div class="edu-content">
+            <div class="edu-title">Step 4 — On-site "Space Audit" offer <span class="badge badge-amber">Week 4–6</span></div>
+            <div class="edu-body">Offer a free, no-obligation campus walk-through and space audit. Bring physical samples (fabric swatches, material samples, product brochures). Create a personalised floor-plan proposal using KI's Classroom Planner. This converts the prospect from educated to engaged. Tie to NAAC accreditation improvement or NEP 2020 compliance where relevant.</div>
+          </div>
+        </div>
+        <div class="edu-step">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#A32D2D;"></div><div class="tl-vline"></div></div>
+          <div class="edu-content">
+            <div class="edu-title">Step 5 — ROI Presentation to decision makers <span class="badge badge-blue">Week 6–8</span></div>
+            <div class="edu-body">Present to the finance/admin committee. Frame in terms of: student capacity per sq. ft., furniture lifespan vs local alternatives, warranty value, resale consideration. Highlight KI's employee-owned model as a quality assurance signal. Show total cost of ownership comparison vs cheaper alternatives.</div>
+          </div>
+        </div>
+        <div class="edu-step">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#0F6E56;"></div></div>
+          <div class="edu-content">
+            <div class="edu-title">Step 6 — Pilot order + campus showcase <span class="badge badge-green">Week 8–12</span></div>
+            <div class="edu-body">Propose a pilot: furnish one room or space at a preferential rate. Photograph it. Let it become a showroom. Other institutions visiting for events see KI furniture in use on a Bangalore campus — peer validation is the most powerful closer. Outreach agent follows up with photos and offer to peer institutions.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTREACH SCRIPTS TAB -->
+  <div id="pane-outreach" class="pane">
+    <div class="section">
+      <div class="section-title">Email sequence — Engineering college (example)</div>
+      <div class="msg-preview"><strong>Email 1 (Day 1) — Problem hook</strong><br>Subject: Your classrooms vs IISc's new learning spaces — the gap is wider than you think<br><br>Hi [Name], institutions across Bangalore are in the middle of a quiet transformation — classrooms designed around active learning, labs that flex between configurations, libraries that students actually want to use. Thought you'd find this 2-min read useful: [link to Space Insight PDF].</div>
+      <div class="msg-preview"><strong>Email 2 (Day 5) — Social proof</strong><br>Subject: How [peer institution] redesigned its lecture halls in 6 months<br><br>Following up on my note — sharing a quick case study of how a comparable institution tackled the same challenge. One thing they found surprising: the furniture decision affected faculty satisfaction scores, not just student experience.</div>
+      <div class="msg-preview"><strong>Email 3 (Day 10) — Workshop invite</strong><br>Subject: Invite: Free campus design workshop for Bangalore institutions (45 min, online)<br><br>We're running a small, focused session for facilities and admin heads at Bangalore colleges. Covering NEP 2020-aligned space design, ROI of flexible furniture, and live demos of our planning tools. Would love to have [Institution Name] represented.</div>
+      <div class="msg-preview"><strong>Email 4 (Day 18) — Audit offer</strong><br>Subject: Free space audit for [Institution Name] — no strings<br><br>I'd like to offer your team a complimentary campus walk-through. We'll assess your current spaces, map them to your capacity goals, and share a layout proposal — whether or not you ever work with us. Would [date] work for a visit?</div>
+    </div>
+    <div class="section">
+      <div class="section-title">LinkedIn outreach — Facilities/Admin Head</div>
+      <div class="msg-preview"><strong>Connection note</strong><br>"Hi [Name], I work with Krueger International, the contract furniture company behind some of India's best-designed campus spaces. I saw [Institution] is expanding — would love to share some ideas that might be relevant. Happy to connect."</div>
+    </div>
+    <button class="ask-btn" onclick="sendPrompt('Write me a full 6-email outreach sequence for a Bangalore K-12 school principal, focused on KI classroom and library furniture')">Get K-12 school email sequence ↗</button>
+    <button class="ask-btn" onclick="sendPrompt('Write WhatsApp outreach scripts for KI furniture targeting Bangalore college admin heads')">Get WhatsApp scripts ↗</button>
+  </div>
+
+  <!-- TIMELINE TAB -->
+  <div id="pane-timeline" class="pane">
+    <div class="section">
+      <div class="section-title">12-week execution plan</div>
+      <div>
+        <div class="timeline-item">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#534AB7;width:12px;height:12px;"></div><div class="tl-vline"></div></div>
+          <div class="tl-content"><div class="tl-title">Week 1–2: Scout & Build</div><div class="tl-body">Scout agent maps 200+ Bangalore institutions. Intel agent enriches top 50 with decision-maker names, budget signals, renovation news. CEO agent approves first target batch. Build Space Insight Report template.</div></div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#0F6E56;width:12px;height:12px;"></div><div class="tl-vline"></div></div>
+          <div class="tl-content"><div class="tl-title">Week 3–4: First outreach wave</div><div class="tl-body">Outreach agent sends personalised Email 1 + 2 to all 50 targets. Track open rates. Intel agent monitors LinkedIn for response signals. Scout agent continues to build Tier 2 list.</div></div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#185FA5;width:12px;height:12px;"></div><div class="tl-vline"></div></div>
+          <div class="tl-content"><div class="tl-title">Week 5–6: Workshop & follow-up</div><div class="tl-body">Host virtual Space Design Workshop. Send Email 3 (workshop invite) to all leads. Warm leads (opened 2+ emails, clicked) receive audit offer (Email 4). CEO agent reviews pipeline, re-prioritises.</div></div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#BA7517;width:12px;height:12px;"></div><div class="tl-vline"></div></div>
+          <div class="tl-content"><div class="tl-title">Week 7–8: On-site audits</div><div class="tl-body">Book and execute campus walk-throughs for top 10 engaged leads. Deliver personalised layout proposals using KI Classroom Planner. Schedule ROI presentations with decision-maker committees.</div></div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#A32D2D;width:12px;height:12px;"></div><div class="tl-vline"></div></div>
+          <div class="tl-content"><div class="tl-title">Week 9–10: ROI presentations</div><div class="tl-body">Present to finance/admin committees at top 5 prospects. Address procurement process — GEM portal registration, tender documentation, CSR budget alignment. Propose pilot room order.</div></div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-line-wrap"><div class="tl-dot" style="background:#0F6E56;width:12px;height:12px;"></div></div>
+          <div class="tl-content"><div class="tl-title">Week 11–12: Close pilots, expand list</div><div class="tl-body">Close 2–3 pilot orders. Photograph installations. Outreach agent uses photos as social proof in next wave. Scout agent expands to 100 new targets. CEO agent reviews cost-per-lead and optimises agent weights for next quarter.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="metric-row">
+      <div class="metric"><div class="metric-num">50</div><div class="metric-label">Leads in week 1</div></div>
+      <div class="metric"><div class="metric-num">10</div><div class="metric-label">Audits by week 8</div></div>
+      <div class="metric"><div class="metric-num">5</div><div class="metric-label">ROI presentations</div></div>
+      <div class="metric"><div class="metric-num">2–3</div><div class="metric-label">Pilot closures</div></div>
+    </div>
+    <button class="ask-btn" onclick="sendPrompt('What are the key decision makers and procurement processes I need to know for selling furniture to Bangalore engineering colleges and universities?')">Learn about procurement processes ↗</button>
+  </div>
+
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('pane-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>

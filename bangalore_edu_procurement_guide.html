@@ -1,0 +1,302 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 10px; }
+  .section-title { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; padding-bottom: 6px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .tab-bar { display: flex; gap: 4px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .tab { padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 0.5px solid var(--color-border-tertiary); cursor: pointer; color: var(--color-text-secondary); background: transparent; }
+  .tab.active { background: var(--color-background-info); color: var(--color-text-info); border-color: transparent; }
+  .pane { display: none; }
+  .pane.active { display: block; }
+  .role-card { background: var(--color-background-secondary); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; display: flex; gap: 12px; align-items: flex-start; }
+  .role-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .role-title { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+  .role-inst { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .role-tip { font-size: 11px; color: var(--color-text-secondary); line-height: 1.5; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 999px; margin-left: 5px; vertical-align: middle; }
+  .b-green { background: var(--color-background-success); color: var(--color-text-success); }
+  .b-amber { background: var(--color-background-warning); color: var(--color-text-warning); }
+  .b-blue { background: var(--color-background-info); color: var(--color-text-info); }
+  .b-red { background: var(--color-background-danger); color: var(--color-text-danger); }
+  .step-row { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+  .step-num { width: 26px; height: 26px; border-radius: 50%; background: var(--color-background-info); color: var(--color-text-info); font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+  .step-body { font-size: 11px; color: var(--color-text-secondary); line-height: 1.6; }
+  .warn-box { background: var(--color-background-warning); border: 0.5px solid var(--color-border-warning); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: var(--color-text-warning); margin-bottom: 10px; line-height: 1.6; }
+  .tip-box { background: var(--color-background-success); border: 0.5px solid var(--color-border-success); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: var(--color-text-success); margin-bottom: 10px; line-height: 1.6; }
+  .info-box { background: var(--color-background-info); border: 0.5px solid var(--color-border-info); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: var(--color-text-info); margin-bottom: 10px; line-height: 1.6; }
+  .two-col { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .small-card { background: var(--color-background-secondary); border-radius: 10px; padding: 12px 14px; }
+  .sc-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+  .sc-body { font-size: 11px; color: var(--color-text-secondary); line-height: 1.6; }
+  .trigger-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .trigger-row:last-child { border-bottom: none; }
+  .trigger-label { font-size: 12px; font-weight: 500; min-width: 140px; flex-shrink: 0; }
+  .trigger-val { font-size: 11px; color: var(--color-text-secondary); line-height: 1.5; }
+  .ask-btn { font-size: 12px; border: 0.5px solid var(--color-border-secondary); border-radius: 999px; padding: 5px 14px; cursor: pointer; color: var(--color-text-secondary); background: transparent; margin-top: 12px; }
+  .ask-btn:hover { background: var(--color-background-secondary); }
+  .gem-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
+  .gem-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .gem-text { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+  .gem-text strong { color: var(--color-text-primary); font-weight: 500; }
+</style>
+
+<div style="padding: 1rem 0;">
+  <div style="margin-bottom: 1.5rem;">
+    <div style="font-size: 18px; font-weight: 500; margin-bottom: 4px;">Procurement Intelligence Guide</div>
+    <div style="font-size: 13px; color: var(--color-text-secondary);">Selling furniture to Bangalore engineering colleges & universities — who to talk to, and how decisions get made</div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="showTab('people')">Decision Makers</button>
+    <button class="tab" onclick="showTab('process')">Procurement Process</button>
+    <button class="tab" onclick="showTab('gem')">GeM Portal</button>
+    <button class="tab" onclick="showTab('naac')">NAAC Leverage</button>
+    <button class="tab" onclick="showTab('timing')">Budget Cycles</button>
+    <button class="tab" onclick="showTab('traps')">Watch Out For</button>
+  </div>
+
+  <!-- DECISION MAKERS -->
+  <div id="pane-people" class="pane active">
+    <div class="section-title">Who actually controls the furniture purchase decision</div>
+
+    <div class="role-card">
+      <div class="role-icon" style="background:#EEEDFE;color:#534AB7;">👑</div>
+      <div>
+        <div class="role-title">Principal / Director <span class="badge b-blue">Final approver</span></div>
+        <div class="role-inst">All engineering colleges — autonomous & affiliated</div>
+        <div class="role-tip">Signs off on all capital expenditure above a threshold (typically ₹5–10 lakh+). Won't evaluate products themselves but must be convinced on institutional benefit — NAAC score, student feedback, campus ranking. Your champion must brief them before you meet them. Never cold-reach a Principal directly — come referred.</div>
+      </div>
+    </div>
+
+    <div class="role-card">
+      <div class="role-icon" style="background:#E1F5EE;color:#0F6E56;">🏗</div>
+      <div>
+        <div class="role-title">Registrar / Estate Officer / Admin Officer <span class="badge b-green">Primary gatekeeper</span></div>
+        <div class="role-inst">Universities & larger deemed institutions (IISc, Christ, PES)</div>
+        <div class="role-tip">Your most important first contact. Manages infrastructure procurement, maintenance budgets, vendor empanelment. Understands timelines, tender cycles, and budget availability. They prepare the committee recommendation. Build this relationship deeply — if the Registrar likes you, the path forward is clear.</div>
+      </div>
+    </div>
+
+    <div class="role-card">
+      <div class="role-icon" style="background:#E6F1FB;color:#185FA5;">🏛</div>
+      <div>
+        <div class="role-title">Purchase Committee / Finance Committee <span class="badge b-amber">Committee decision</span></div>
+        <div class="role-inst">Typical in AICTE-regulated engineering colleges</div>
+        <div class="role-tip">Most colleges above ₹10 lakh require a committee approval — usually 3–5 members: Principal, Registrar/Admin, HOD of relevant dept, Finance Officer, and sometimes an IQAC member. Your proposal must be formatted for committee review: comparison table, vendor credentials, warranty terms, delivery schedule. One bad committee member can kill a deal.</div>
+      </div>
+    </div>
+
+    <div class="role-card">
+      <div class="role-icon" style="background:#FAECE7;color:#993C1D;">🏢</div>
+      <div>
+        <div class="role-title">Head of Department (HOD) <span class="badge b-green">Influencer / Champion</span></div>
+        <div class="role-inst">All colleges — especially for lab, classroom, department-specific furniture</div>
+        <div class="role-tip">HODs often raise the purchase indent (the formal internal request that starts the procurement cycle). They specify what they need, quality standards, and which vendor they prefer. Winning an HOD means the indent is written with your product specs in mind. Target CSE, ECE, ME department heads — highest lab furniture spend.</div>
+      </div>
+    </div>
+
+    <div class="role-card">
+      <div class="role-icon" style="background:#E1F5EE;color:#0F6E56;">📋</div>
+      <div>
+        <div class="role-title">IQAC Coordinator (Internal Quality Assurance Cell) <span class="badge b-blue">NAAC link</span></div>
+        <div class="role-inst">All NAAC-accredited institutions</div>
+        <div class="role-tip">The IQAC prepares the Annual Quality Assurance Report (AQAR) which documents infrastructure spend. They have a direct interest in improving Criteria 4 (Infrastructure) scores. If you frame furniture as a NAAC score improvement, the IQAC Coordinator becomes a powerful internal champion who can justify the purchase to the finance committee.</div>
+      </div>
+    </div>
+
+    <div class="role-card">
+      <div class="role-icon" style="background:#E6F1FB;color:#185FA5;">📦</div>
+      <div>
+        <div class="role-title">Store Keeper / Purchase Officer <span class="badge b-amber">Operational</span></div>
+        <div class="role-inst">All institutions</div>
+        <div class="role-tip">Handles vendor registration, quotation collection, GRN (Goods Receipt Note) after delivery, and invoice processing. Not a decision maker but can delay or block you through documentation friction. Ensure your vendor registration paperwork is complete before they're involved in your deal.</div>
+      </div>
+    </div>
+
+    <button class="ask-btn" onclick="sendPrompt('How do I get introduced to the Registrar or Admin Officer at a Bangalore engineering college without a warm referral? Give me a strategy.')">How to get a warm intro to the Registrar ↗</button>
+  </div>
+
+  <!-- PROCUREMENT PROCESS -->
+  <div id="pane-process" class="pane">
+    <div class="section-title">How a furniture purchase actually moves through the system</div>
+
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Purchase Indent (Internal Requisition)</div>
+        <div class="step-body">A department head or admin officer raises a formal internal purchase request specifying the type of furniture, quantity, and budget estimate. This is where your pre-sales work pays off — if you've educated the HOD or IQAC Coordinator, they write the indent with your product specs (dimensions, material standards, load capacity). This is called "spec-in" strategy and is the most powerful position to be in.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Budget Sanction</div>
+        <div class="step-body">Principal or Finance Officer approves the budget allocation. For government-aided colleges, this may require VTU (Visvesvaraya Technological University) or state government approval for large capex. For private institutions, the management trust approves. Deals stuck here need a business case — ROI, NAAC benefit, student capacity improvement.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Tender / Quotation Process</div>
+        <div class="step-body">Three routes depending on value: (a) Below ₹1 lakh — direct purchase, single quotation. (b) ₹1–10 lakh — three competitive quotations required (Limited Tender). (c) Above ₹10 lakh — open tender / e-tender / GeM portal. For tenders, your technical specs and price discovery format matters hugely — submit a detailed BoQ (Bill of Quantities) with product codes, warranty terms, AMC options.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Technical Evaluation & L1 Selection</div>
+        <div class="step-body">A committee evaluates bids on technical compliance first (does it meet specs?), then price. Government institutions typically must select L1 — the Lowest Qualified Bidder. This is where being spec'd in becomes critical: if the technical specs are written around KI products, competitors who don't meet specs are disqualified before price comparison. Private institutions have more flexibility to weigh quality vs price.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">5</div>
+      <div>
+        <div class="step-title">Purchase Order & Vendor Registration</div>
+        <div class="step-body">Once selected, a formal PO is issued. You must first be registered as an approved vendor with the institution — this requires: GST registration, PAN, TDS exemption certificate, bank details, product catalogue, warranty letter. Some institutions require a security deposit (10% of order value). Complete vendor registration early — don't wait for a deal to start it.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">6</div>
+      <div>
+        <div class="step-title">Delivery, Inspection & GRN</div>
+        <div class="step-body">Delivery must match PO specs exactly. A physical inspection committee (usually HOD + store keeper) approves the goods. Any deviation — wrong colour, size difference, missing components — can result in rejection. Ensure your delivery note, installation, and warranty documentation matches the PO exactly. Get a signed GRN before leaving site.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">7</div>
+      <div>
+        <div class="step-title">Payment Cycle</div>
+        <div class="step-body">Government-aided institutions typically pay in 30–90 days after GRN. Private institutions vary — 15–45 days is common. Always submit invoices with GRN number, PO reference, and GST details attached. Budget for delayed payment as standard — do not overextend credit on government college orders.</div>
+      </div>
+    </div>
+
+    <button class="ask-btn" onclick="sendPrompt('Help me write a technical specification sheet for KI furniture for a Bangalore engineering college tender submission')">Write a tender spec sheet for KI furniture ↗</button>
+  </div>
+
+  <!-- GEM PORTAL -->
+  <div id="pane-gem" class="pane">
+    <div class="section-title">GeM Portal — the mandatory government procurement gateway</div>
+
+    <div class="info-box">GeM (Government e-Marketplace) is India's national public procurement platform. Government-aided colleges and autonomous institutions under central/state government are <strong>mandated by the Ministry of Finance</strong> to procure through GeM. If KI is not registered on GeM, you are locked out of a large portion of Bangalore's public engineering colleges.</div>
+
+    <div class="section-title" style="margin-top: 1rem;">What GeM means for your sales strategy</div>
+
+    <div class="gem-row"><div class="gem-dot" style="background:#185FA5;"></div><div class="gem-text"><strong>Register on GeM as a seller first.</strong> List KI furniture products under the correct category codes (e.g. Office Furniture, Classroom Furniture, Library Furniture). Institutions search GeM by category — if you're not listed, you don't exist in their procurement workflow.</div></div>
+    <div class="gem-row"><div class="gem-dot" style="background:#185FA5;"></div><div class="gem-text"><strong>Three buying modes on GeM:</strong> Direct Purchase (up to ₹25,000 per item), L1 purchase (₹25K–₹5 lakh without bidding if 3+ sellers), and Bidding/RA (above ₹5 lakh — reverse auction where price matters most). Your Scout/Intel agent should monitor GeM bids daily for Bangalore institution tenders in furniture categories.</div></div>
+    <div class="gem-row"><div class="gem-dot" style="background:#0F6E56;"></div><div class="gem-text"><strong>GeM gives you inbound leads automatically.</strong> Once listed, institutions can find and order from you directly. Optimise your GeM product listings with high-quality photos, detailed specs, and competitive pricing. A strong GeM presence means procurement officers find KI without any cold outreach.</div></div>
+    <div class="gem-row"><div class="gem-dot" style="background:#0F6E56;"></div><div class="gem-text"><strong>Make in India preference on GeM.</strong> GeM applies purchase preference for "Make in India" products. Confirm whether KI products manufactured/assembled in India qualify — this can give a 20% price preference over imported alternatives in bid evaluation.</div></div>
+    <div class="gem-row"><div class="gem-dot" style="background:#BA7517;"></div><div class="gem-text"><strong>Custom Bids (also called Bespoke).</strong> For large or specialised orders (e.g. a full auditorium fit-out), institutions can issue a Custom Bid on GeM with specific technical requirements. This is where your pre-sales relationship matters — if your specs are in the custom bid, you're the natural winner. Monitor GeM's custom bid section for Bangalore colleges.</div></div>
+    <div class="gem-row"><div class="gem-dot" style="background:#A32D2D;"></div><div class="gem-text"><strong>Price wars are real on GeM.</strong> Reverse auctions drive prices down aggressively. Your defence is technical differentiation — win on specs (warranty period, material grade, load rating, sustainability certification) so competitors can't match, not just on price.</div></div>
+
+    <div class="two-col" style="margin-top: 1rem;">
+      <div class="small-card">
+        <div class="sc-title">GeM registration checklist</div>
+        <div class="sc-body">GST registration · PAN · MSME/Udyam certificate (if applicable) · Bank account (verified) · Product catalogue with HSN codes · ISO/quality certifications · Brand authorisation letter · Test reports for furniture standards (BIS/IS codes)</div>
+      </div>
+      <div class="small-card">
+        <div class="sc-title">GeM-mandated institutions in Bangalore</div>
+        <div class="sc-body">All VTU-affiliated government engineering colleges · Government-aided private colleges · Central govt autonomous bodies (IISc, NITs) · State PSU training centres · Government polytechnics · DRDL, ISRO, DRDO (for office furniture)</div>
+      </div>
+    </div>
+    <button class="ask-btn" onclick="sendPrompt('What HSN codes and product categories should KI use to list furniture on the GeM portal in India?')">Get GeM category & HSN codes for KI ↗</button>
+  </div>
+
+  <!-- NAAC LEVERAGE -->
+  <div id="pane-naac" class="pane">
+    <div class="section-title">How NAAC accreditation creates furniture buying urgency</div>
+
+    <div class="tip-box"><strong>Key insight:</strong> NAAC Criteria 4 — "Infrastructure and Learning Resources" — is a scored criterion. Institutions with poor facilities score lower. Every institution preparing for a NAAC cycle or re-accreditation is actively spending on infrastructure. This is your entry point.</div>
+
+    <div class="section-title" style="margin-top: 1rem;">NAAC Criteria 4 — what gets evaluated (and what KI solves)</div>
+
+    <div class="two-col">
+      <div class="small-card">
+        <div class="sc-title">4.1 Physical Facilities</div>
+        <div class="sc-body">Classrooms, labs, seminar rooms — must be "adequate, modern, and well-maintained." NAAC peer teams physically inspect classrooms. Broken, outdated, or insufficient furniture directly reduces this score. <strong>KI pitch:</strong> show how a KI classroom upgrade improves Criterion 4.1 documentation.</div>
+      </div>
+      <div class="small-card">
+        <div class="sc-title">4.2 Library as a Learning Resource</div>
+        <div class="sc-body">Spacious reading room, modern storage, comfortable seating — all assessed. Libraries with old broken furniture score poorly. <strong>KI pitch:</strong> KI's library furniture range is specifically designed for academic environments. Show before/after case studies.</div>
+      </div>
+      <div class="small-card">
+        <div class="sc-title">4.3 IT Infrastructure</div>
+        <div class="sc-body">Computer labs, tech-enabled classrooms. KI's media-integrated tables and height-adjustable desks directly support this criterion — tying furniture to IT infrastructure spend. <strong>KI pitch:</strong> frame as "smart classroom readiness" not just furniture.</div>
+      </div>
+      <div class="small-card">
+        <div class="sc-title">4.4 Maintenance of Infrastructure</div>
+        <div class="sc-body">NAAC requires documented percentage of expenditure on infrastructure maintenance. Institutions must show regular renovation (recommended every 4–5 years). <strong>KI pitch:</strong> KI's durability and warranty reduces long-term maintenance spend — lower TCO is a NAAC documentation win.</div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top: 1rem;">How to use NAAC in your sales conversation</div>
+    <div class="step-row">
+      <div class="step-num" style="background:var(--color-background-success);color:var(--color-text-success);">1</div>
+      <div><div class="step-title">Find out the institution's NAAC grade and last cycle date</div><div class="step-body">Check naac.gov.in for the institution's current grade and cycle. If they have a B or B+ and are due for re-accreditation in 1–2 years, they are actively investing in infrastructure upgrades to improve to A. This is your highest-urgency window.</div></div>
+    </div>
+    <div class="step-row">
+      <div class="step-num" style="background:var(--color-background-success);color:var(--color-text-success);">2</div>
+      <div><div class="step-title">Contact the IQAC Coordinator directly</div><div class="step-body">Find or request the IQAC Coordinator's contact from the institution website. Reach out with: "We help institutions improve their Criteria 4 documentation ahead of NAAC cycles." This framing gets immediate attention from the one person most stressed about infrastructure quality.</div></div>
+    </div>
+    <div class="step-row">
+      <div class="step-num" style="background:var(--color-background-success);color:var(--color-text-success);">3</div>
+      <div><div class="step-title">Deliver a "NAAC Criteria 4 Readiness Report"</div><div class="step-body">A 2-page audit of the institution's current Criteria 4 status with specific recommendations that include KI furniture. Format it as an official-looking document with their institution name, NAAC grade, and projected improvement. This is the most powerful sales document you can create.</div></div>
+    </div>
+
+    <button class="ask-btn" onclick="sendPrompt('Write a NAAC Criteria 4 readiness pitch letter for selling KI furniture to an engineering college in Bangalore that currently has a NAAC B+ grade')">Write a NAAC pitch letter ↗</button>
+  </div>
+
+  <!-- BUDGET CYCLES -->
+  <div id="pane-timing" class="pane">
+    <div class="section-title">When money is available — India's academic budget calendar</div>
+
+    <div class="card">
+      <div style="display: grid; grid-template-columns: 110px 1fr; gap: 0;">
+        <div class="trigger-row"><div class="trigger-label" style="font-weight:500;color:var(--color-text-info);">April – May</div><div class="trigger-val"><strong>New financial year begins.</strong> This is when annual capex budgets are released and purchase committees meet to approve spending plans. Start conversations in January–February to be in their plan. Deals proposed in April have budget to spend.</div></div>
+        <div class="trigger-row"><div class="trigger-label" style="font-weight:500;color:var(--color-text-success);">June – July</div><div class="trigger-val"><strong>Pre-academic year furniture rush.</strong> New academic year begins in July/August. Colleges completing expansion or renovation place large furniture orders in June to be ready for students. High urgency, compressed timelines — be ready to deliver fast.</div></div>
+        <div class="trigger-row"><div class="trigger-label" style="font-weight:500;color:var(--color-text-warning);">August – October</div><div class="trigger-val"><strong>NAAC peer team visits peak season.</strong> Most institutions schedule NAAC visits in this window. Colleges rush infrastructure upgrades. Any institution with a peer visit scheduled is an emergency buyer. Intel agent should track NAAC visit announcements.</div></div>
+        <div class="trigger-row"><div class="trigger-label" style="font-weight:500;color:var(--color-text-success);">November – December</div><div class="trigger-val"><strong>Year-end budget utilisation.</strong> Government institutions must spend allocated budgets before 31 March or lose the funds. November–February is "use it or lose it" season — purchase committees approve pending proposals quickly. This is when follow-up on stalled proposals pays off.</div></div>
+        <div class="trigger-row"><div class="trigger-label" style="font-weight:500;color:var(--color-text-danger);">January – March</div><div class="trigger-val"><strong>Financial year close.</strong> Rush purchases before 31 March. Simultaneously, new year budget planning happens. Best time to plant seeds for April approvals and close deals that have been stuck. Also when tenders close fastest — decision-makers are motivated to clear the pipeline.</div></div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top: 1rem;">Event triggers that unlock budget immediately</div>
+    <div class="two-col">
+      <div class="small-card"><div class="sc-title">New campus / building inauguration</div><div class="sc-body">A new academic block needs full furniture fit-out before inauguration. Typically 3–6 months lead time. Scout for construction completions on college websites and local news.</div></div>
+      <div class="small-card"><div class="sc-title">NAAC re-accreditation cycle</div><div class="sc-body">Institutions invest heavily in the 12–18 months before a NAAC peer visit. Monitor naac.gov.in for upcoming cycle dates of Bangalore institutions.</div></div>
+      <div class="small-card"><div class="sc-title">NIRF ranking submission</div><div class="sc-body">National Institutional Ranking Framework (NIRF) includes infrastructure parameters. Institutions climbing the NIRF rankings invest in visible improvements ahead of submissions (January–March annually).</div></div>
+      <div class="small-card"><div class="sc-title">NBA accreditation (engineering)</div><div class="sc-body">NBA (National Board of Accreditation) for specific engineering programs evaluates labs and classrooms. Lab furniture upgrades are directly tied to NBA program visits. Ask if any department is up for NBA.</div></div>
+    </div>
+    <button class="ask-btn" onclick="sendPrompt('Create a quarterly outreach calendar for selling KI furniture to Bangalore engineering colleges, aligned to India academic budget cycles and NAAC season')">Build my outreach calendar ↗</button>
+  </div>
+
+  <!-- WATCH OUT -->
+  <div id="pane-traps" class="pane">
+    <div class="section-title">Common mistakes and pitfalls to avoid</div>
+
+    <div class="warn-box"><strong>L1 trap:</strong> In government college tenders, the lowest qualifying bidder wins (L1). If you lead on price conversations early, you train them to evaluate on price. Lead on technical specs instead — get your product written into the indent before the tender is floated.</div>
+
+    <div class="warn-box"><strong>Reaching the Principal first:</strong> Principals rarely handle procurement. Approaching them directly without a referral from the Admin/Registrar is seen as bypassing process and creates resistance. Build bottom-up: HOD → Admin Officer → Registrar → Principal.</div>
+
+    <div class="warn-box"><strong>GeM non-registration:</strong> If a government college asks you to quote and you're not on GeM, the procurement officer legally cannot process your order. Always confirm GeM registration status before investing in a relationship with a government-aided institution.</div>
+
+    <div class="warn-box"><strong>Ignoring the committee member you don't know:</strong> Purchase committees have 3–5 members. Often one member — sometimes a junior finance officer or external trustee — can block a deal. When presenting to a committee, ask the Registrar who else will be present and prepare for all of them.</div>
+
+    <div class="warn-box"><strong>Spec sheets that don't match BIS/IS standards:</strong> Indian institutions expect furniture to reference Bureau of Indian Standards (BIS) specifications. If your product documentation doesn't cite IS codes, purchase officers who follow government procurement rules may flag it as non-compliant during evaluation.</div>
+
+    <div class="tip-box"><strong>Best practice — the referral flywheel:</strong> One successful installation on a Bangalore campus is worth more than 50 cold emails. The education community shares vendors via WhatsApp groups of Principals, Registrars, and Admins. One happy customer actively refers you. Prioritise getting that first pilot right over anything else.</div>
+
+    <div class="tip-box"><strong>CSR budget angle:</strong> Large corporates with campuses or training centres (Infosys, Wipro, TCS all have Bangalore campuses) often have CSR budgets for educational institutions. Position KI as the furniture partner for CSR-funded campus upgrades — a different budget pool with faster decisions than government procurement.</div>
+
+    <button class="ask-btn" onclick="sendPrompt('What BIS and IS standards apply to classroom and office furniture in India, and how should KI products be certified or documented for Indian institutional procurement?')">Get BIS/IS standards for KI furniture ↗</button>
+  </div>
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('pane-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>

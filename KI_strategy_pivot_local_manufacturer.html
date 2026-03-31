@@ -1,0 +1,288 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary);}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:10px;}
+.sec{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;padding-bottom:6px;border-bottom:.5px solid var(--color-border-tertiary);}
+.tab-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1.2rem;}
+.tab{padding:5px 13px;border-radius:999px;font-size:12px;font-weight:500;border:.5px solid var(--color-border-tertiary);cursor:pointer;color:var(--color-text-secondary);background:transparent;}
+.tab.active{background:var(--color-background-info);color:var(--color-text-info);border-color:transparent;}
+.pane{display:none;}.pane.active{display:block;}
+.change-row{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:0;}
+.col-before{padding:10px 12px;border-bottom:.5px solid var(--color-border-tertiary);border-right:.5px solid var(--color-border-tertiary);}
+.col-after{padding:10px 12px;border-bottom:.5px solid var(--color-border-tertiary);}
+.col-before:last-of-type,.col-after:last-of-type{border-bottom:none;}
+.col-head{font-size:11px;font-weight:500;padding:8px 12px;border-bottom:.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);}
+.col-head-r{border-right:.5px solid var(--color-border-tertiary);}
+.label{font-size:11px;font-weight:500;margin-bottom:3px;}
+.body{font-size:11px;color:var(--color-text-secondary);line-height:1.6;}
+.badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:999px;margin-bottom:4px;}
+.b-red{background:#FCEBEB;color:#A32D2D;}
+.b-green{background:#EAF3DE;color:#3B6D11;}
+.b-amber{background:#FAEEDA;color:#854F0B;}
+.b-blue{background:#E6F1FB;color:#185FA5;}
+.b-purple{background:#EEEDFE;color:#534AB7;}
+.same-row{display:flex;gap:10px;padding:9px 0;border-bottom:.5px solid var(--color-border-tertiary);align-items:flex-start;}
+.same-row:last-child{border-bottom:none;}
+.same-dot{width:8px;height:8px;border-radius:50%;background:#639922;flex-shrink:0;margin-top:4px;}
+.same-text{font-size:12px;line-height:1.5;}
+.new-row{display:flex;gap:12px;padding:10px 0;border-bottom:.5px solid var(--color-border-tertiary);align-items:flex-start;}
+.new-row:last-child{border-bottom:none;}
+.new-num{width:24px;height:24px;border-radius:50%;background:var(--color-background-success);color:var(--color-text-success);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.new-title{font-size:13px;font-weight:500;margin-bottom:2px;}
+.new-body{font-size:11px;color:var(--color-text-secondary);line-height:1.6;}
+.adv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.adv-card{background:var(--color-background-secondary);border-radius:10px;padding:10px 12px;}
+.adv-title{font-size:12px;font-weight:500;margin-bottom:4px;}
+.adv-body{font-size:11px;color:var(--color-text-secondary);line-height:1.6;}
+.risk-row{display:flex;gap:10px;padding:9px 0;border-bottom:.5px solid var(--color-border-tertiary);align-items:flex-start;}
+.risk-row:last-child{border-bottom:none;}
+.risk-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.risk-title{font-size:12px;font-weight:500;margin-bottom:2px;}
+.risk-body{font-size:11px;color:var(--color-text-secondary);line-height:1.5;}
+.act-btn{font-size:11px;padding:5px 12px;border-radius:999px;border:.5px solid var(--color-border-secondary);cursor:pointer;background:transparent;color:var(--color-text-secondary);margin-top:10px;margin-right:6px;}
+.act-btn:hover{background:var(--color-background-secondary);}
+.verdict{background:var(--color-background-success);border:.5px solid var(--color-border-success);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:10px;}
+.verdict-title{font-size:14px;font-weight:500;color:var(--color-text-success);margin-bottom:6px;}
+.verdict-body{font-size:12px;color:var(--color-text-success);line-height:1.6;}
+</style>
+
+<div style="padding:1rem 0;">
+
+<div style="margin-bottom:1.2rem;">
+  <div style="font-size:17px;font-weight:500;margin-bottom:3px;">Strategy pivot: import brand → local Bangalore manufacturer</div>
+  <div style="font-size:12px;color:var(--color-text-secondary);">What changes in the agent game plan — and what stays exactly the same.</div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab active" onclick="show('verdict')">Verdict first</button>
+  <button class="tab" onclick="show('changes')">What changes</button>
+  <button class="tab" onclick="show('same')">What stays</button>
+  <button class="tab" onclick="show('newadvantages')">New advantages</button>
+  <button class="tab" onclick="show('newrisks')">New risks</button>
+  <button class="tab" onclick="show('agents')">Agent rewrites</button>
+</div>
+
+<div id="pane-verdict" class="pane active">
+  <div class="verdict">
+    <div class="verdict-title">The game plan gets stronger, not weaker — but the messaging must completely change</div>
+    <div class="verdict-body">A local manufacturer beats an import brand on every dimension that matters to Indian institutional procurement: price, delivery speed, L1 competitiveness, GeM eligibility, Make in India preference, and the ability to do factory visits. The 50-institution target list, the decision maker hierarchy, the NAAC/GeM strategy — all of that holds. What changes is the <em>pitch</em>, the <em>pricing power</em>, the <em>production capacity angle</em>, and the <em>competitive moat</em>. You stop selling "American design" and start selling "Bangalore-made, institution-grade, delivered in 2 weeks."</div>
+  </div>
+
+  <div class="card">
+    <div class="sec">The 3 biggest strategic shifts</div>
+
+    <div class="new-row">
+      <div class="new-num">1</div>
+      <div>
+        <div class="new-title">GeM registration is now your #1 unlock — not a nice-to-have</div>
+        <div class="new-body">As a domestic manufacturer, you qualify for GeM's "Make in India" purchase preference — government buyers must prefer you over foreign brands by up to 20% price differential. This flips the entire government college segment from "hard to access" to "you have a structural advantage." UVCE, BIT, BMCRI, ISI, ISRO — all of these open up the moment you're GeM-registered as a verified manufacturer.</div>
+      </div>
+    </div>
+
+    <div class="new-row">
+      <div class="new-num">2</div>
+      <div>
+        <div class="new-title">The Scout Agent should now also hunt for tenders — not just relationships</div>
+        <div class="new-body">A manufacturer can win on open tender. The Scout Agent's job expands: daily monitoring of GeM, CPPP (Central Public Procurement Portal), Karnataka state e-procurement portal, and individual institution tender pages. A live furniture tender is a fully-funded, time-bound deal. You don't need a relationship to win it — you need the right specs and the right price. This is a completely new lead channel that didn't exist in the import-brand strategy.</div>
+      </div>
+    </div>
+
+    <div class="new-row">
+      <div class="new-num">3</div>
+      <div>
+        <div class="new-title">Factory visits replace case study PDFs as the trust-builder</div>
+        <div class="new-body">You have a working factory 20 minutes from most south Bangalore colleges. Inviting a Registrar or HOD to see the manufacturing floor, touch the materials, and watch quality checks is more powerful than any brochure. No imported brand can do this. "Come see where your furniture is made" is an outreach line no competitor can match — and it converts fence-sitters into committed buyers.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pane-changes" class="pane">
+  <div class="card" style="padding:0;overflow:hidden;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;">
+      <div class="col-head col-head-r" style="background:var(--color-background-secondary);">Before (assumed import/distribution brand)</div>
+      <div class="col-head" style="background:var(--color-background-secondary);">After (Bangalore manufacturer)</div>
+    </div>
+
+    <div class="change-row">
+      <div class="col-before"><div class="label">Core pitch</div><div class="body">"International quality furniture for Indian institutions"</div></div>
+      <div class="col-after"><div class="label">Core pitch</div><div class="body"><span class="badge b-green">Rewrite</span> "Made in Bangalore. For Bangalore. 2-week delivery, 5-year warranty, factory visit on request."</div></div>
+    </div>
+    <div class="change-row">
+      <div class="col-before"><div class="label">Government college strategy</div><div class="body">GeM registration optional — focus on private institutions first</div></div>
+      <div class="col-after"><div class="label">Government college strategy</div><div class="body"><span class="badge b-green">Flip</span> GeM registration is priority #1. Make in India preference gives 20% advantage in tender evaluation.</div></div>
+    </div>
+    <div class="change-row">
+      <div class="col-before"><div class="label">Pricing position</div><div class="body">Premium — justify with US brand heritage and quality</div></div>
+      <div class="col-after"><div class="label">Pricing position</div><div class="body"><span class="badge b-amber">Nuance</span> Competitive on price vs imports, premium vs local commodity. "Best value institutional furniture — not cheapest, not overpriced."</div></div>
+    </div>
+    <div class="change-row">
+      <div class="col-before"><div class="label">Lead time messaging</div><div class="body">Long lead time risk — imported stock may have 6–12 week delays</div></div>
+      <div class="col-after"><div class="label">Lead time messaging</div><div class="body"><span class="badge b-green">Major win</span> 2–4 week delivery from Bommasandra. Pre-academic year rush (June) is now a strength, not a risk.</div></div>
+    </div>
+    <div class="change-row">
+      <div class="col-before"><div class="label">Scout Agent focus</div><div class="body">Scrape LinkedIn, news, institution websites for relationship signals</div></div>
+      <div class="col-after"><div class="label">Scout Agent focus</div><div class="body"><span class="badge b-green">Expand</span> Add daily tender monitoring: GeM bids, Karnataka e-procurement, CPPP. Live tenders = immediate revenue.</div></div>
+    </div>
+    <div class="change-row">
+      <div class="col-before"><div class="label">Trust-building tool</div><div class="body">Case study PDFs from US KI installations</div></div>
+      <div class="col-after"><div class="label">Trust-building tool</div><div class="body"><span class="badge b-green">Upgrade</span> Factory visit invitations. "Come see where your furniture is made" — 20 min from campus.</div></div>
+    </div>
+    <div class="change-row">
+      <div class="col-before"><div class="label">Outreach email hook</div><div class="body">Global brand recognition + NAAC framing</div></div>
+      <div class="col-after"><div class="label">Outreach email hook</div><div class="body"><span class="badge b-amber">Update</span> Local credibility + speed + Make in India + NAAC. Lead with Bangalore roots, not US brand.</div></div>
+    </div>
+    <div class="change-row">
+      <div class="col-before"><div class="label">Warranty / after-sales pitch</div><div class="body">International warranty — unclear India service logistics</div></div>
+      <div class="col-after"><div class="label">Warranty / after-sales pitch</div><div class="body"><span class="badge b-green">Major win</span> Local service team, spares from Bommasandra, same-city support. Registrars love this.</div></div>
+    </div>
+    <div class="change-row" style="border-bottom:none;">
+      <div class="col-before" style="border-bottom:none;"><div class="label">MSME / Startup India angle</div><div class="body">Not applicable</div></div>
+      <div class="col-after" style="border-bottom:none;"><div class="label">MSME / Startup India angle</div><div class="body"><span class="badge b-blue">Check</span> If registered as MSME/Udyam, GeM gives additional purchase preference. Verify and use aggressively.</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="pane-same" class="pane">
+  <div class="card">
+    <div class="sec">These 12 things stay exactly the same</div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">The 50-institution target list — every college on it is still a valid target</div></div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">The decision-maker hierarchy — Registrar → HOD → Purchase Committee → Principal</div></div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">NAAC Criteria 4 as the education pitch hook — infrastructure scoring drives spend</div></div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">The 4-agent system — CEO, Scout, Intel, Outreach — same roles, updated tasks</div></div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">The 6-step education plan — problem-first → insight report → workshop → audit → ROI → pilot</div></div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">Budget cycle timing — April new year, June pre-semester rush, Jan–Mar year-end utilisation</div></div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">The Intel Agent checklist — all 42 questions still apply</div></div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">The pilot room strategy — get one installation, use it as a showroom</div></div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">The group-buying angle — Dayananda Sagar, Christ, NPS chains</div></div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">NBA accreditation and NIRF ranking as urgency triggers</div></div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">The spec-in strategy for tenders — get your specs written into the purchase indent</div></div>
+    <div class="same-row"><div class="same-dot"></div><div class="same-text">The referral flywheel — one happy campus creates word-of-mouth through admin WhatsApp groups</div></div>
+  </div>
+</div>
+
+<div id="pane-newadvantages" class="pane">
+  <div class="card">
+    <div class="sec">New competitive advantages unlocked by local manufacturing</div>
+    <div class="adv-grid">
+      <div class="adv-card">
+        <div class="adv-title">Make in India tender preference</div>
+        <div class="adv-body">GoI policy gives domestic manufacturers up to 20% price preference over imports in government procurement. In a reverse auction on GeM, this means you can price ₹20 higher per unit and still win. Competitors importing from China or Europe cannot match this.</div>
+      </div>
+      <div class="adv-card">
+        <div class="adv-title">2–4 week delivery window</div>
+        <div class="adv-body">The pre-semester rush (May–July) is when colleges desperately need furniture fast. Imported brands take 8–16 weeks. You deliver in 2–4. This alone closes deals that no amount of relationship-building can close for an importer.</div>
+      </div>
+      <div class="adv-card">
+        <div class="adv-title">Factory visit as sales tool</div>
+        <div class="adv-body">Invite Registrars, HODs, and Purchase Committee members to Bommasandra-Jigni. Let them see quality control, touch materials, and meet the team. This converts a 3-month sales cycle into 3 weeks. No imported brand in India can offer this.</div>
+      </div>
+      <div class="adv-card">
+        <div class="adv-title">Custom / bespoke orders</div>
+        <div class="adv-body">Institutions often need non-standard sizes — narrow rows for old buildings, specific colours for branding, custom tablet arm designs. A local manufacturer can say yes to these. An importer cannot. This wins you specs that lock out competition.</div>
+      </div>
+      <div class="adv-card">
+        <div class="adv-title">Local warranty & spares</div>
+        <div class="adv-body">After-sales is a major institutional concern — who fixes it when it breaks? "Our factory is in Jigni, spares are on the shelf, engineer on-site within 48 hours" beats any international warranty card. Registrars managing 5,000-student campuses care deeply about this.</div>
+      </div>
+      <div class="adv-card">
+        <div class="adv-title">Genuine "Bangalore for Bangalore" story</div>
+        <div class="adv-body">In a market where institutions are proud of supporting local industry, "we manufacture here, employ here, and deliver here" is a genuine brand story. IISc, IIIT-B, and PES University all have sustainability and local-sourcing commitments this narrative directly addresses.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pane-newrisks" class="pane">
+  <div class="card">
+    <div class="sec">New risks and tensions to manage</div>
+    <div class="risk-row">
+      <div class="risk-dot" style="background:#E24B4A;"></div>
+      <div>
+        <div class="risk-title">The IndiaMART page undercuts every premium claim you make</div>
+        <div class="risk-body">If your outreach email says "institutional-grade furniture from Bangalore's leading manufacturer" and the prospect Googles you and finds a commodity IndiaMART page with bar chairs and sofa sets, the credibility gap is fatal. Fixing the digital presence is now even more urgent — your pitch is stronger, so the mismatch with the website is more jarring, not less.</div>
+      </div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-dot" style="background:#E24B4A;"></div>
+      <div>
+        <div class="risk-title">Production capacity must match outreach ambition</div>
+        <div class="risk-body">If the agents generate 15 simultaneous large institutional orders and the factory can only fulfil 3, you damage relationships at scale. Before aggressive outreach, the CEO Agent's brief must include a capacity check — what is the monthly unit output? What is the lead time at 50%, 80%, 100% capacity? Set outreach throttles accordingly.</div>
+      </div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-dot" style="background:#BA7517;"></div>
+      <div>
+        <div class="risk-title">The "local manufacturer" label can trigger a price expectation problem</div>
+        <div class="risk-body">Procurement officers who know you manufacture locally will anchor to local commodity furniture prices (₹800–1,200 per chair). You need to establish institutional-grade pricing as a separate category — "engineered for 10-year lifespan, tested to IS:1303, NAAC-auditable" — before any price discussion begins. Never reveal you're a local manufacturer before you've established the quality and certification story.</div>
+      </div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-dot" style="background:#BA7517;"></div>
+      <div>
+        <div class="risk-title">US KI brand association may be unclear</div>
+        <div class="risk-body">Is this a licensed Indian entity, a JV, or an independent company that licensed the KI name? If the brand relationship is unclear, some buyers may question whether they're getting "real KI" or a local knockoff. The Intel Agent should be briefed to never let this ambiguity surface — the answer must be crisp and consistent in every outreach touchpoint.</div>
+      </div>
+    </div>
+    <div class="risk-row">
+      <div class="risk-dot" style="background:#378ADD;"></div>
+      <div>
+        <div class="risk-title">Tender monitoring is a new operational burden</div>
+        <div class="risk-body">The Scout Agent now needs to monitor GeM, CPPP, and Karnataka state procurement portals daily. Tender response windows can be 7–21 days. If the agent flags a live tender late, you miss the window. This needs a reliable automated alert system — not a manual check.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pane-agents" class="pane">
+  <div class="card">
+    <div class="sec">Updated instructions for each agent</div>
+
+    <div class="new-row">
+      <div class="new-num" style="background:var(--color-background-info);color:var(--color-text-info);">CEO</div>
+      <div>
+        <div class="new-title">CEO Agent — add capacity gating</div>
+        <div class="new-body">New weekly check: confirm factory capacity before approving the next outreach batch. If the pipeline has 8 active proposals, pause new outreach until 3 close or stall. Add a "production lead time" field to every deal in the pipeline. Also owns the GeM registration chase — must confirm completion within 2 weeks.</div>
+      </div>
+    </div>
+
+    <div class="new-row">
+      <div class="new-num" style="background:var(--color-background-success);color:var(--color-text-success);">Scout</div>
+      <div>
+        <div class="new-title">Scout Agent — add tender monitoring as a primary channel</div>
+        <div class="new-body">Daily scan: gem.gov.in (search "furniture", "school furniture", "educational furniture" in Karnataka), etenders.karnataka.gov.in, cppp.nic.in. Flag any tender with closing date &gt;7 days and estimated value &gt;₹5 lakh. Create a "Tender Leads" queue separate from "Relationship Leads" — tenders need a different, faster response workflow.</div>
+      </div>
+    </div>
+
+    <div class="new-row">
+      <div class="new-num" style="background:var(--color-background-warning);color:var(--color-text-warning);">Intel</div>
+      <div>
+        <div class="new-title">Intel Agent — add 3 new research questions</div>
+        <div class="new-body">(1) Has this institution purchased furniture via tender in the last 2 years? Find the GeM/CPPP order history. (2) What furniture is currently installed — local commodity, mid-tier, or premium? This calibrates your price positioning. (3) Does the institution have a "local sourcing" or sustainability policy in its NAAC SSR? If yes, your Bangalore manufacturing is a direct compliance win.</div>
+      </div>
+    </div>
+
+    <div class="new-row">
+      <div class="new-num" style="background:#FAECE7;color:#993C1D;">Out</div>
+      <div>
+        <div class="new-title">Outreach Agent — update all email templates</div>
+        <div class="new-body">Replace "international quality" with "manufactured in Bangalore." Add "factory visit" as a CTA option alongside demo and audit. Add a line about 2–4 week delivery in every email. For government college sequences, add a "we are GeM registered" line as the opener — it removes the #1 procurement objection immediately. Remove all references to US KI case studies; replace with "request our India installation portfolio."</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="act-btn" onclick="sendPrompt('Rewrite the KI furniture cold outreach email sequence for Bangalore engineering colleges, now positioning KI as a local Bangalore manufacturer — not an import brand — emphasising Make in India, 2-week delivery, factory visits, and GeM registration')">Rewrite outreach emails for local manufacturer positioning ↗</button>
+  <button class="act-btn" onclick="sendPrompt('Build a Scout Agent tender monitoring brief — what portals to check daily, what search terms to use, and how to qualify and respond to live furniture tenders for Bangalore educational institutions')">Build the tender monitoring brief ↗</button>
+</div>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('pane-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
