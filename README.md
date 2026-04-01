@@ -1,8 +1,8 @@
-# KI × Jugaad AI — Bangalore Education Sales Engine
+# KI × Jugaad AI — Bangalore Education Institutions AI Agents BD & Sales Engine
 
 A rich, interactive AI-powered sales intelligence dashboard built for **Krueger International Furniture Systems Private Limited**.
 
-**Built by:** Vasu Ranganathan · [Jugaad AI](https://jugaad.ai)
+**Built by:** Vasu Ranganathan · [Jugaad AI](https://jugaadai.orangelabs.com)
 
 ---
 

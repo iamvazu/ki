@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KI × Jugaad AI — Bangalore Education Sales Engine</title>
+<title>KI × Jugaad AI — Bangalore Education Institutions AI Agents BD &amp; Sales Engine</title>
 <meta name="description" content="AI-powered sales intelligence dashboard for Krueger International Furniture Systems. Built by Jugaad AI.">
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -51,6 +51,9 @@
       <div class="nav-item" data-tab="4" data-tooltip="Strategy Pivot" onclick="switchTab(4)">
         <span class="nav-icon">⚡</span>
       </div>
+      <div class="nav-item" data-tab="5" data-tooltip="Video &amp; Audio" onclick="switchTab(5)">
+        <span class="nav-icon">🎬</span>
+      </div>
       <div class="sidebar-spacer"></div>
       <div class="sidebar-bottom">
         <div class="sidebar-bottom-text">KI India<br>2025</div>
@@ -73,6 +76,7 @@
           <div class="tour-dot" id="td-2"></div>
           <div class="tour-dot" id="td-3"></div>
           <div class="tour-dot" id="td-4"></div>
+          <div class="tour-dot" id="td-5"></div>
         </div>
         <button class="tour-btn" onclick="tourNext()">Next Tab →</button>
         <span class="tour-close" onclick="closeTour()">✕</span>
@@ -155,6 +159,21 @@
           <div class="page-content" id="pc-4"></div>
         </div>
 
+        <!-- ════════════════════════════════════════
+             PAGE 5 — MEDIA: VIDEO + AUDIO
+             ════════════════════════════════════════ -->
+        <div class="page" id="page-5">
+          <div class="page-header">
+            <div class="page-header-left">
+              <div class="page-tab-number">Tab 06 · Media</div>
+              <div class="page-title">Video &amp; Audio</div>
+              <div class="page-subtitle">Watch the Automating B2B Sales explainer video and listen to the AI agents tender strategy audio briefing.</div>
+            </div>
+            <div class="page-badge">🎬 YouTube · 🎙 22-min Audio</div>
+          </div>
+          <div class="page-content" id="pc-5"></div>
+        </div>
+
       </div><!-- /pages-container -->
     </main>
   </div>
@@ -167,15 +186,17 @@ const FRAGMENTS = [
   'bangalore_50_edu_leads_KI.html',
   'bangalore_edu_procurement_guide.html',
   'intel_agent_research_checklist.html',
-  'KI_strategy_pivot_local_manufacturer.html'
+  'KI_strategy_pivot_local_manufacturer.html',
+  'ki_media_tab.html'
 ];
 
 const TOUR_DATA = [
-  { name: 'Tab 1 of 5 · Agent Playbook',      desc: 'Your 4-agent AI system: CEO, Scout, Intel, Outreach. See roles, lead targets, product mapping, outreach scripts & 12-week timeline.' },
-  { name: 'Tab 2 of 5 · 50 Leads Database',   desc: 'Filter by institution type, search by name, click any row for the full contact strategy, budget estimate & agent tip.' },
-  { name: 'Tab 3 of 5 · Procurement Guide',   desc: '6 deep-dive topics: who decides, how the process works, GeM portal tactics, NAAC leverage, budget calendar & common traps.' },
-  { name: 'Tab 4 of 5 · Intel Checklist',     desc: '42 research questions across 7 modules. Rate each signal Cold/Warm/Hot and get a live outreach-readiness score out of 100.' },
-  { name: 'Tab 5 of 5 · Strategy Pivot',      desc: 'Local manufacturer vs import brand comparison — 9 changes, 12 things that stay, 6 new advantages, 5 risks & updated agent briefs.' }
+  { name: 'Tab 1 of 6 · Agent Playbook',      desc: 'Your 4-agent AI system: CEO, Scout, Intel, Outreach. See roles, lead targets, product mapping, outreach scripts & 12-week timeline.' },
+  { name: 'Tab 2 of 6 · 50 Leads Database',   desc: 'Filter by institution type, search by name, click any row for the full contact strategy, budget estimate & agent tip.' },
+  { name: 'Tab 3 of 6 · Procurement Guide',   desc: '6 deep-dive topics: who decides, how the process works, GeM portal tactics, NAAC leverage, budget calendar & common traps.' },
+  { name: 'Tab 4 of 6 · Intel Checklist',     desc: '42 research questions across 7 modules. Rate each signal Cold/Warm/Hot and get a live outreach-readiness score out of 100.' },
+  { name: 'Tab 5 of 6 · Strategy Pivot',      desc: 'Local manufacturer vs import brand comparison — 9 changes, 12 things that stay, 6 new advantages, 5 risks & updated agent briefs.' },
+  { name: 'Tab 6 of 6 · Video & Audio',       desc: 'Watch the Automating B2B Sales explainer and listen to the 22-minute AI agents tender strategy audio briefing.' }
 ];
 
 let currentTab = 0;
