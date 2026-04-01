@@ -70,6 +70,9 @@
   --transition-fast: 0.15s ease;
   --transition-med:  0.25s ease;
   --transition-slow: 0.4s cubic-bezier(0.4,0,0.2,1);
+
+  /* Responsive Heights */
+  --nav-height: 60px;
 }
 
 /* ── Reset ── */
@@ -106,6 +109,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile */
   overflow: hidden;
 }
 
@@ -134,6 +138,11 @@ body {
   border-right: 1px solid var(--color-border-tertiary);
 }
 
+@media (max-width: 768px) {
+  .header-logo-zone { width: 50px; }
+  .header-logo { width: 32px; height: 32px; font-size: 16px; }
+}
+
 .header-logo {
   width: 36px;
   height: 36px;
@@ -152,6 +161,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0; /* Allow text truncate */
+}
+
+@media (max-width: 768px) {
+  .header-titles { padding-left: 12px; }
 }
 
 .header-project-name {
@@ -160,12 +174,18 @@ body {
   color: var(--color-text-primary);
   letter-spacing: -0.01em;
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header-project-sub {
   font-size: 11px;
   color: var(--color-text-secondary);
   margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header-stats {
@@ -248,6 +268,23 @@ body {
   overflow: visible;
   position: relative;
   z-index: 50;
+  transition: transform var(--transition-med);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: var(--nav-height);
+    flex-direction: row;
+    padding: 0 10px;
+    border-right: none;
+    border-top: 1px solid var(--color-border-tertiary);
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+  }
 }
 
 .nav-item {
@@ -263,6 +300,11 @@ body {
   color: var(--color-text-tertiary);
   border: 1px solid transparent;
   flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .nav-item { width: 42px; height: 42px; }
+  .nav-icon { font-size: 18px !important; }
 }
 
 .nav-item:hover {
@@ -287,43 +329,57 @@ body {
 
 .nav-item:hover .nav-icon { transform: scale(1.1); }
 
-/* Tooltip */
-.nav-item::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  left: calc(100% + 14px);
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--bg-card-2);
-  border: 1px solid var(--color-border-secondary);
-  color: var(--color-text-primary);
-  font-size: 12px;
-  font-weight: 500;
-  padding: 5px 10px;
-  border-radius: 8px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--transition-fast);
-  box-shadow: var(--shadow-card);
-  z-index: 200;
+/* Tooltip - Hide on mobile */
+@media (min-width: 769px) {
+  .nav-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: calc(100% + 14px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--bg-card-2);
+    border: 1px solid var(--color-border-secondary);
+    color: var(--color-text-primary);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+    box-shadow: var(--shadow-card);
+    z-index: 200;
+  }
+  .nav-item:hover::after { opacity: 1; }
 }
 
-.nav-item:hover::after { opacity: 1; }
+@media (max-width: 768px) {
+  .nav-item::after { display: none; }
+}
 
 /* Active indicator */
 .nav-item.active::before {
   content: '';
   position: absolute;
-  left: -1px;
-  top: 12px;
-  bottom: 12px;
-  width: 3px;
   background: var(--accent);
-  border-radius: 0 3px 3px 0;
+  border-radius: 3px;
+}
+
+@media (min-width: 769px) {
+  .nav-item.active::before {
+    left: -1px; top: 12px; bottom: 12px; width: 3px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-item.active::before {
+    bottom: -1px; left: 12px; right: 12px; height: 3px;
+  }
 }
 
 .sidebar-spacer { flex: 1; }
+@media (max-width: 768px) { .sidebar-spacer { display: none; } }
 
 .sidebar-bottom {
   display: flex;
@@ -334,6 +390,8 @@ body {
   border-top: 1px solid var(--color-border-tertiary);
   width: 100%;
 }
+
+@media (max-width: 768px) { .sidebar-bottom { display: none; } }
 
 .sidebar-bottom-text {
   font-size: 9px;
@@ -442,6 +500,10 @@ body {
   transform: translateX(20px);
   pointer-events: none;
   transition: opacity var(--transition-slow), transform var(--transition-slow);
+}
+
+@media (max-width: 768px) {
+  .page { padding: 16px 16px 80px 16px; } /* Bottom nav space */
 }
 
 .page.active {
@@ -1007,14 +1069,34 @@ td { padding: 9px 10px; vertical-align: top; font-size: 12px; }
 .sig-cold { background: rgba(99,102,241,0.12) !important; color: #a5b4fc !important; }
 
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVE OVERRIDES
    ============================================================ */
-@media (max-width: 768px) {
+
+/* Small Phones */
+@media (max-width: 480px) {
+  .header-titles { padding-left: 8px; }
+  .header-project-name { font-size: 13px; }
+  .header-project-sub { font-size: 10px; }
+  .page-title { font-size: 18px; }
+  .page-subtitle { font-size: 12px; }
+  .page-tab-number { font-size: 9px; }
+}
+
+/* All Mobile/Tablet */
+@media (max-width: 1024px) {
   .header-stats { display: none; }
   .header-credit { display: none; }
-  .page { padding: 16px; }
+  
+  /* Component-level responsiveness */
+  .agent-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .product-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .two-col { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .metric-row { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+  .topics-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Tablet refinements */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .header-stats { display: flex; transform: scale(0.85); transform-origin: right; }
   .agent-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  .product-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  .two-col { grid-template-columns: 1fr !important; }
-  .metric-row { grid-template-columns: repeat(2, 1fr) !important; }
 }

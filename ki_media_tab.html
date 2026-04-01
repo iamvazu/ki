@@ -352,6 +352,13 @@
   margin-top: 12px;
 }
 
+@media (max-width: 768px) {
+  .topics-grid { grid-template-columns: 1fr; }
+  .controls-row { flex-wrap: wrap; justify-content: center; }
+  .time-display { width: 100%; text-align: center; margin: 5px 0; }
+}
+
+
 .topic-card {
   background: var(--color-background-secondary);
   border: 0.5px solid var(--color-border-tertiary);
@@ -510,8 +517,19 @@ function fmt(s) {
 }
 
 audio.addEventListener('loadedmetadata', () => {
+  console.log('Audio metadata loaded');
   durEl.textContent = fmt(audio.duration);
   totalEl.textContent = fmt(audio.duration);
+});
+
+audio.addEventListener('error', (e) => {
+  console.error('Audio error:', audio.error);
+  const errorMsg = document.createElement('div');
+  errorMsg.style.color = 'var(--color-text-danger)';
+  errorMsg.style.fontSize = '10px';
+  errorMsg.style.marginTop = '8px';
+  errorMsg.textContent = '⚠️ Audio file could not be loaded. Please ensure "ki_audio_briefing.mp3" is in the same folder.';
+  document.querySelector('.audio-controls').appendChild(errorMsg);
 });
 
 audio.addEventListener('timeupdate', () => {
@@ -527,13 +545,21 @@ audio.addEventListener('ended', () => {
   currentTimeEl.textContent = '0:00';
 });
 
-function togglePlay() {
-  if (audio.paused) {
-    audio.play();
-    playBtn.textContent = '⏸';
-  } else {
-    audio.pause();
-    playBtn.textContent = '▶';
+async function togglePlay() {
+  try {
+    if (audio.paused) {
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        await playPromise;
+        playBtn.textContent = '⏸';
+      }
+    } else {
+      audio.pause();
+      playBtn.textContent = '▶';
+    }
+  } catch (err) {
+    console.error('Playback failed:', err);
+    alert('Browser blocked autoplay or audio is still loading. Please click again.');
   }
 }
 
