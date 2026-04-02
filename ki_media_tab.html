@@ -492,8 +492,7 @@
 
 </div>
 
-<audio id="ki-audio" preload="metadata">
-  <source src="ki_audio_briefing.mp3" type="audio/mpeg">
+<audio id="ki-audio" src="ki_audio_briefing.mp3" preload="auto">
   Your browser does not support the audio element.
 </audio>
 
@@ -511,29 +510,46 @@ const speeds = [0.75, 1, 1.25, 1.5, 2];
 let speedIdx = 1;
 
 function fmt(s) {
+  if (isNaN(s) || s === Infinity) return '0:00';
   const m = Math.floor(s / 60);
   const sec = Math.floor(s % 60);
   return m + ':' + (sec < 10 ? '0' : '') + sec;
 }
 
-audio.addEventListener('loadedmetadata', () => {
-  console.log('Audio metadata loaded');
-  durEl.textContent = fmt(audio.duration);
-  totalEl.textContent = fmt(audio.duration);
-});
+function updateDuration() {
+  if (audio.duration && !isNaN(audio.duration)) {
+    const timeStr = fmt(audio.duration);
+    durEl.textContent = timeStr;
+    totalEl.textContent = timeStr;
+  }
+}
+
+// Ensure duration is updated when metadata loads
+audio.addEventListener('loadedmetadata', updateDuration);
+audio.addEventListener('durationchange', updateDuration);
+audio.addEventListener('canplay', updateDuration);
+
+// Fallback: check every second until metadata is available
+const durCheck = setInterval(() => {
+  if (audio.duration) {
+    updateDuration();
+    clearInterval(durCheck);
+  }
+}, 1000);
 
 audio.addEventListener('error', (e) => {
-  console.error('Audio error:', audio.error);
+  console.error('Audio error:', e);
   const errorMsg = document.createElement('div');
-  errorMsg.style.color = 'var(--color-text-danger)';
+  errorMsg.style.color = '#ef4444';
   errorMsg.style.fontSize = '10px';
   errorMsg.style.marginTop = '8px';
-  errorMsg.textContent = '⚠️ Audio file could not be loaded. Please ensure "ki_audio_briefing.mp3" is in the same folder.';
+  errorMsg.style.textAlign = 'center';
+  errorMsg.textContent = '⚠️ Audio could not be loaded. Please check your connection or Refresh.';
   document.querySelector('.audio-controls').appendChild(errorMsg);
 });
 
 audio.addEventListener('timeupdate', () => {
-  if (!audio.duration) return;
+  if (!audio.duration || isNaN(audio.duration)) return;
   const pct = (audio.currentTime / audio.duration) * 100;
   progressFill.style.width = pct + '%';
   currentTimeEl.textContent = fmt(audio.currentTime);
@@ -548,9 +564,15 @@ audio.addEventListener('ended', () => {
 async function togglePlay() {
   try {
     if (audio.paused) {
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        await playPromise;
+      // If duration is still not known, try to load it
+      if (isNaN(audio.duration) || audio.readyState < 2) {
+        audio.load();
+      }
+
+      const promise = audio.play();
+      if (promise !== undefined) {
+        playBtn.textContent = '...'; 
+        await promise;
         playBtn.textContent = '⏸';
       }
     } else {
@@ -559,15 +581,18 @@ async function togglePlay() {
     }
   } catch (err) {
     console.error('Playback failed:', err);
-    alert('Browser blocked autoplay or audio is still loading. Please click again.');
+    playBtn.textContent = '▶';
+    // If blocked, we just log it. The user clicking again is the standard recovery.
   }
 }
 
 function skipAudio(sec) {
+  if (isNaN(audio.duration)) return;
   audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + sec));
 }
 
 function seekAudio(e) {
+  if (isNaN(audio.duration)) return;
   const rect = progressTrack.getBoundingClientRect();
   const pct = (e.clientX - rect.left) / rect.width;
   audio.currentTime = pct * audio.duration;
