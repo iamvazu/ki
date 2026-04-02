@@ -375,6 +375,48 @@
 .topic-icon { font-size: 18px; margin-bottom: 5px; }
 .topic-title { font-size: 12px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
 .topic-desc { font-size: 11px; color: var(--color-text-secondary); line-height: 1.5; }
+
+/* ── Infographic ── */
+.infographic-container {
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-tertiary);
+  background: #fdf2f8; /* Soft pink-ish bg to match kawaii style */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  cursor: zoom-in;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.infographic-container.zoomed {
+  position: fixed;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  z-index: 9999;
+  cursor: zoom-out;
+  background: rgba(0,0,0,0.9);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.infographic-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.infographic-container.zoomed .infographic-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  border-radius: 12px;
+}
 </style>
 
 <div style="padding: 0;">
@@ -419,6 +461,23 @@
         <div class="topic-title">Hyper-Personalised Outreach</div>
         <div class="topic-desc">NAAC-aware emails written by AI, specific to each institution's context</div>
       </div>
+    </div>
+  </div>
+
+  <!-- ── DIVIDER ── -->
+  <div class="media-divider">
+    <div class="media-divider-line"></div>
+    <div class="media-divider-label">Strategy Infographic</div>
+    <div class="media-divider-line"></div>
+  </div>
+
+  <!-- ── INFOGRAPHIC SECTION ── -->
+  <div class="media-section">
+    <div class="infographic-container" id="info-container" onclick="toggleZoom()">
+      <img src="kawaii_ai_sales_infographic.png" alt="Kawaii AI Sales Squad Infographic" class="infographic-img">
+    </div>
+    <div style="font-size: 11px; color: var(--color-text-tertiary); margin-top: 8px; text-align: center;">
+      Click to toggle full-screen view
     </div>
   </div>
 
@@ -614,5 +673,15 @@ function toggleTranscript() {
   const toggle = document.getElementById('tr-toggle');
   body.classList.toggle('open');
   toggle.classList.toggle('open');
+}
+
+function toggleZoom() {
+  const container = document.getElementById('info-container');
+  container.classList.toggle('zoomed');
+  if (container.classList.contains('zoomed')) {
+    document.body.style.overflow = 'hidden'; // Stop scroll
+  } else {
+    document.body.style.overflow = '';
+  }
 }
 </script>
