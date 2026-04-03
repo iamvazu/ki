@@ -6,7 +6,9 @@
   .section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; padding-bottom: 6px; border-bottom: 0.5px solid var(--color-border-tertiary); }
   .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
   .agent-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-  .agent-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 0.9rem; }
+  .agent-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 0.9rem; cursor: pointer; transition: background 0.15s; }
+  .agent-card:hover { background: var(--color-background-secondary); }
+  .agent-card.agent-active { background: var(--color-background-secondary); }
   .agent-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 8px; }
   .agent-name { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
   .agent-desc { font-size: 11px; color: var(--color-text-secondary); line-height: 1.5; }
@@ -61,12 +63,12 @@
   </div>
 
   <div class="tab-bar">
-    <button class="tab active" onclick="showTab('agents')">Agent Roles</button>
-    <button class="tab" onclick="showTab('leads')">Lead Targets</button>
-    <button class="tab" onclick="showTab('products')">Product Mapping</button>
-    <button class="tab" onclick="showTab('educate')">Education Plan</button>
-    <button class="tab" onclick="showTab('outreach')">Outreach Scripts</button>
-    <button class="tab" onclick="showTab('timeline')">Execution Timeline</button>
+    <button class="tab active" onclick="showTab('agents',this)">Agent Roles</button>
+    <button class="tab" onclick="showTab('leads',this)">Lead Targets</button>
+    <button class="tab" onclick="showTab('products',this)">Product Mapping</button>
+    <button class="tab" onclick="showTab('educate',this)">Education Plan</button>
+    <button class="tab" onclick="showTab('outreach',this)">Outreach Scripts</button>
+    <button class="tab" onclick="showTab('timeline',this)">Execution Timeline</button>
   </div>
 
   <!-- AGENTS TAB -->
@@ -74,25 +76,29 @@
     <div class="section">
       <div class="section-title">Your 4-Agent System</div>
       <div class="agent-grid">
-        <div class="agent-card" style="border-top: 3px solid #534AB7;">
+        <div class="agent-card" data-agent-id="ceo" style="border-top: 3px solid #534AB7;" onclick="toggleAgentPanel('ceo',this)">
           <div class="agent-icon" style="background:#EEEDFE;color:#534AB7;">👑</div>
           <div class="agent-name">CEO Agent</div>
           <div class="agent-desc">Orchestrates all agents. Sets weekly targeting priorities, approves outreach campaigns, reviews pipeline health & closes loop on decisions.</div>
+          <div style="font-size:10px;color:#534AB7;margin-top:6px;font-weight:500;">Click to view workings ↓</div>
         </div>
-        <div class="agent-card" style="border-top: 3px solid #0F6E56;">
+        <div class="agent-card" data-agent-id="scout" style="border-top: 3px solid #0F6E56;" onclick="toggleAgentPanel('scout',this)">
           <div class="agent-icon" style="background:#E1F5EE;color:#0F6E56;">🔍</div>
           <div class="agent-name">Scout Agent</div>
           <div class="agent-desc">Discovers new leads. Scrapes school directories, LinkedIn, college websites, Google Maps. Classifies institution type, size, decision-maker hierarchy.</div>
+          <div style="font-size:10px;color:#0F6E56;margin-top:6px;font-weight:500;">Click to view brief ↓</div>
         </div>
-        <div class="agent-card" style="border-top: 3px solid #185FA5;">
+        <div class="agent-card" data-agent-id="intel" style="border-top: 3px solid #185FA5;" onclick="toggleAgentPanel('intel',this)">
           <div class="agent-icon" style="background:#E6F1FB;color:#185FA5;">🧠</div>
           <div class="agent-name">Intel Agent</div>
           <div class="agent-desc">Deep-dives each lead. Finds budget cycles, infrastructure plans, NAAC/NBA accreditation needs, recent tenders, social signals, and pain points.</div>
+          <div style="font-size:10px;color:#185FA5;margin-top:6px;font-weight:500;">Click to open checklist ↓</div>
         </div>
-        <div class="agent-card" style="border-top: 3px solid #993C1D;">
+        <div class="agent-card" data-agent-id="outreach" style="border-top: 3px solid #993C1D;" onclick="toggleAgentPanel('outreach',this)">
           <div class="agent-icon" style="background:#FAECE7;color:#993C1D;">📨</div>
           <div class="agent-name">Outreach Agent</div>
           <div class="agent-desc">Executes personalized email, LinkedIn, and WhatsApp sequences. Tracks opens, schedules follow-ups, books demos, hands warm leads to sales.</div>
+          <div style="font-size:10px;color:#993C1D;margin-top:6px;font-weight:500;">Click to view scripts ↓</div>
         </div>
       </div>
     </div>
@@ -117,6 +123,9 @@
       <div class="metric"><div class="metric-num">5</div><div class="metric-label">Touchpoints/lead</div></div>
       <div class="metric"><div class="metric-num">3x</div><div class="metric-label">Pipeline multiplier</div></div>
     </div>
+
+    <!-- Agent detail panel — expands below on card click -->
+    <div id="agent-detail-panel" style="display:none;margin-top:14px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;"></div>
   </div>
 
   <!-- LEADS TAB -->
@@ -359,10 +368,171 @@
 </div>
 
 <script>
-function showTab(id) {
+function showTab(id, btn) {
   document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('pane-' + id).classList.add('active');
-  event.target.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+/* ── Agent card expand/collapse ─────────────────────────────────────── */
+let _activeAgent = null;
+const _agentPanelLoaded = {};
+
+function toggleAgentPanel(id, cardEl) {
+  const panel = document.getElementById('agent-detail-panel');
+  document.querySelectorAll('.agent-card').forEach(c => c.classList.remove('agent-active'));
+
+  if (_activeAgent === id) {
+    panel.style.display = 'none';
+    _activeAgent = null;
+    return;
+  }
+  _activeAgent = id;
+  cardEl.classList.add('agent-active');
+  panel.style.display = 'block';
+
+  if (_agentPanelLoaded[id]) return; // already rendered
+  _agentPanelLoaded[id] = true;
+
+  panel.innerHTML = '<div style="padding:1.5rem;text-align:center;font-size:12px;color:var(--color-text-secondary);">Loading…</div>';
+
+  if (id === 'ceo') {
+    fetch('ki_tender_data.js')
+      .then(r => r.text())
+      .then(js => { try { eval(js); } catch(e){} renderCEOPanel(panel); })
+      .catch(() => renderCEOPanel(panel));
+  } else if (id === 'scout') {
+    loadAgentFragment(panel, 'scout_agent_tender_monitoring_brief.html', '🔍 Scout Agent — Tender Monitoring Brief', '#0F6E56');
+  } else if (id === 'intel') {
+    loadAgentFragment(panel, 'intel_agent_research_checklist.html', '🧠 Intel Agent — Research Checklist', '#185FA5');
+  } else if (id === 'outreach') {
+    panel.style.display = 'none';
+    _activeAgent = null;
+    _agentPanelLoaded[id] = false;
+    cardEl.classList.remove('agent-active');
+    // Switch to Outreach Scripts tab
+    var outBtn = document.querySelector('.tab-bar .tab:nth-child(5)');
+    showTab('outreach', outBtn);
+  }
+}
+
+function loadAgentFragment(panel, src, title, color) {
+  fetch(src)
+    .then(r => r.text())
+    .then(html => {
+      panel.innerHTML =
+        '<div style="border-bottom:3px solid '+color+';padding:10px 14px;display:flex;justify-content:space-between;align-items:center;background:var(--color-background-secondary);">' +
+          '<div style="font-size:13px;font-weight:500;">'+title+'</div>' +
+          '<button onclick="closeAgentPanel()" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--color-text-secondary);line-height:1;">×</button>' +
+        '</div>' +
+        '<div style="padding:1rem;">'+html+'</div>';
+      panel.querySelectorAll('script').forEach(old => {
+        const s = document.createElement('script');
+        s.textContent = old.textContent;
+        old.parentNode.replaceChild(s, old);
+      });
+    })
+    .catch(() => {
+      panel.innerHTML = '<div style="padding:1rem;font-size:12px;color:var(--color-text-secondary);">Could not load. Open via Live Server.</div>';
+    });
+}
+
+function closeAgentPanel() {
+  document.getElementById('agent-detail-panel').style.display = 'none';
+  document.querySelectorAll('.agent-card').forEach(c => c.classList.remove('agent-active'));
+  _activeAgent = null;
+}
+
+function renderCEOPanel(panel) {
+  const d = (typeof KI_TENDER_DATA !== 'undefined') ? KI_TENDER_DATA : null;
+  let statsHtml = '';
+
+  if (d) {
+    const db = d.dashboard || {};
+    const pipelineVal = db['Pipeline Value'] ? '₹' + Number(db['Pipeline Value']).toLocaleString('en-IN') : '₹' + (d.tenders.reduce((s,t) => s + parseFloat((t['Est. Value (₹)'] || t['Value'] || '0').toString().replace(/[^0-9.]/g,'')), 0)).toLocaleString('en-IN');
+    const winRatePct = db['Win Rate'] ? Math.round(Number(db['Win Rate']) * 100) + '%' : '—';
+    const statsItems = [
+      ['Total Tenders', db['Total Tenders'] || d.tenders.length],
+      ['Active Bids', db['Active Bids'] || '—'],
+      ['Won', db['Won'] || '—'],
+      ['Pipeline Value', pipelineVal],
+      ['Win Rate', winRatePct]
+    ];
+    statsHtml += '<div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:1rem;border-bottom:0.5px solid var(--color-border-tertiary);">';
+    statsItems.forEach(function(item) {
+      statsHtml += '<div style="background:var(--color-background-secondary);border-radius:8px;padding:10px;text-align:center;">' +
+        '<div style="font-size:18px;font-weight:500;">'+item[1]+'</div>' +
+        '<div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">'+item[0]+'</div>' +
+        '</div>';
+    });
+    statsHtml += '</div>';
+
+    if (d.tenders && d.tenders.length) {
+      var tRows = d.tenders.map(function(t) {
+        var status = t['Status'] || '';
+        var statusColor = status === 'Won' ? 'var(--color-text-success)' : status === 'Submitted' ? 'var(--color-text-info)' : 'var(--color-text-warning)';
+        var statusBg = status === 'Won' ? 'var(--color-background-success)' : status === 'Submitted' ? 'var(--color-background-info)' : 'var(--color-background-warning)';
+        return '<tr style="border-bottom:0.5px solid var(--color-border-tertiary);">' +
+          '<td style="padding:6px 8px;color:var(--color-text-secondary);font-size:11px;">' + (t['#']||'') + '</td>' +
+          '<td style="padding:6px 8px;font-weight:500;font-size:12px;">' + (t['Institution']||'') + '</td>' +
+          '<td style="padding:6px 8px;color:var(--color-text-secondary);font-size:11px;">' + (t['Category']||t['Space / Scope']||'') + '</td>' +
+          '<td style="padding:6px 8px;font-size:11px;">' + (t['Portal']||'') + '</td>' +
+          '<td style="padding:6px 8px;text-align:right;font-size:12px;">₹' + (t['Est. Value (₹)']||t['Value']||'—') + '</td>' +
+          '<td style="padding:6px 8px;"><span style="font-size:10px;padding:2px 7px;border-radius:999px;background:'+statusBg+';color:'+statusColor+';">'+status+'</span></td>' +
+          '</tr>';
+      }).join('');
+      statsHtml += '<div style="padding:1rem;border-bottom:0.5px solid var(--color-border-tertiary);">' +
+        '<div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Live Tender Register</div>' +
+        '<table style="width:100%;border-collapse:collapse;">' +
+        '<thead><tr style="border-bottom:0.5px solid var(--color-border-tertiary);">' +
+        '<th style="text-align:left;padding:4px 8px;font-size:11px;font-weight:500;color:var(--color-text-secondary);">#</th>' +
+        '<th style="text-align:left;padding:4px 8px;font-size:11px;font-weight:500;color:var(--color-text-secondary);">Institution</th>' +
+        '<th style="text-align:left;padding:4px 8px;font-size:11px;font-weight:500;color:var(--color-text-secondary);">Category</th>' +
+        '<th style="text-align:left;padding:4px 8px;font-size:11px;font-weight:500;color:var(--color-text-secondary);">Portal</th>' +
+        '<th style="text-align:right;padding:4px 8px;font-size:11px;font-weight:500;color:var(--color-text-secondary);">Est. Value</th>' +
+        '<th style="text-align:left;padding:4px 8px;font-size:11px;font-weight:500;color:var(--color-text-secondary);">Status</th>' +
+        '</tr></thead>' +
+        '<tbody>' + tRows + '</tbody></table></div>';
+    }
+
+    if (d.bids && d.bids.length) {
+      var bRows = d.bids.map(function(b) {
+        var pct = Math.round((parseFloat(b['% Complete']||0))*100);
+        var barColor = pct >= 75 ? '#0F6E56' : pct >= 40 ? '#BA7517' : '#185FA5';
+        return '<tr style="border-bottom:0.5px solid var(--color-border-tertiary);">' +
+          '<td style="padding:6px 8px;font-size:12px;font-weight:500;">' + (b['Institution']||b['Tender ID']||'') + '</td>' +
+          '<td style="padding:6px 8px;font-size:11px;color:var(--color-text-secondary);">' + (b['Closing Date']||'') + '</td>' +
+          '<td style="padding:6px 8px;min-width:120px;">' +
+            '<div style="display:flex;align-items:center;gap:6px;">' +
+              '<div style="flex:1;height:5px;background:var(--color-border-tertiary);border-radius:3px;overflow:hidden;">' +
+                '<div style="width:'+pct+'%;height:100%;background:'+barColor+';border-radius:3px;"></div>' +
+              '</div>' +
+              '<span style="font-size:11px;font-weight:500;color:'+barColor+';">'+pct+'%</span>' +
+            '</div>' +
+          '</td>' +
+          '</tr>';
+      }).join('');
+      statsHtml += '<div style="padding:1rem;border-bottom:0.5px solid var(--color-border-tertiary);">' +
+        '<div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Bid Tracker</div>' +
+        '<table style="width:100%;border-collapse:collapse;">' +
+        '<thead><tr style="border-bottom:0.5px solid var(--color-border-tertiary);">' +
+        '<th style="text-align:left;padding:4px 8px;font-size:11px;font-weight:500;color:var(--color-text-secondary);">Institution / Tender</th>' +
+        '<th style="text-align:left;padding:4px 8px;font-size:11px;font-weight:500;color:var(--color-text-secondary);">Deadline</th>' +
+        '<th style="text-align:left;padding:4px 8px;font-size:11px;font-weight:500;color:var(--color-text-secondary);">Completion</th>' +
+        '</tr></thead><tbody>' + bRows + '</tbody></table></div>';
+    }
+  }
+
+  panel.innerHTML =
+    '<div style="border-bottom:3px solid #534AB7;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;background:var(--color-background-secondary);">' +
+      '<div style="font-size:13px;font-weight:500;">👑 CEO Agent — Bid Processing & Pipeline Intelligence</div>' +
+      '<button onclick="closeAgentPanel()" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--color-text-secondary);line-height:1;">×</button>' +
+    '</div>' +
+    statsHtml +
+    '<div>' +
+      '<iframe src="KI_CEO_Agent_Bid_Processing.html" style="width:100%;border:none;display:block;min-height:4000px;" ' +
+        'onload="try{this.style.height=this.contentDocument.documentElement.scrollHeight+\'px\'}catch(e){}"></iframe>' +
+    '</div>';
 }
 </script>
