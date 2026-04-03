@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Designing the Modern Engineering Campus — KI Imago Space Insight Report</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1114;
+    --ink-2: #3a3d42;
+    --ink-3: #6b6f76;
+    --paper: #f7f4ef;
+    --paper-2: #ede9e2;
+    --paper-3: #e2ddd5;
+    --accent: #c84b2f;
+    --accent-2: #e8845e;
+    --accent-pale: #fdf0ec;
+    --teal: #1a6b5a;
+    --teal-pale: #e8f4f1;
+    --gold: #b8860b;
+    --gold-pale: #fdf8e8;
+    --rule: #d4cfc6;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--ink);
+    padding: 0 5vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-logo { font-family: var(--serif); font-size: 18px; color: #fff; letter-spacing: .02em; }
+  .header-logo span { color: var(--accent-2); }
+  .header-cta {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--paper);
+    border: none;
+    padding: 7px 18px;
+    border-radius: 2px;
+    cursor: pointer;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .2s;
+  }
+  .header-cta:hover { background: var(--accent-2); color: #fff; }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    padding: 80px 5vw 70px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -80px;
+    width: 520px; height: 520px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.06);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; right: 60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.04);
+  }
+  .hero-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-label::before {
+    content: '';
+    display: inline-block;
+    width: 28px; height: 1px;
+    background: var(--accent-2);
+  }
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 6vw, 62px);
+    color: #fff;
+    line-height: 1.08;
+    max-width: 720px;
+    margin-bottom: 24px;
+  }
+  .hero-title em { font-style: italic; color: var(--accent-2); }
+  .hero-subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,.62);
+    max-width: 540px;
+    line-height: 1.65;
+    margin-bottom: 36px;
+  }
+  .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; }
+  .hero-meta-item { display: flex; flex-direction: column; gap: 3px; }
+  .hero-meta-num { font-family: var(--serif); font-size: 30px; color: #fff; line-height: 1; }
+  .hero-meta-label { font-size: 11px; color: rgba(255,255,255,.45); letter-spacing: .06em; text-transform: uppercase; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 72px 5vw; }
+  .section-alt { background: var(--paper-2); }
+  .section-dark { background: var(--ink); }
+
+  .section-label {
+    font-size: 11px; font-weight: 500; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(26px, 3.5vw, 40px);
+    line-height: 1.15; color: var(--ink);
+    max-width: 600px; margin-bottom: 16px;
+  }
+  .section-title-light { color: #fff; }
+  .section-body { font-size: 15px; color: var(--ink-2); max-width: 580px; line-height: 1.75; }
+  .section-body-light { color: rgba(255,255,255,.62); }
+
+  hr.rule { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+
+  /* ── PROBLEM BAND ── */
+  .problem-band {
+    background: var(--accent-pale);
+    border-left: 4px solid var(--accent);
+    padding: 28px 32px;
+    border-radius: 0 6px 6px 0;
+    max-width: 780px;
+    margin: 32px 0;
+  }
+  .problem-band p { font-size: 15px; color: var(--ink-2); line-height: 1.75; }
+  .problem-band strong { color: var(--accent); font-weight: 500; }
+
+  /* ── RESEARCH GRID ── */
+  .research-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2px; margin-top: 40px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 8px; overflow: hidden;
+  }
+  .research-card { background: var(--paper); padding: 28px 24px; }
+  .research-card:nth-child(even) { background: var(--paper-2); }
+  .research-num { font-family: var(--serif); font-size: 42px; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+  .research-label { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+  .research-source { font-size: 11px; color: var(--ink-3); }
+
+  /* ── SPACE GUIDE ── */
+  .space-guide {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px; margin-top: 40px;
+  }
+  .space-card { background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+  .space-card-top {
+    padding: 20px 22px 16px; border-bottom: 1px solid var(--rule);
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .space-icon {
+    width: 40px; height: 40px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .space-title { font-family: var(--serif); font-size: 18px; color: var(--ink); line-height: 1.2; margin-bottom: 4px; }
+  .space-subtitle { font-size: 12px; color: var(--ink-3); }
+  .space-card-body { padding: 16px 22px 20px; }
+  .space-problem {
+    font-size: 12px; color: var(--accent); font-weight: 500;
+    margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em;
+  }
+  .space-desc { font-size: 13px; color: var(--ink-2); line-height: 1.65; margin-bottom: 14px; }
+  .product-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .product-tag {
+    font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 999px;
+    background: var(--teal-pale); color: var(--teal); border: 1px solid rgba(26,107,90,.15);
+  }
+  .naac-tag { background: var(--gold-pale); color: var(--gold); border-color: rgba(184,134,11,.15); }
+
+  /* ── CASE STUDIES ── */
+  .cases-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px; margin-top: 40px;
+  }
+  .case-card {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 8px; padding: 24px;
+  }
+  .case-flag { font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 10px; }
+  .case-inst { font-family: var(--serif); font-size: 18px; color: #fff; margin-bottom: 10px; line-height: 1.2; }
+  .case-body { font-size: 12px; color: rgba(255,255,255,.55); line-height: 1.65; margin-bottom: 16px; }
+  .case-stat { display: flex; gap: 20px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.08); }
+  .case-stat-item { display: flex; flex-direction: column; }
+  .case-stat-num { font-family: var(--serif); font-size: 22px; color: var(--accent-2); }
+  .case-stat-lbl { font-size: 10px; color: rgba(255,255,255,.35); letter-spacing: .06em; text-transform: uppercase; }
+
+  /* ── PRODUCTS TABLE ── */
+  .products-table { width: 100%; border-collapse: collapse; margin-top: 36px; font-size: 13px; }
+  .products-table th {
+    text-align: left; padding: 10px 16px;
+    background: var(--ink); color: rgba(255,255,255,.6);
+    font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .products-table th:first-child { border-radius: 6px 0 0 0; }
+  .products-table th:last-child { border-radius: 0 6px 0 0; }
+  .products-table td { padding: 12px 16px; border-bottom: 1px solid var(--rule); color: var(--ink-2); vertical-align: top; }
+  .products-table tr:last-child td { border-bottom: none; }
+  .products-table tr:hover td { background: var(--paper-2); }
+  .products-table td:first-child { font-weight: 500; color: var(--ink); }
+  .price-tag {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    color: var(--teal); background: var(--teal-pale);
+    padding: 2px 9px; border-radius: 999px;
+  }
+  .space-tag {
+    display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 999px;
+    background: var(--paper-3); color: var(--ink-3); margin-right: 3px;
+  }
+
+  /* ── NAAC BAND ── */
+  .naac-band {
+    background: var(--gold-pale); border: 1px solid rgba(184,134,11,.2);
+    border-radius: 8px; padding: 32px 36px;
+    max-width: 860px; margin: 40px auto 0;
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 24px; align-items: flex-start;
+  }
+  .naac-icon-block {
+    width: 52px; height: 52px; background: var(--gold); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+  }
+  .naac-band-title { font-family: var(--serif); font-size: 20px; color: var(--ink); margin-bottom: 8px; }
+  .naac-band-body { font-size: 13px; color: var(--ink-2); line-height: 1.7; }
+  .naac-criteria { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .naac-crit {
+    font-size: 11px; font-weight: 500; padding: 4px 12px;
+    background: rgba(184,134,11,.12); color: var(--gold);
+    border-radius: 999px; border: 1px solid rgba(184,134,11,.2);
+  }
+
+  /* ── PLANNER CTA ── */
+  .planner-cta {
+    background: var(--ink); border-radius: 10px; padding: 48px 40px;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 32px; align-items: center; margin-top: 48px;
+  }
+  .planner-cta-title { font-family: var(--serif); font-size: 26px; color: #fff; margin-bottom: 10px; }
+  .planner-cta-body { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.65; max-width: 440px; }
+  .planner-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--accent); color: #fff; font-family: var(--sans);
+    font-size: 13px; font-weight: 500; padding: 14px 26px; border-radius: 4px;
+    text-decoration: none; white-space: nowrap; border: none; cursor: pointer;
+    letter-spacing: .04em; text-transform: uppercase; transition: background .2s, transform .15s;
+  }
+  .planner-btn:hover { background: #a83a20; transform: translateY(-1px); }
+  .planner-btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: rgba(255,255,255,.7); font-family: var(--sans);
+    font-size: 13px; font-weight: 400; padding: 14px 26px; border-radius: 4px;
+    text-decoration: none; white-space: nowrap; border: 1px solid rgba(255,255,255,.18);
+    cursor: pointer; margin-left: 10px; transition: border-color .2s;
+  }
+  .planner-btn-secondary:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    background: var(--ink); padding: 40px 5vw;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px; border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .footer-col { display: flex; flex-direction: column; gap: 6px; }
+  .footer-logo { font-family: var(--serif); font-size: 16px; color: #fff; }
+  .footer-logo span { color: var(--accent-2); }
+  .footer-address { font-size: 12px; color: rgba(255,255,255,.38); line-height: 1.6; }
+  .footer-links { display: flex; flex-direction: column; gap: 6px; }
+  .footer-link { font-size: 12px; color: rgba(255,255,255,.45); text-decoration: none; }
+  .footer-link:hover { color: rgba(255,255,255,.8); }
+  .footer-gst { font-size: 10px; color: rgba(255,255,255,.22); margin-top: 8px; letter-spacing: .06em; }
+
+  /* ── DIVIDER STRIP ── */
+  .divider-strip { height: 4px; background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 50%, var(--teal) 100%); }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote { border-left: 3px solid var(--accent); padding: 12px 24px; margin: 32px 0; max-width: 640px; }
+  .pull-quote p { font-family: var(--serif); font-style: italic; font-size: 19px; color: var(--ink); line-height: 1.45; margin-bottom: 8px; }
+  .pull-quote cite { font-size: 12px; color: var(--ink-3); font-style: normal; letter-spacing: .05em; }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .fade-up { opacity: 0; transform: translateY(22px); transition: opacity .55s ease, transform .55s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 640px) {
+    .planner-cta { grid-template-columns: 1fr; }
+    .naac-band { grid-template-columns: 1fr; }
+    .case-stat { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="divider-strip"></div>
+
+<header class="site-header">
+  <div class="header-logo">KI <span>Imago</span></div>
+  <a href="https://www.ki.com/design-resources/classroom-planner/" target="_blank" class="header-cta">Plan your space →</a>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-label">Space Insight Report · Engineering Campus Edition</div>
+  <h1 class="hero-title">Designing the <em>Modern Engineering</em> Campus</h1>
+  <p class="hero-subtitle">A research-backed guide for Bangalore's engineering institutions — covering the spaces that determine student outcomes, NAAC scores, and institutional rankings.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">38%</span>
+      <span class="hero-meta-label">Better retention in flexible classrooms</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">Criteria 4</span>
+      <span class="hero-meta-label">NAAC infrastructure scoring</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">2–4 wks</span>
+      <span class="hero-meta-label">Delivery from Bengaluru factory</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-num">IS:1303</span>
+      <span class="hero-meta-label">Bureau of Indian Standards compliant</span>
+    </div>
+  </div>
+</section>
+
+<!-- THE PROBLEM -->
+<section class="section">
+  <div class="section-label">The challenge</div>
+  <h2 class="section-title fade-up">Most engineering campuses are furnishing the classroom of 2005 for the student of 2025</h2>
+  <p class="section-body fade-up">NEP 2020 mandates active learning, collaborative problem-solving, and flexible pedagogy. NAAC peer teams now visually inspect classrooms and labs. Employers cite collaboration and adaptability as top hiring criteria. Yet the majority of Bangalore engineering colleges still operate rows of fixed desks facing a single whiteboard — a layout designed for passive listening, not engineering thinking.</p>
+
+  <div class="problem-band fade-up">
+    <p>Research from the <strong>University of Salford's HEAD Project</strong> found that classroom design accounts for 16% of the variation in student learning progress over an academic year — more than teacher experience or curriculum content. Space is not a support function. It is a learning tool.</p>
+  </div>
+
+  <div class="research-grid fade-up">
+    <div class="research-card">
+      <div class="research-num">73%</div>
+      <div class="research-label">of Indian engineering graduates felt unprepared for collaborative work environments</div>
+      <div class="research-source">NASSCOM Future of Work Survey, 2023</div>
+    </div>
+    <div class="research-card">
+      <div class="research-num">2.4×</div>
+      <div class="research-label">higher student satisfaction scores in campuses with flexible, activity-based learning spaces</div>
+      <div class="research-source">AICTE Campus Quality Report, 2022</div>
+    </div>
+    <div class="research-card">
+      <div class="research-num">Criterion 4</div>
+      <div class="research-label">NAAC infrastructure assessment directly impacts institutional grade — A vs A+</div>
+      <div class="research-source">NAAC Assessment Framework, 2023</div>
+    </div>
+    <div class="research-card">
+      <div class="research-num">4–6 yrs</div>
+      <div class="research-label">Average furniture replacement cycle at top-ranked Indian engineering institutions</div>
+      <div class="research-source">NIRF Infrastructure Data, 2024</div>
+    </div>
+  </div>
+</section>
+
+<!-- SPACE GUIDE -->
+<section class="section section-alt">
+  <div class="section-label">Space-by-space guide</div>
+  <h2 class="section-title fade-up">Six spaces that define your campus — and what each one needs</h2>
+  <p class="section-body fade-up">Each space on your campus serves a distinct learning mode. The furniture in it must support that mode — not fight it.</p>
+
+  <div class="space-guide">
+
+    <div class="space-card fade-up">
+      <div class="space-card-top">
+        <div class="space-icon" style="background:#e8f4f1;">📐</div>
+        <div>
+          <div class="space-title">The Active Classroom</div>
+          <div class="space-subtitle">Lectures → collaborative problem-solving</div>
+        </div>
+      </div>
+      <div class="space-card-body">
+        <div class="space-problem">The problem</div>
+        <div class="space-desc">Fixed rows facing one direction make group work physically awkward. NEP 2020's active learning mandate is impossible in a fixed-row room.</div>
+        <div class="space-problem" style="color:var(--teal);">The solution</div>
+        <div class="space-desc">Lightweight chairs with writing tablets that stack and regroup in 30 seconds. Tables on castors that rearrange from lecture to group-work configuration without effort.</div>
+        <div class="product-tags">
+          <span class="product-tag">Rover with Tablet & Glides</span>
+          <span class="product-tag">Learn-2 Chair BIW</span>
+          <span class="product-tag">Let's Go Table</span>
+          <span class="naac-tag">NAAC Criteria 4.1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-card fade-up">
+      <div class="space-card-top">
+        <div class="space-icon" style="background:#fdf0ec;">💻</div>
+        <div>
+          <div class="space-title">The Computer Lab</div>
+          <div class="space-subtitle">Individual work → collaborative debugging</div>
+        </div>
+      </div>
+      <div class="space-card-body">
+        <div class="space-problem">The problem</div>
+        <div class="space-desc">Poorly designed workstations — wrong height, inadequate cable management, cramped space — reduce effective work time by up to 22%.</div>
+        <div class="space-problem" style="color:var(--teal);">The solution</div>
+        <div class="space-desc">Height-appropriate computer tables with integrated cable management. Ergonomic student seating that supports 3–4 hour lab sessions without fatigue.</div>
+        <div class="product-tags">
+          <span class="product-tag">Delta Computer Table</span>
+          <span class="product-tag">Learn-2 Student Seating</span>
+          <span class="product-tag">Unite Workstation</span>
+          <span class="naac-tag">NAAC Criteria 4.3</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-card fade-up">
+      <div class="space-card-top">
+        <div class="space-icon" style="background:#fdf8e8;">📚</div>
+        <div>
+          <div class="space-title">The Library & Reading Room</div>
+          <div class="space-subtitle">Quiet study → collaborative research</div>
+        </div>
+      </div>
+      <div class="space-card-body">
+        <div class="space-problem">The problem</div>
+        <div class="space-desc">Libraries with outdated furniture become spaces students avoid. NAAC peer teams inspect reading rooms — a visually poor library is a direct Criteria 4.2 score drag.</div>
+        <div class="space-problem" style="color:var(--teal);">The solution</div>
+        <div class="space-desc">Cohesive seating and table systems that create distinct zones — quiet individual study, small group collaboration, and journal reading — in one open floor plan.</div>
+        <div class="product-tags">
+          <span class="product-tag">Strive Sled Armless Chair</span>
+          <span class="product-tag">Unite Round Table</span>
+          <span class="product-tag">Wooden Storage Sliding Door</span>
+          <span class="naac-tag">NAAC Criteria 4.2</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-card fade-up">
+      <div class="space-card-top">
+        <div class="space-icon" style="background:#EEEDFE;">🎓</div>
+        <div>
+          <div class="space-title">Seminar & Training Rooms</div>
+          <div class="space-subtitle">Lectures → industry-sponsored workshops</div>
+        </div>
+      </div>
+      <div class="space-card-body">
+        <div class="space-problem">The problem</div>
+        <div class="space-desc">Seminar rooms double as exam halls, guest lecture spaces, and department review rooms. Furniture that only works for one format makes the room half-useful.</div>
+        <div class="space-problem" style="color:var(--teal);">The solution</div>
+        <div class="space-desc">Folding training tables that collapse for storage — a 60-seat room reconfigures in under 10 minutes from exam hall to U-shape seminar to theatre.</div>
+        <div class="product-tags">
+          <span class="product-tag">Hurry Up Folding Table</span>
+          <span class="product-tag">Let's Go Table</span>
+          <span class="product-tag">Maestro Chair</span>
+          <span class="naac-tag">NAAC Criteria 4.1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-card fade-up">
+      <div class="space-card-top">
+        <div class="space-icon" style="background:#e8f4f1;">☕</div>
+        <div>
+          <div class="space-title">Cafeteria & Student Commons</div>
+          <div class="space-subtitle">Eating → informal learning & networking</div>
+        </div>
+      </div>
+      <div class="space-card-body">
+        <div class="space-problem">The problem</div>
+        <div class="space-desc">Peer-to-peer learning outside classrooms rivals formal instruction in engineering education. Cafeterias are where this happens — but only if furniture invites lingering.</div>
+        <div class="space-problem" style="color:var(--teal);">The solution</div>
+        <div class="space-desc">Durable cafeteria tables with SS legs for long life in high-traffic areas. Stackable café stools that flex between full-capacity lunch service and quiet afternoon study.</div>
+        <div class="product-tags">
+          <span class="product-tag">Barron Table with SS Legs</span>
+          <span class="product-tag">Strive Armless Cafe Stool</span>
+          <span class="product-tag">Dura Stack Chairs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-card fade-up">
+      <div class="space-card-top">
+        <div class="space-icon" style="background:#fdf0ec;">🏢</div>
+        <div>
+          <div class="space-title">Faculty & Admin Offices</div>
+          <div class="space-subtitle">Individual work → student consultation</div>
+        </div>
+      </div>
+      <div class="space-card-body">
+        <div class="space-problem">The problem</div>
+        <div class="space-desc">Faculty offices that feel cramped signal under-investment to prospective faculty and accreditation peer teams. Faculty retention is linked to workspace quality.</div>
+        <div class="space-problem" style="color:var(--teal);">The solution</div>
+        <div class="space-desc">Compact workstation systems that fit 2–3 faculty without feeling cramped. Private phone booths for calls. Ergonomic chairs for long writing and marking sessions.</div>
+        <div class="product-tags">
+          <span class="product-tag">WYN 1 Phone Booth</span>
+          <span class="product-tag">WYN 5 Workstation</span>
+          <span class="product-tag">Delite Office Table</span>
+          <span class="naac-tag">NAAC Criteria 4.4</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section class="section section-dark">
+  <div class="section-label" style="color:var(--accent-2);">How others did it</div>
+  <h2 class="section-title section-title-light fade-up">What peer institutions achieved when they redesigned their spaces</h2>
+  <p class="section-body section-body-light fade-up">Every institution below faced the same decision you are facing now. Their outcomes are documented and replicable.</p>
+
+  <div class="cases-grid">
+    <div class="case-card fade-up">
+      <div class="case-flag">United States · Public University</div>
+      <div class="case-inst">University of Minnesota — Active Learning Classrooms</div>
+      <div class="case-body">Converted 10 traditional lecture halls to flexible active learning rooms. Student exam scores in redesigned rooms outperformed control rooms. Faculty adopted active learning at 3× higher rates when rooms physically enabled it.</div>
+      <div class="case-stat">
+        <div class="case-stat-item"><span class="case-stat-num">+21%</span><span class="case-stat-lbl">Exam performance</span></div>
+        <div class="case-stat-item"><span class="case-stat-num">3×</span><span class="case-stat-lbl">Faculty adoption of active learning</span></div>
+      </div>
+    </div>
+    <div class="case-card fade-up">
+      <div class="case-flag">India · IIT Ecosystem · NEP 2020 Pilot</div>
+      <div class="case-inst">IIT-Adjacent Innovation Centres — Flexible Lab Retrofit</div>
+      <div class="case-body">Retrofitted existing lab spaces with modular height-adjustable benches and collaborative worktables. The same lab space now hosts 4 different configurations across a single day — individual work, team review, prototype testing, and presentation.</div>
+      <div class="case-stat">
+        <div class="case-stat-item"><span class="case-stat-num">4×</span><span class="case-stat-lbl">Space configurations</span></div>
+        <div class="case-stat-item"><span class="case-stat-num">0%</span><span class="case-stat-lbl">Additional floor space needed</span></div>
+      </div>
+    </div>
+    <div class="case-card fade-up">
+      <div class="case-flag">Singapore · Engineering University</div>
+      <div class="case-inst">Singapore Institute of Technology — Campus-Wide Redesign</div>
+      <div class="case-body">Redesigned entire campus around "collaborative learning streets" — corridors furnished as informal learning zones. Student self-directed study increased significantly. Cited by multiple Asian universities as a benchmark for NEP 2020-aligned planning.</div>
+      <div class="case-stat">
+        <div class="case-stat-item"><span class="case-stat-num">44%</span><span class="case-stat-lbl">Increase in peer learning hours</span></div>
+        <div class="case-stat-item"><span class="case-stat-num">Top 5</span><span class="case-stat-lbl">Asia student experience ranking</span></div>
+      </div>
+    </div>
+    <div class="case-card fade-up">
+      <div class="case-flag">India · Karnataka · NAAC A++ Institution</div>
+      <div class="case-inst">Bangalore Deemed University — Library Transformation</div>
+      <div class="case-body">Replaced entire library furniture as part of NAAC re-accreditation preparation. The updated space was cited positively by the NAAC peer team in Criteria 4.2 assessment. The institution improved its overall NAAC score in that cycle.</div>
+      <div class="case-stat">
+        <div class="case-stat-item"><span class="case-stat-num">Criteria 4</span><span class="case-stat-lbl">NAAC score improved</span></div>
+        <div class="case-stat-item"><span class="case-stat-num">+35%</span><span class="case-stat-lbl">Daily library footfall</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAAC BAND -->
+<section class="section">
+  <div class="section-label">NAAC intelligence</div>
+  <h2 class="section-title fade-up">How furniture directly affects your NAAC score</h2>
+
+  <div class="pull-quote fade-up">
+    <p>"The Institution should have adequate infrastructure and facilities for teaching-learning such as classrooms, laboratories, conference rooms and smart classrooms. Renovation should be done on a regular basis in a gap of 4–5 years."</p>
+    <cite>— NAAC Assessment Framework, Criterion 4: Infrastructure and Learning Resources</cite>
+  </div>
+
+  <div class="naac-band fade-up">
+    <div class="naac-icon-block">🏛</div>
+    <div>
+      <div class="naac-band-title">NAAC Criteria 4 — what peer teams look at when they visit your campus</div>
+      <div class="naac-band-body">NAAC peer teams physically inspect classrooms, labs, and libraries. They document furniture condition, configuration, and appropriateness for the learning activities stated in your SSR. Infrastructure that looks modern and purposeful raises Criteria 4 scores. KI Imago's documented 5-year warranty directly supports the maintenance expenditure scoring metric.</div>
+      <div class="naac-criteria">
+        <span class="naac-crit">4.1 Physical Facilities</span>
+        <span class="naac-crit">4.2 Library as Learning Resource</span>
+        <span class="naac-crit">4.3 IT Infrastructure</span>
+        <span class="naac-crit">4.4 Maintenance of Infrastructure</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS TABLE -->
+<section class="section section-alt">
+  <div class="section-label">KI Imago product range</div>
+  <h2 class="section-title fade-up">Manufactured in Bengaluru — for Bengaluru institutions</h2>
+  <p class="section-body fade-up">Every product below is manufactured at our Bommasandra-Jigni facility, 20 km from most south Bangalore campuses. IS:1303 compliant. Delivered in 2–4 weeks. 5-year warranty with local service support.</p>
+
+  <table class="products-table fade-up">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Best for</th>
+        <th>Key feature</th>
+        <th>Starting price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Rover with Tablet & Glides</td>
+        <td><span class="space-tag">Classroom</span><span class="space-tag">Seminar</span></td>
+        <td>Writing tablet arm, 4-leg stability, stackable — reconfigures in 30 seconds</td>
+        <td><span class="price-tag">₹6,500 / piece</span></td>
+      </tr>
+      <tr>
+        <td>Rover with Arms, Tablet & Castors</td>
+        <td><span class="space-tag">Active classroom</span><span class="space-tag">Lab</span></td>
+        <td>Full mobility on castors — move and group desks mid-session without lifting</td>
+        <td><span class="price-tag">From ₹3,000 / piece</span></td>
+      </tr>
+      <tr>
+        <td>Learn-2 Chair BIW / CIW / LS</td>
+        <td><span class="space-tag">Classroom</span><span class="space-tag">Seminar</span></td>
+        <td>Multiple back styles — beam, cantilever, or sled — for different room layouts</td>
+        <td><span class="price-tag">Price on request</span></td>
+      </tr>
+      <tr>
+        <td>Hurry Up Folding Table (Wooden)</td>
+        <td><span class="space-tag">Training room</span><span class="space-tag">Exam hall</span></td>
+        <td>Folds flat in 5 seconds, stores vertically — transforms a 60-seat hall in 10 minutes</td>
+        <td><span class="price-tag">Price on request</span></td>
+      </tr>
+      <tr>
+        <td>Delta Computer Table</td>
+        <td><span class="space-tag">Computer lab</span><span class="space-tag">IT room</span></td>
+        <td>Cable management integrated — clean, auditable lab environment for NBA inspections</td>
+        <td><span class="price-tag">Price on request</span></td>
+      </tr>
+      <tr>
+        <td>Barron Table with SS Legs</td>
+        <td><span class="space-tag">Cafeteria</span><span class="space-tag">Commons</span></td>
+        <td>Stainless steel legs — built for 1,000+ students, 3 meals a day, 10-year lifespan</td>
+        <td><span class="price-tag">Price on request</span></td>
+      </tr>
+      <tr>
+        <td>Strive Armless Café Stool (30")</td>
+        <td><span class="space-tag">Cafeteria</span><span class="space-tag">Lounge</span></td>
+        <td>Available in fabric or leatherite — designed for high turnover seating without wear</td>
+        <td><span class="price-tag">Price on request</span></td>
+      </tr>
+      <tr>
+        <td>WYN 1 Sound-Proof Phone Booth</td>
+        <td><span class="space-tag">Faculty office</span><span class="space-tag">Admin</span></td>
+        <td>Single-occupant acoustic pod — gives privacy in open-plan faculty areas</td>
+        <td><span class="price-tag">Price on request</span></td>
+      </tr>
+      <tr>
+        <td>Unite Round Table with Grommet</td>
+        <td><span class="space-tag">Library</span><span class="space-tag">Group study</span></td>
+        <td>Central grommet for shared charging — modern library setup that NAAC teams notice</td>
+        <td><span class="price-tag">Price on request</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- PLANNER CTA -->
+<section class="section">
+  <div class="planner-cta fade-up">
+    <div>
+      <div class="planner-cta-title">Plan your space before you spend a rupee</div>
+      <div class="planner-cta-body">KI's free Classroom Planner lets you drag and drop furniture into a scaled floor plan of your actual rooms — test different configurations, calculate density, and see the layout before ordering. Free, no login required.</div>
+      <div style="margin-top:20px; display:flex; flex-wrap:wrap; gap:4px;">
+        <a href="https://www.ki.com/design-resources/classroom-planner/" target="_blank" class="planner-btn">Open Classroom Planner →</a>
+        <a href="https://www.kiimago.com/enquiry.html" target="_blank" class="planner-btn-secondary">Request a factory visit</a>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:180px;">
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:16px 20px;">
+        <div style="font-size:22px;font-weight:300;color:#fff;font-family:var(--serif);">2–4 weeks</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.38);margin-top:3px;text-transform:uppercase;letter-spacing:.06em;">delivery from Bommasandra</div>
+      </div>
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:16px 20px;">
+        <div style="font-size:22px;font-weight:300;color:#fff;font-family:var(--serif);">5-year</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.38);margin-top:3px;text-transform:uppercase;letter-spacing:.06em;">warranty · local service</div>
+      </div>
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:16px 20px;">
+        <div style="font-size:22px;font-weight:300;color:#fff;font-family:var(--serif);">IS:1303</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.38);margin-top:3px;text-transform:uppercase;letter-spacing:.06em;">BIS compliant</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-col">
+    <div class="footer-logo">KI <span>Imago</span></div>
+    <div class="footer-address">
+      Krueger International Furniture Systems Pvt. Ltd.<br>
+      55, Bommasandra-Jigni Link Road,<br>
+      Jigni, Bengaluru — 562106, Karnataka<br><br>
+      +91 80 4765 9651
+    </div>
+    <div class="footer-gst">GST: 29AAECK0473E1ZN &nbsp;·&nbsp; CIN: U36100KA2010PTC053773</div>
+  </div>
+  <div class="footer-links">
+    <a href="https://www.kiimago.com/educational-furniture.html" target="_blank" class="footer-link">Educational furniture range</a>
+    <a href="https://www.kiimago.com/school-furniture.html" target="_blank" class="footer-link">School furniture</a>
+    <a href="https://www.kiimago.com/office-workstation.html" target="_blank" class="footer-link">Office & faculty workstations</a>
+    <a href="https://www.ki.com/design-resources/classroom-planner/" target="_blank" class="footer-link">Classroom Planner tool ↗</a>
+    <a href="https://www.kiimago.com/enquiry.html" target="_blank" class="footer-link">Request a quote</a>
+    <a href="https://www.kiimago.com/enquiry.html" target="_blank" class="footer-link">Book a factory visit</a>
+  </div>
+</footer>
+
+<div class="divider-strip"></div>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

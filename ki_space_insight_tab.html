@@ -1,0 +1,26 @@
+<style>
+/* Cancel the .page padding so the report is full-bleed */
+#sir-wrap {
+  margin: -24px -32px -28px -32px;
+}
+#sir-frame {
+  width: 100%;
+  border: none;
+  display: block;
+  /* Auto-height set by onload — fallback below */
+  min-height: 4200px;
+}
+@media (max-width: 768px) {
+  #sir-wrap { margin: -16px -16px -80px -16px; }
+}
+</style>
+
+<div id="sir-wrap">
+  <iframe
+    id="sir-frame"
+    src="space_insight_report.html"
+    scrolling="no"
+    title="KI Imago Space Insight Report — Engineering Campus Edition"
+    onload="try{this.style.height=this.contentDocument.documentElement.scrollHeight+'px'}catch(e){}">
+  </iframe>
+</div>
