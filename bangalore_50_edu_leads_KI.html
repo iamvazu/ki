@@ -2187,9 +2187,12 @@ function setFilter(f, btn) {
 function applyFilters() { renderTable(); }
 
 function showModal(l, num) {
-  const c = document.getElementById('modal-container');
-  c.innerHTML = `
-    <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  closeModal();
+  const overlay = document.createElement('div');
+  overlay.id = 'ki-leads-modal-overlay';
+  overlay.className = 'modal-overlay';
+  overlay.onclick = function(e){ if(e.target===this) closeModal(); };
+  overlay.innerHTML = `
       <div class="modal">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
           <div>
@@ -2239,12 +2242,13 @@ function showModal(l, num) {
           <button class="action-btn" onclick="sendPrompt('What is the procurement process at ${l.n} and who are the key decision makers I need to reach?')">Research this institution ↗</button>
           <button class="action-btn" onclick="closeModal()">Close</button>
         </div>
-      </div>
-    </div>`;
+      </div>`;
+  document.body.appendChild(overlay);
 }
 
 function closeModal() {
-  document.getElementById('modal-container').innerHTML = '';
+  const el = document.getElementById('ki-leads-modal-overlay');
+  if (el) el.remove();
 }
 
 renderTable();
