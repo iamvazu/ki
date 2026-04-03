@@ -249,9 +249,72 @@
       <div class="section-title">LinkedIn outreach — Facilities/Admin Head</div>
       <div class="msg-preview"><strong>Connection note</strong><br>"Hi [Name], I work with Krueger International, the contract furniture company behind some of India's best-designed campus spaces. I saw [Institution] is expanding — would love to share some ideas that might be relevant. Happy to connect."</div>
     </div>
-    <button class="ask-btn" onclick="sendPrompt('Write me a full 6-email outreach sequence for a Bangalore K-12 school principal, focused on KI classroom and library furniture')">Get K-12 school email sequence ↗</button>
-    <button class="ask-btn" onclick="sendPrompt('Write WhatsApp outreach scripts for KI furniture targeting Bangalore college admin heads')">Get WhatsApp scripts ↗</button>
+    <!-- ── Inline script panels ── -->
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
+
+      <!-- K-12 Email Sequence -->
+      <div style="border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;">
+        <button
+          class="ask-btn"
+          id="btn-k12"
+          onclick="togglePanel('k12','KI_k12_email_sequence.html',this)"
+          style="width:100%;text-align:left;border-radius:0;border:none;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;">
+          <span>📧 K-12 School Email Sequence — 6 emails · 35-day cadence</span>
+          <span id="arrow-k12" style="font-size:11px;color:var(--color-text-tertiary);transition:transform .2s;">▼</span>
+        </button>
+        <div id="panel-k12" style="display:none;border-top:0.5px solid var(--color-border-tertiary);"></div>
+      </div>
+
+      <!-- WhatsApp Scripts -->
+      <div style="border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;">
+        <button
+          class="ask-btn"
+          id="btn-wa"
+          onclick="togglePanel('wa','KI_whatsapp_outreach_scripts.html',this)"
+          style="width:100%;text-align:left;border-radius:0;border:none;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;">
+          <span>💬 WhatsApp Outreach Scripts — 7 scripts · college admin heads</span>
+          <span id="arrow-wa" style="font-size:11px;color:var(--color-text-tertiary);transition:transform .2s;">▼</span>
+        </button>
+        <div id="panel-wa" style="display:none;border-top:0.5px solid var(--color-border-tertiary);"></div>
+      </div>
+
+    </div>
   </div>
+
+  <script>
+  const _panelLoaded = {};
+  function togglePanel(id, src, btn) {
+    const panel = document.getElementById('panel-' + id);
+    const arrow = document.getElementById('arrow-' + id);
+    const isOpen = panel.style.display !== 'none';
+    if (isOpen) {
+      panel.style.display = 'none';
+      arrow.style.transform = '';
+      btn.style.background = '';
+    } else {
+      panel.style.display = 'block';
+      arrow.style.transform = 'rotate(180deg)';
+      btn.style.background = 'var(--color-background-secondary)';
+      if (!_panelLoaded[id]) {
+        _panelLoaded[id] = true;
+        panel.innerHTML = '<div style="padding:1.5rem;text-align:center;font-size:12px;color:var(--color-text-secondary);">Loading…</div>';
+        fetch(src)
+          .then(r => r.text())
+          .then(html => {
+            panel.innerHTML = html;
+            panel.querySelectorAll('script').forEach(old => {
+              const s = document.createElement('script');
+              s.textContent = old.textContent;
+              old.parentNode.replaceChild(s, old);
+            });
+          })
+          .catch(() => {
+            panel.innerHTML = '<div style="padding:1rem;font-size:12px;color:var(--color-text-secondary);">Could not load. Open via Live Server.</div>';
+          });
+      }
+    }
+  }
+  </script>
 
   <!-- TIMELINE TAB -->
   <div id="pane-timeline" class="pane">

@@ -1,0 +1,360 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary);}
+.seq-header{margin-bottom:1.5rem;}
+.seq-title{font-size:17px;font-weight:500;margin-bottom:4px;}
+.seq-sub{font-size:12px;color:var(--color-text-secondary);}
+.timeline{display:flex;gap:0;margin-bottom:1.5rem;overflow-x:auto;padding-bottom:4px;}
+.tl-step{display:flex;flex-direction:column;align-items:center;flex:1;min-width:80px;cursor:pointer;padding:0 4px;}
+.tl-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;background:var(--color-background-primary);color:var(--color-text-secondary);transition:all .2s;position:relative;z-index:1;}
+.tl-dot.active{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info);}
+.tl-dot.sent{background:var(--color-background-success);color:var(--color-text-success);border-color:var(--color-border-success);}
+.tl-line{flex:1;height:2px;background:var(--color-border-tertiary);margin-top:13px;align-self:flex-start;}
+.tl-label{font-size:10px;color:var(--color-text-secondary);margin-top:5px;text-align:center;white-space:nowrap;}
+.tl-day{font-size:9px;color:var(--color-text-tertiary);margin-top:2px;}
+.tl-row{display:flex;align-items:flex-start;width:100%;}
+.email-pane{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;}
+.email-meta{background:var(--color-background-secondary);padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);}
+.meta-row{display:flex;gap:8px;margin-bottom:3px;font-size:12px;align-items:baseline;}
+.meta-row:last-child{margin-bottom:0;}
+.meta-label{color:var(--color-text-secondary);min-width:60px;flex-shrink:0;}
+.meta-val{color:var(--color-text-primary);}
+.subject-val{font-weight:500;color:var(--color-text-primary);}
+.intent-badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:999px;margin-left:8px;}
+.email-body{padding:20px 24px;font-size:13px;line-height:1.85;color:var(--color-text-primary);white-space:pre-wrap;font-family:var(--font-sans);}
+.email-footer{padding:10px 16px;border-top:0.5px solid var(--color-border-tertiary);display:flex;justify-content:space-between;align-items:center;flex-wrap:gap;gap:8px;}
+.tip-block{background:var(--color-background-warning);border:0.5px solid var(--color-border-warning);border-radius:8px;padding:10px 14px;margin:12px 16px 0;font-size:11px;color:var(--color-text-warning);line-height:1.6;}
+.tip-block strong{font-weight:500;}
+.copy-btn{font-size:11px;padding:5px 12px;border-radius:999px;border:0.5px solid var(--color-border-secondary);cursor:pointer;background:transparent;color:var(--color-text-secondary);}
+.copy-btn:hover{background:var(--color-background-secondary);}
+.copy-btn.copied{color:var(--color-text-success);border-color:var(--color-border-success);}
+.nav-btn{font-size:12px;padding:6px 14px;border-radius:999px;border:0.5px solid var(--color-border-secondary);cursor:pointer;background:transparent;color:var(--color-text-secondary);}
+.nav-btn:hover{background:var(--color-background-secondary);}
+.nav-btn:disabled{opacity:.3;cursor:default;}
+.summary-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1.2rem;}
+.ss-card{background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;text-align:center;}
+.ss-num{font-size:16px;font-weight:500;}
+.ss-label{font-size:10px;color:var(--color-text-secondary);margin-top:1px;}
+.b-blue{background:var(--color-background-info);color:var(--color-text-info);}
+.b-amber{background:var(--color-background-warning);color:var(--color-text-warning);}
+.b-green{background:var(--color-background-success);color:var(--color-text-success);}
+.b-purple{background:#EEEDFE;color:#534AB7;}
+.b-red{background:var(--color-background-danger);color:var(--color-text-danger);}
+.b-gray{background:var(--color-background-secondary);color:var(--color-text-secondary);}
+</style>
+
+<div style="padding:1rem 0;">
+
+<div class="seq-header">
+  <div class="seq-title">K-12 Principal Outreach — 6-email sequence</div>
+  <div class="seq-sub">KI Imago classroom & library furniture · Bangalore schools · 35-day cadence</div>
+</div>
+
+<div class="summary-strip">
+  <div class="ss-card"><div class="ss-num">6</div><div class="ss-label">Emails</div></div>
+  <div class="ss-card"><div class="ss-num">35</div><div class="ss-label">Days total</div></div>
+  <div class="ss-card"><div class="ss-num">3</div><div class="ss-label">CTAs offered</div></div>
+  <div class="ss-card"><div class="ss-num">0</div><div class="ss-label">Hard sells</div></div>
+</div>
+
+<div class="timeline">
+  <div class="tl-step" onclick="k12_show(0)">
+    <div class="tl-row">
+      <div class="tl-dot active" id="dot-0">1</div>
+      <div class="tl-line"></div>
+    </div>
+    <div class="tl-label">The hook</div>
+    <div class="tl-day">Day 1</div>
+  </div>
+  <div class="tl-step" onclick="k12_show(1)">
+    <div class="tl-row">
+      <div class="tl-dot" id="dot-1">2</div>
+      <div class="tl-line"></div>
+    </div>
+    <div class="tl-label">Social proof</div>
+    <div class="tl-day">Day 5</div>
+  </div>
+  <div class="tl-step" onclick="k12_show(2)">
+    <div class="tl-row">
+      <div class="tl-dot" id="dot-2">3</div>
+      <div class="tl-line"></div>
+    </div>
+    <div class="tl-label">The resource</div>
+    <div class="tl-day">Day 10</div>
+  </div>
+  <div class="tl-step" onclick="k12_show(3)">
+    <div class="tl-row">
+      <div class="tl-dot" id="dot-3">4</div>
+      <div class="tl-line"></div>
+    </div>
+    <div class="tl-label">The offer</div>
+    <div class="tl-day">Day 17</div>
+  </div>
+  <div class="tl-step" onclick="k12_show(4)">
+    <div class="tl-row">
+      <div class="tl-dot" id="dot-4">5</div>
+      <div class="tl-line"></div>
+    </div>
+    <div class="tl-label">The nudge</div>
+    <div class="tl-day">Day 26</div>
+  </div>
+  <div class="tl-step" onclick="k12_show(5)">
+    <div class="tl-row">
+      <div class="tl-dot" id="dot-5">6</div>
+    </div>
+    <div class="tl-label">The close</div>
+    <div class="tl-day">Day 35</div>
+  </div>
+</div>
+
+<div class="email-pane" id="email-display"></div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+  <button class="nav-btn" id="prev-btn" onclick="k12_prev()" disabled>← Previous</button>
+  <span style="font-size:11px;color:var(--color-text-secondary);" id="nav-label">Email 1 of 6</span>
+  <button class="nav-btn" id="next-btn" onclick="k12_next()">Next →</button>
+</div>
+
+</div>
+
+<script>
+const emails = [
+  {
+    num: 1,
+    day: "Day 1",
+    intent: "Problem hook",
+    intentClass: "b-blue",
+    from: "KI Imago — Bengaluru",
+    to: "[Principal's name], [School Name]",
+    subject: "Why do your students lean forward in class? (It's not engagement)",
+    body: `Dear [Principal's Name],
+
+There's a posture researchers call the "slouch of disengagement" — students sliding forward on hard plastic chairs, resting chins on desks, shifting every few minutes because the furniture isn't supporting their bodies. Teachers often read this as boredom or distraction.
+
+It usually isn't. It's furniture.
+
+A 2021 study from the University of Salford found that poorly designed classroom seating reduces a child's active learning time by up to 22 minutes per day. Across a 200-school-day year, that's 73 hours per student — nearly two full school weeks — lost not to curriculum gaps or teaching quality, but to uncomfortable chairs and badly proportioned desks.
+
+We're KI Imago — we manufacture school and library furniture here in Bengaluru, at our Bommasandra-Jigni facility. We work with schools across Karnataka and we've spent 15 years thinking about exactly this problem.
+
+I'm not writing to sell you furniture. I'd like to share a two-page guide we've put together specifically for Bangalore schools — "Why Your Classroom Layout Is a Hidden Teaching Variable" — and get your reaction to one idea it contains.
+
+Would it be alright if I sent it across?
+
+Warm regards,
+[Your Name]
+KI Imago — Krueger International Furniture Systems Pvt. Ltd.
+Bengaluru | +91 80 4765 9651 | kiimago.com`,
+    tip: "Send Tuesday or Wednesday, 8:00–9:00 AM. Principals check email before the school day begins. No attachment on Email 1 — the ask is to send the guide, not to send it yet. This lowers the barrier to a reply dramatically.",
+    cta: "Permission to send the guide"
+  },
+  {
+    num: 2,
+    day: "Day 5",
+    intent: "Social proof",
+    intentClass: "b-purple",
+    from: "KI Imago — Bengaluru",
+    to: "[Principal's name], [School Name]",
+    subject: "Re: Why do your students lean forward in class?",
+    body: `Dear [Principal's Name],
+
+Following up on my note from last week — I wanted to share one example that I think is directly relevant to [School Name].
+
+Greenwood High on Sarjapur Road asked us a similar question two years ago: "Our new library wing is almost ready. What should we put in it so students actually use it?"
+
+The instinct is always to go with what's cheapest per seat. What we helped them think through instead was this: a library that students avoid is an expensive room that isn't working. The right furniture — grouped reading zones, adjustable-height tables, quiet individual carrels alongside collaborative study tables — turns a library into the school's most-used space.
+
+Within one term, their library footfall had increased measurably. The school now uses it as a point of differentiation in parent open days.
+
+I'm not suggesting you need to do what they did. Every school's situation is different and I'd need to understand yours before making any recommendations.
+
+What I'd find useful to know: is there a specific space at [School Name] — a classroom block, the library, a reading room — that you feel isn't quite working the way you'd like it to?
+
+Even a one-line reply would help me send you something genuinely relevant rather than generic.
+
+Warm regards,
+[Your Name]
+KI Imago
+Bommasandra-Jigni, Bengaluru`,
+    tip: "This email does something unusual — it asks the principal a question about their school rather than pitching. This generates replies that tell you exactly which space to focus on. Every reply, no matter how brief, is a warm lead. If they mention 'the library' or 'our Grade 6 block', you've just written the subject line of Email 3.",
+    cta: "One-line reply about a space that isn't working"
+  },
+  {
+    num: 3,
+    day: "Day 10",
+    intent: "The resource",
+    intentClass: "b-amber",
+    from: "KI Imago — Bengaluru",
+    to: "[Principal's name], [School Name]",
+    subject: "The classroom layout guide + one thing worth knowing about library furniture",
+    body: `Dear [Principal's Name],
+
+I promised a guide — attaching it here. It's two pages, no product photos, just the research and three layout principles that any school can apply regardless of which furniture they use.
+
+[ATTACH: KI_Space_Insight_Report_Schools.pdf]
+
+The one thing I'd highlight from it specifically for [School Name]:
+
+The most common mistake schools make when furnishing a library isn't choosing the wrong chair. It's furnishing the library as a single-purpose space — rows of fixed desks for quiet individual reading — when most schools now need the same room to function as a reading corner, a group project space, a small-group teaching area, and a reading-for-pleasure zone.
+
+Furniture that can't move makes this impossible. Furniture that moves — our Maestro stackable chairs (₹2,500–5,300/piece) combined with lightweight Hurry Up folding tables — lets you reconfigure the same room in under 10 minutes.
+
+We manufacture everything at our Bengaluru facility, so lead times are 2–4 weeks, not the 3–4 months you'd wait for imported furniture.
+
+I've also linked KI's free Classroom Planner tool at the bottom of the guide — you can drag your actual room dimensions in and test different configurations before spending anything.
+
+No obligation at all. If the guide raises any questions, happy to answer them.
+
+Warm regards,
+[Your Name]
+KI Imago
+
+P.S. If you'd like to see the furniture in person, our factory is in Jigni — a 20-minute drive from most south Bangalore schools. You're welcome to visit any weekday.`,
+    tip: "This is the first email with product names and prices. They're mentioned once, naturally, inside context — not in a list or a table. The P.S. factory visit offer is low-friction and genuinely differentiating — no other furniture vendor in Bangalore can make this offer. Track whether the PDF attachment is opened (use a tracked link if possible).",
+    cta: "Read the guide + optional factory visit"
+  },
+  {
+    num: 4,
+    day: "Day 17",
+    intent: "The offer",
+    intentClass: "b-green",
+    from: "KI Imago — Bengaluru",
+    to: "[Principal's name], [School Name]",
+    subject: "Free classroom walk-through for [School Name] — no strings",
+    body: `Dear [Principal's Name],
+
+A short note to offer something we've been doing for a handful of Bangalore schools this term.
+
+We call it a space walk-through. It takes 45 minutes. We visit, walk the classrooms and library with you or your admin team, and at the end we share three specific observations about what's working, what isn't, and what could be changed — sometimes with furniture, sometimes without.
+
+We don't pitch during the walk-through. We just look and listen.
+
+At the end, if you'd like a layout proposal using our products, we'll prepare one. If you'd rather just take the observations and act independently, that's completely fine too. Two out of the three schools we've done this with this term didn't buy from us immediately — but both called back within the following term once they were ready to budget.
+
+There's no charge for this.
+
+The reason we offer it: we've found that a 45-minute visit tells us more about what a school actually needs than any number of email exchanges. And it means any proposal we make is specific to your building and your students — not a generic catalogue suggestion.
+
+Would any morning next week work for [School Name]?
+
+Warm regards,
+[Your Name]
+KI Imago
++91 80 4765 9651`,
+    tip: "This is your conversion email. The 'no pitch during the walk-through' framing removes the principal's biggest objection — 'I don't want to sit through a sales presentation.' The honesty about two schools not buying immediately builds enormous trust. Keep this email short. Principals respect brevity. The only ask is a morning next week.",
+    cta: "Book a 45-minute campus walk-through"
+  },
+  {
+    num: 5,
+    day: "Day 26",
+    intent: "The nudge",
+    intentClass: "b-amber",
+    from: "KI Imago — Bengaluru",
+    to: "[Principal's name], [School Name]",
+    subject: "One photo from a school we worked with last month",
+    body: `Dear [Principal's Name],
+
+I've been meaning to share this since our last note.
+
+Attached is a before-and-after from [Reference School Name / or "a CBSE school in south Bangalore" if not permitted to name] — same library space, same floor area, same number of seats. The difference is configuration and furniture design.
+
+[ATTACH or EMBED: before_after_library_photo.jpg]
+
+The after photo is what their library looked like three weeks after we completed the installation. The principal told us that within a fortnight, students were choosing to spend free periods there rather than the common area.
+
+I'm sharing it not to suggest you need to do the same thing, but because sometimes seeing an actual room — not a showroom, not a render — is more useful than any specification sheet.
+
+We still have a couple of open slots for campus walk-throughs in [Month]. If [School Name] would like one, I'm happy to come by.
+
+And if the timing isn't right at the moment, that's completely fine — I'll check back in next term.
+
+Warm regards,
+[Your Name]
+KI Imago`,
+    tip: "By Day 26, principals who haven't replied are either busy or mildly interested but not yet convinced. This email does two things: provides a concrete visual proof point (the before/after photo) and gently re-opens the walk-through offer without pressure. The 'I'll check back in next term' line signals you're a long-term partner, not a pushy vendor. Do NOT send this email if they've already booked a walk-through.",
+    cta: "Book a walk-through OR passive — let the photo do the work"
+  },
+  {
+    num: 6,
+    day: "Day 35",
+    intent: "The close",
+    intentClass: "b-gray",
+    from: "KI Imago — Bengaluru",
+    to: "[Principal's name], [School Name]",
+    subject: "Last note for now — and a standing offer",
+    body: `Dear [Principal's Name],
+
+This will be my last note for a while — I don't want to fill your inbox.
+
+A quick summary of what we've shared in case it's useful for a future conversation:
+
+→ The space guide on classroom layout and library design (attached again, one click)
+→ KI's free Classroom Planner: ki.com/design-resources/classroom-planner/
+→ Our offer of a free 45-minute campus walk-through — open-ended, no expiry
+→ Our factory in Jigni, Bengaluru — open for visits any weekday
+
+When the time is right — whether it's a new classroom block, a library refresh, or replacing furniture that's seen better days — we'd be glad to help. Schools we've worked with typically find that a conversation with us saves them time on the tender process, because we can help specify exactly what they need before the purchase indent is written.
+
+Until then, best of luck with [academic year / current term / upcoming admission season].
+
+Warm regards,
+[Your Name]
+KI Imago — Krueger International Furniture Systems Pvt. Ltd.
+55, Bommasandra-Jigni Link Road, Jigni, Bengaluru 562106
++91 80 4765 9651 | kiimago.com
+GST: 29AAECK0473E1ZN`,
+    tip: "This is a graceful exit, not a goodbye. The bullet-point summary is a gift — it means the principal can forward this single email to their admin team or purchase committee months later with everything they need. The 'helps them on the tender process' line plants a seed for the spec-in strategy. Do not follow up after this email unless they respond. Wait one full academic term, then restart the sequence with a fresh hook.",
+    cta: "No direct CTA — leave the door permanently open"
+  }
+];
+
+let current = 0;
+
+function k12_render() {
+  const e = emails[current];
+  const pane = document.getElementById('email-display');
+  pane.innerHTML = `
+    <div class="email-meta">
+      <div class="meta-row">
+        <span class="meta-label">Sequence</span>
+        <span class="meta-val">Email ${e.num} of 6 &nbsp;·&nbsp; ${e.day}</span>
+        <span class="intent-badge ${e.intentClass}">${e.intent}</span>
+      </div>
+      <div class="meta-row"><span class="meta-label">From</span><span class="meta-val">${e.from}</span></div>
+      <div class="meta-row"><span class="meta-label">To</span><span class="meta-val">${e.to}</span></div>
+      <div class="meta-row"><span class="meta-label">Subject</span><span class="subject-val">${e.subject}</span></div>
+      <div class="meta-row"><span class="meta-label">CTA goal</span><span class="meta-val" style="color:var(--color-text-secondary);font-size:11px;">${e.cta}</span></div>
+    </div>
+    <div class="tip-block"><strong>Agent tip —</strong> ${e.tip}</div>
+    <div class="email-body">${e.body}</div>
+    <div class="email-footer">
+      <div style="font-size:11px;color:var(--color-text-secondary);">Click to copy the email body</div>
+      <button class="copy-btn" id="copy-btn-${e.num}" onclick="k12_copyBody(${e.num})">Copy email</button>
+    </div>
+  `;
+  document.querySelectorAll('.tl-dot').forEach((d, i) => {
+    d.className = 'tl-dot' + (i < current ? ' sent' : '') + (i === current ? ' active' : '');
+  });
+  document.getElementById('nav-label').textContent = `Email ${current + 1} of 6`;
+  document.getElementById('prev-btn').disabled = current === 0;
+  document.getElementById('next-btn').disabled = current === 5;
+}
+
+function k12_show(i) { current = i; k12_render(); }
+function k12_next() { if (current < 5) { current++; k12_render(); } }
+function k12_prev() { if (current > 0) { current--; k12_render(); } }
+
+function k12_copyBody(num) {
+  const e = emails[num - 1];
+  const text = `Subject: ${e.subject}\n\n${e.body}`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(`copy-btn-${num}`);
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy email'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+k12_render();
+</script>

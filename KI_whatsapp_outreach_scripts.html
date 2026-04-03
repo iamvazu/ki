@@ -1,0 +1,443 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary);}
+
+.header{margin-bottom:1.4rem;}
+.header-title{font-size:17px;font-weight:500;margin-bottom:4px;}
+.header-sub{font-size:12px;color:var(--color-text-secondary);}
+
+.rule-strip{background:var(--color-background-warning);border:0.5px solid var(--color-border-warning);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--color-text-warning);line-height:1.6;margin-bottom:1.2rem;}
+.rule-strip strong{font-weight:500;}
+
+.tab-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1.2rem;}
+.tab{padding:5px 13px;border-radius:999px;font-size:12px;font-weight:500;border:0.5px solid var(--color-border-tertiary);cursor:pointer;color:var(--color-text-secondary);background:transparent;}
+.tab.active{background:var(--color-background-info);color:var(--color-text-info);border-color:transparent;}
+.pane{display:none;}.pane.active{display:block;}
+
+/* whatsapp phone mockup */
+.phone-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+.phone{background:#e5ddd5;border-radius:16px;overflow:hidden;border:0.5px solid var(--color-border-tertiary);}
+.phone-header{background:#075e54;padding:10px 14px;display:flex;align-items:center;gap:10px;}
+.phone-avatar{width:34px;height:34px;border-radius:50%;background:#128c7e;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;font-weight:500;flex-shrink:0;}
+.phone-contact{display:flex;flex-direction:column;}
+.phone-name{font-size:13px;font-weight:500;color:#fff;}
+.phone-status{font-size:10px;color:rgba(255,255,255,.6);}
+.phone-body{padding:10px 10px 12px;display:flex;flex-direction:column;gap:8px;min-height:200px;}
+.msg-out{align-self:flex-end;background:#dcf8c6;border-radius:12px 12px 2px 12px;padding:8px 10px 6px;max-width:85%;font-size:12px;line-height:1.55;color:#1a1a1a;position:relative;white-space:pre-wrap;}
+.msg-in{align-self:flex-start;background:#fff;border-radius:12px 12px 12px 2px;padding:8px 10px 6px;max-width:85%;font-size:12px;line-height:1.55;color:#1a1a1a;white-space:pre-wrap;}
+.msg-time{font-size:9px;color:rgba(0,0,0,.35);margin-top:2px;text-align:right;}
+.msg-time-in{text-align:left;}
+.msg-check{color:#34b7f1;font-size:10px;}
+
+/* script panel */
+.script-panel{display:flex;flex-direction:column;gap:0;}
+.script-item{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden;}
+.script-header{padding:10px 14px;background:var(--color-background-secondary);display:flex;align-items:center;gap:10px;cursor:pointer;}
+.script-header:hover{background:var(--color-background-primary);}
+.script-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;}
+.script-title{font-size:13px;font-weight:500;flex:1;}
+.script-day{font-size:11px;color:var(--color-text-secondary);white-space:nowrap;}
+.script-body{display:none;border-top:0.5px solid var(--color-border-tertiary);}
+.script-body.open{display:block;}
+.script-message{padding:12px 14px;background:var(--color-background-primary);}
+.msg-label{font-size:10px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.msg-box{background:#dcf8c6;border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.65;color:#1a1a1a;white-space:pre-wrap;position:relative;}
+.msg-box-reply{background:#fff;border:0.5px solid var(--color-border-tertiary);border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.65;color:var(--color-text-secondary);white-space:pre-wrap;font-style:italic;}
+.tip-box{background:var(--color-background-warning);border-top:0.5px solid var(--color-border-tertiary);padding:10px 14px;font-size:11px;color:var(--color-text-warning);line-height:1.6;}
+.tip-box strong{font-weight:500;}
+.copy-btn{position:absolute;top:8px;right:8px;font-size:10px;padding:3px 8px;border-radius:999px;border:0.5px solid rgba(0,0,0,.15);cursor:pointer;background:rgba(255,255,255,.8);color:#333;}
+.copy-btn:hover{background:#fff;}
+.copy-btn.copied{color:#128c7e;border-color:#128c7e;}
+
+.badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:999px;}
+.b-green{background:#e8f5e9;color:#2e7d32;}
+.b-amber{background:#fff8e1;color:#f57f17;}
+.b-blue{background:var(--color-background-info);color:var(--color-text-info);}
+.b-red{background:var(--color-background-danger);color:var(--color-text-danger);}
+.b-gray{background:var(--color-background-secondary);color:var(--color-text-secondary);}
+.b-purple{background:#EEEDFE;color:#534AB7;}
+
+.rule-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:10px;}
+.rule-row{display:flex;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start;}
+.rule-row:last-child{border-bottom:none;}
+.rule-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.rule-text{font-size:12px;line-height:1.55;color:var(--color-text-secondary);}
+.rule-text strong{color:var(--color-text-primary);font-weight:500;}
+
+.objection-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.obj-card{background:var(--color-background-secondary);border-radius:10px;padding:12px 14px;}
+.obj-q{font-size:12px;font-weight:500;margin-bottom:6px;color:var(--color-text-primary);}
+.obj-a{font-size:11px;color:var(--color-text-secondary);line-height:1.6;}
+.obj-msg{background:#dcf8c6;border-radius:8px;padding:8px 10px;font-size:11px;color:#1a1a1a;line-height:1.6;margin-top:8px;white-space:pre-wrap;}
+
+.sec-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;padding-bottom:6px;border-bottom:0.5px solid var(--color-border-tertiary);}
+</style>
+
+<div style="padding:1rem 0;">
+
+<div class="header">
+  <div class="header-title">WhatsApp outreach scripts — college admin heads</div>
+  <div class="header-sub">KI Imago furniture · Bangalore institutions · Parallel to email sequence</div>
+</div>
+
+<div class="rule-strip">
+  <strong>Before sending anything:</strong> WhatsApp outreach to unknown numbers without prior contact is legally grey under TRAI regulations and practically risky — an early "Block" ends all future contact. These scripts assume either (a) the number was shared voluntarily (enquiry form, event, referral), (b) you've already exchanged at least one email, or (c) you have a warm mutual introduction. Never send these cold to scraped numbers.
+</div>
+
+<div class="tab-bar">
+  <button class="tab active" onclick="wa_showTab('sequence')">Full sequence</button>
+  <button class="tab" onclick="wa_showTab('preview')">Phone preview</button>
+  <button class="tab" onclick="wa_showTab('objections')">Handle objections</button>
+  <button class="tab" onclick="wa_showTab('rules')">WA rules</button>
+</div>
+
+<!-- SEQUENCE TAB -->
+<div id="pane-sequence" class="pane active">
+
+<div class="script-item">
+  <div class="script-header" onclick="wa_toggleScript('s1')">
+    <div class="script-num" style="background:#E6F1FB;color:#185FA5;">1</div>
+    <div class="script-title">First touch — warm intro message</div>
+    <span class="badge b-blue">Day 1</span>
+    <div class="script-day">After email sent</div>
+  </div>
+  <div class="script-body" id="s1">
+    <div class="script-message">
+      <div class="msg-label">You send</div>
+      <div class="msg-box" id="m1">Hello [Name] sir/ma'am,
+
+This is [Your Name] from KI Imago — we manufacture school and college furniture here in Bengaluru (Jigni).
+
+I sent an email to your institution's official address earlier today regarding classroom and library furniture. Wanted to make sure it reached you directly.
+
+If you have 2 minutes at a convenient time, I'd love to share something relevant to [College Name]'s infrastructure.
+
+No obligation at all. Thank you for your time.
+
+— [Your Name], KI Imago
+<button class="copy-btn" onclick="wa_copyMsg('m1',this)">Copy</button></div>
+    </div>
+    <div class="tip-box"><strong>Why this works:</strong> References the email so you're not appearing from nowhere. "2 minutes" is a low-commitment ask. Mentioning Bengaluru/Jigni immediately signals local manufacturer — not a random pan-India spam message. Keep it under 5 lines. Do not send images, PDFs, or links in the first message — WhatsApp spam filters and human instinct both flag these.</div>
+  </div>
+</div>
+
+<div class="script-item">
+  <div class="script-header" onclick="wa_toggleScript('s2')">
+    <div class="script-num" style="background:#EAF3DE;color:#3B6D11;">2</div>
+    <div class="script-title">Follow-up if no reply in 3 days</div>
+    <span class="badge b-green">Day 4</span>
+    <div class="script-day">No reply to message 1</div>
+  </div>
+  <div class="script-body" id="s2">
+    <div class="script-message">
+      <div class="msg-label">You send</div>
+      <div class="msg-box" id="m2">Hi [Name] sir/ma'am,
+
+Quick follow-up — wanted to share one specific thing rather than send a long message.
+
+We recently furnished the [library/classroom block — use whichever is most relevant] at a Bangalore college similar to [College Name]. The admin team found our 2-4 week local delivery particularly useful when working against a semester deadline.
+
+If furniture is something [College Name] is thinking about — even for next year — happy to send across 2-3 photos and a rough range of what it costs. No formal proposal, just context.
+
+Would that be useful?
+<button class="copy-btn" onclick="wa_copyMsg('m2',this)">Copy</button></div>
+    </div>
+    <div class="tip-box"><strong>The ask is tiny:</strong> "Would that be useful?" requires a yes/no answer — the smallest possible commitment. Mentioning delivery timeline before price is intentional: it positions you as solving a logistics problem, not just selling furniture. Send between 10 AM–12 PM on a weekday — avoid Monday mornings and Friday afternoons.</div>
+  </div>
+</div>
+
+<div class="script-item">
+  <div class="script-header" onclick="wa_toggleScript('s3')">
+    <div class="script-num" style="background:#FAEEDA;color:#854F0B;">3</div>
+    <div class="script-title">They said yes — send the proof</div>
+    <span class="badge b-amber">Day 4–5</span>
+    <div class="script-day">After a "yes" or "sure" reply</div>
+  </div>
+  <div class="script-body" id="s3">
+    <div class="script-message">
+      <div class="msg-label">They replied "yes" / "sure" / "send it"</div>
+      <div class="msg-box-reply">"Yes go ahead"  /  "Ok send"  /  "Sure what is it"</div>
+      <br>
+      <div class="msg-label" style="margin-top:8px;">You send — Image 1 (installation photo)</div>
+      <div class="msg-box" id="m3a">📸 This is our Maestro Chair setup in a seminar room at a Bangalore engineering college — installed last month.
+
+Stackable, powder-coated frame, leatherite or fabric seat options. Starts at ₹2,500/piece for the poly version, ₹5,300 for chrome finish with tablet arm.
+
+All manufactured at our Jigni factory — 2–4 week delivery.
+<button class="copy-btn" onclick="wa_copyMsg('m3a',this)">Copy</button></div>
+      <br>
+      <div class="msg-label" style="margin-top:8px;">You send — Image 2 (library setup)</div>
+      <div class="msg-box" id="m3b">📚 And this is a library reading room we furnished earlier this year — Unite Round Tables with grommet holes for shared charging, Strive chairs for long reading sessions.
+
+Same factory, same lead time.
+
+If [College Name] has a specific space in mind — classroom, library, seminar room — I can share what would work best for that layout specifically.
+
+What space is most pressing for you right now?
+<button class="copy-btn" onclick="wa_copyMsg('m3b',this)">Copy</button></div>
+    </div>
+    <div class="tip-box"><strong>Send images separately, not in a single burst.</strong> Two images with text captions, sent 30–60 seconds apart, feel like a conversation — not a catalogue dump. The final question ("what space is most pressing?") is the most important line in this exchange. The answer tells you exactly what to pitch next and what to bring to the campus visit.</div>
+  </div>
+</div>
+
+<div class="script-item">
+  <div class="script-header" onclick="wa_toggleScript('s4')">
+    <div class="script-num" style="background:#EEEDFE;color:#534AB7;">4</div>
+    <div class="script-title">Booking the campus visit</div>
+    <span class="badge b-purple">Day 7–10</span>
+    <div class="script-day">After they engage with photos</div>
+  </div>
+  <div class="script-body" id="s4">
+    <div class="script-message">
+      <div class="msg-label">You send</div>
+      <div class="msg-box" id="m4">Hi [Name] sir/ma'am,
+
+Thank you for the feedback on the photos.
+
+We usually find the most useful next step is a quick visit — we come to [College Name], walk the space with you or your team, and tell you honestly what would work and what wouldn't. Takes about 45 minutes.
+
+No presentation, no slides. Just a walk and a conversation.
+
+We're available any morning this week or next — whichever is convenient. Would [Tuesday morning] or [Thursday morning] work?
+<button class="copy-btn" onclick="wa_copyMsg('m4',this)">Copy</button></div>
+    </div>
+    <div class="tip-box"><strong>Give two specific options, not "any time that suits you."</strong> Open-ended scheduling invitations get deferred indefinitely. Two specific days force a decision. "No presentation, no slides" removes the admin head's biggest fear — that this is a 2-hour sales ordeal. If they suggest a different time, accept immediately without negotiating.</div>
+  </div>
+</div>
+
+<div class="script-item">
+  <div class="script-header" onclick="wa_toggleScript('s5')">
+    <div class="script-num" style="background:#FAECE7;color:#993C1D;">5</div>
+    <div class="script-title">Day-before visit confirmation</div>
+    <span class="badge b-red">Visit day −1</span>
+    <div class="script-day">Evening before the campus visit</div>
+  </div>
+  <div class="script-body" id="s5">
+    <div class="script-message">
+      <div class="msg-label">You send — evening before</div>
+      <div class="msg-box" id="m5">Hi [Name] sir/ma'am,
+
+Looking forward to visiting [College Name] tomorrow morning.
+
+I'll be bringing fabric and material samples for the classroom chairs and library furniture — so you and your team can physically feel the options rather than just see photos.
+
+Is there anyone else from your team — HOD, purchase officer — who you'd like to join the walk-through? Happy to accommodate whoever is available.
+
+See you at [time]. Thank you.
+
+— [Your Name]
+KI Imago | +91 80 4765 9651
+<button class="copy-btn" onclick="wa_copyMsg('m5',this)">Copy</button></div>
+    </div>
+    <div class="tip-box"><strong>Two things this message does:</strong> (1) Signals professionalism — you're bringing samples, not just showing up. (2) Asks if the HOD or purchase officer can join — if they say yes, you've just expanded your access to the decision-making committee in a single WhatsApp message. This is one of the highest-leverage lines in the entire sequence.</div>
+  </div>
+</div>
+
+<div class="script-item">
+  <div class="script-header" onclick="wa_toggleScript('s6')">
+    <div class="script-num" style="background:#E1F5EE;color:#0F6E56;">6</div>
+    <div class="script-title">Post-visit follow-up</div>
+    <span class="badge b-green">Visit day +1</span>
+    <div class="script-day">Next morning after the visit</div>
+  </div>
+  <div class="script-body" id="s6">
+    <div class="script-message">
+      <div class="msg-label">You send — next morning</div>
+      <div class="msg-box" id="m6">Good morning [Name] sir/ma'am,
+
+Thank you for the time yesterday — it was genuinely useful to see the [library/classroom block/seminar rooms] in person.
+
+As discussed, I'll prepare a layout proposal for [specific space they mentioned] and send it across by [day — give 3 business days maximum].
+
+A few things I'll include:
+• Recommended furniture for each zone
+• Indicative quantities and pricing
+• Delivery timeline from our Jigni factory
+• 5-year warranty terms
+
+If there's anything specific you'd like me to address — budget range, preference on materials, a particular configuration — just let me know and I'll factor it in.
+
+Thank you again. Speak soon.
+<button class="copy-btn" onclick="wa_copyMsg('m6',this)">Copy</button></div>
+    </div>
+    <div class="tip-box"><strong>Speed is everything here.</strong> Send this within 18 hours of the visit — not 3 days later. The layout proposal must follow within 3 business days as promised. Admin heads talk to each other; a vendor who delivers on a commitment stands out sharply against those who say "I'll send it" and disappear for 2 weeks. The bullet list sets exact expectations so there are no surprises in the proposal.</div>
+  </div>
+</div>
+
+<div class="script-item">
+  <div class="script-header" onclick="wa_toggleScript('s7')">
+    <div class="script-num" style="background:#F1EFE8;color:#5F5E5A;">7</div>
+    <div class="script-title">Ghost recovery — they went silent</div>
+    <span class="badge b-gray">Day 21+</span>
+    <div class="script-day">If they stop replying after engagement</div>
+  </div>
+  <div class="script-body" id="s7">
+    <div class="script-message">
+      <div class="msg-label">You send — after 10+ days of silence post-engagement</div>
+      <div class="msg-box" id="m7">Hi [Name] sir/ma'am,
+
+Hope the [semester/term/admission season] is going well at [College Name].
+
+I won't take much of your time — just wanted to check if the layout proposal I sent across was useful, or if the timing has shifted.
+
+No pressure at all. If furniture is something for next quarter, I'm happy to pick this up then. Our factory schedule means we can typically accommodate orders with 3–4 weeks' notice.
+
+One quick thing — we just completed an installation at [nearby institution if available / "a college in [area]"] and I can share photos if that would help the conversation with your team.
+
+Whenever works for [College Name], we're here.
+<button class="copy-btn" onclick="wa_copyMsg('m7',this)">Copy</button></div>
+    </div>
+    <div class="tip-box"><strong>Ghost recovery rules:</strong> Never send more than one ghost recovery message. If this gets no reply, move the contact to the "next-term nurture" list and reactivate in 8–10 weeks with a fresh hook — ideally tied to a new trigger (NAAC news, semester start, renovation announcement). The mention of a nearby installation is the most powerful re-engagement tool available.</div>
+  </div>
+</div>
+
+</div>
+
+<!-- PHONE PREVIEW TAB -->
+<div id="pane-preview" class="pane">
+  <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:14px;">How a typical successful conversation looks end-to-end on screen.</div>
+  <div class="phone-wrap">
+    <div>
+      <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;">Opening exchange</div>
+      <div class="phone">
+        <div class="phone-header">
+          <div class="phone-avatar">RA</div>
+          <div class="phone-contact">
+            <div class="phone-name">Registrar Anand</div>
+            <div class="phone-status">RV College of Engineering</div>
+          </div>
+        </div>
+        <div class="phone-body">
+          <div class="msg-out">Hello sir, this is Priya from KI Imago — we manufacture college furniture here in Bengaluru (Jigni). Sent an email to your institution earlier. Wanted to make sure it reached you. Would you have 2 minutes at a convenient time? No obligation at all. Thank you.
+<div class="msg-time">9:14 AM <span class="msg-check">✓✓</span></div></div>
+          <div class="msg-in">Yes I received the email. What is it regarding exactly?
+<div class="msg-time msg-time-in">11:32 AM</div></div>
+          <div class="msg-out">Thank you sir. It's regarding classroom and library furniture — specifically for institutions planning upgrades ahead of the new academic year or NAAC cycle. We manufacture locally so delivery is 2–4 weeks, not months. Would it be useful if I shared 2–3 photos of recent installations?
+<div class="msg-time">11:35 AM <span class="msg-check">✓✓</span></div></div>
+          <div class="msg-in">Ok share
+<div class="msg-time msg-time-in">11:58 AM</div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;">Booking the visit</div>
+      <div class="phone">
+        <div class="phone-header">
+          <div class="phone-avatar">RA</div>
+          <div class="phone-contact">
+            <div class="phone-name">Registrar Anand</div>
+            <div class="phone-status">RV College of Engineering</div>
+          </div>
+        </div>
+        <div class="phone-body">
+          <div class="msg-out">📸 [Installation photo — Maestro chairs in seminar room]
+
+Maestro Chair — powder-coated frame, leatherite seat. Starts ₹2,500/piece. Manufactured Jigni, 2–4 week delivery.
+<div class="msg-time">12:01 PM <span class="msg-check">✓✓</span></div></div>
+          <div class="msg-out">📚 [Installation photo — library reading room]
+
+Unite Round Tables with grommet, Strive chairs. Same factory, same lead time. What space is most pressing for RVCE right now?
+<div class="msg-time">12:02 PM <span class="msg-check">✓✓</span></div></div>
+          <div class="msg-in">We are looking to redo the central library and 2 seminar rooms before July
+<div class="msg-time msg-time-in">2:15 PM</div></div>
+          <div class="msg-out">That's a good timeline — July is very achievable from our end. The most useful next step would be a quick visit to see the spaces in person. We come to RVCE, walk the library and seminar rooms with you, 45 minutes. No presentation.
+
+Would Tuesday morning or Thursday morning work?
+<div class="msg-time">2:18 PM <span class="msg-check">✓✓</span></div></div>
+          <div class="msg-in">Thursday 10am is fine
+<div class="msg-time msg-time-in">2:44 PM</div></div>
+          <div class="msg-out">Confirmed — Thursday 10 AM at RVCE. I'll bring fabric and material samples. Thank you sir. See you then.
+<div class="msg-time">2:45 PM <span class="msg-check">✓✓</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OBJECTIONS TAB -->
+<div id="pane-objections" class="pane">
+  <div class="sec-label">Handle these on WhatsApp — fast, human, no panic</div>
+  <div class="objection-grid">
+
+    <div class="obj-card">
+      <div class="obj-q">"We already have a vendor"</div>
+      <div class="obj-a">Do not argue. Acknowledge and plant a seed for when the relationship cracks — which it always eventually does.</div>
+      <div class="obj-msg">Understood sir, no problem at all. If you ever need a second quote or your current vendor has a lead time issue, we're right here in Bengaluru — happy to step in. I'll check back in next term.</div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-q">"Send a quote / price list"</div>
+      <div class="obj-a">Don't send a full price list — it anchors them to numbers before they understand value. Offer a visit-based quote instead.</div>
+      <div class="obj-msg">Happy to sir. For an accurate quote I'd need to know the quantities and space layout — a 45-minute visit lets me give you a precise number rather than a generic range. Alternatively I can share our starting prices for the most common items if that helps for now?</div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-q">"Budget is approved only for next year"</div>
+      <div class="obj-a">This is not a rejection — it's a timeline. Lock in the relationship now so you're their first call when the budget opens.</div>
+      <div class="obj-msg">Perfectly fine sir — our best relationships start well before the budget is finalised. If you'd like we can do the walk-through now so the proposal is ready the moment the PO process opens. No pressure otherwise — I'll follow up closer to your budget cycle.</div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-q">"Is this on GeM?"</div>
+      <div class="obj-a">Critical question for government-aided institutions. Answer immediately and specifically — do not hedge.</div>
+      <div class="obj-msg">Yes sir, we are [registered / in the process of registering] on GeM under furniture categories. Our GST is 29AAECK0473E1ZN and we can provide all documentation needed for your purchase order process. Shall I share the GeM seller details?</div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-q">"Are you a local company or imported?"</div>
+      <div class="obj-a">This is your strongest card. Lead with manufacturing, end with heritage.</div>
+      <div class="obj-msg">We manufacture right here in Bengaluru sir — our factory is in Bommasandra-Jigni, about 20 km from your campus. So delivery is 2–4 weeks and our after-sales team is local. We're part of the Krueger International family — a global institutional furniture brand — but everything for India is made here.</div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-q">"Not interested"</div>
+      <div class="obj-a">Respect it completely. A graceful exit leaves the door open — a pushy response shuts it permanently.</div>
+      <div class="obj-msg">Of course sir, I completely understand. Thank you for your time. If things change at [College Name] or you need a second opinion on a furniture decision, we're always available. Best wishes for the semester.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RULES TAB -->
+<div id="pane-rules" class="pane">
+  <div class="sec-label">WhatsApp outreach — what works, what kills the conversation</div>
+  <div class="rule-card">
+    <div class="rule-row"><div class="rule-dot" style="background:#639922;"></div><div class="rule-text"><strong>Send between 9–11 AM or 2–4 PM on weekdays.</strong> Admin heads check WhatsApp during transit and between meetings. Monday morning and Friday after 3 PM are dead zones.</div></div>
+    <div class="rule-row"><div class="rule-dot" style="background:#639922;"></div><div class="rule-text"><strong>First message: text only.</strong> No links, no PDFs, no images. Anything that looks like a broadcast gets blocked or ignored. The first message must feel personal.</div></div>
+    <div class="rule-row"><div class="rule-dot" style="background:#639922;"></div><div class="rule-text"><strong>Keep messages under 5 lines.</strong> If it requires scrolling, it won't be read. WhatsApp is not email — every message should fit in one screen without expanding.</div></div>
+    <div class="rule-row"><div class="rule-dot" style="background:#639922;"></div><div class="rule-text"><strong>Use "sir" or "ma'am" throughout.</strong> College admin heads in Bangalore expect formal address. Dropping it signals unfamiliarity with the culture and immediately flags you as an outsider.</div></div>
+    <div class="rule-row"><div class="rule-dot" style="background:#639922;"></div><div class="rule-text"><strong>Always end with a single, specific question.</strong> "Would Tuesday morning work?" closes better than "let me know your availability." One question, one answer required.</div></div>
+    <div class="rule-row"><div class="rule-dot" style="background:#E24B4A;"></div><div class="rule-text"><strong>Never send a catalogue or price list as the second message.</strong> It signals you're a commodity vendor. Send a photo of a real installation with a caption — that signals you're a partner.</div></div>
+    <div class="rule-row"><div class="rule-dot" style="background:#E24B4A;"></div><div class="rule-text"><strong>Never follow up more than twice without a response.</strong> Two unanswered messages is the absolute maximum. A third marks you as spam in their mind regardless of what it says.</div></div>
+    <div class="rule-row"><div class="rule-dot" style="background:#E24B4A;"></div><div class="rule-text"><strong>Never use WhatsApp Business broadcast lists for these scripts.</strong> College admin heads can tell when a message was broadcast. The moment they sense it isn't personal, they disengage — even if the content is relevant.</div></div>
+    <div class="rule-row"><div class="rule-dot" style="background:#E24B4A;"></div><div class="rule-text"><strong>Do not send the layout proposal or any document over WhatsApp.</strong> Send a link or a brief summary on WhatsApp, then email the full document. WhatsApp is for conversation — email is for documentation that needs to be forwarded to a committee.</div></div>
+    <div class="rule-row"><div class="rule-dot" style="background:#BA7517;"></div><div class="rule-text"><strong>Set up WhatsApp Business with a proper profile.</strong> Logo, company name (KI Imago), address (Jigni, Bengaluru), website, and catalogue. An admin head who gets your message and taps your profile should see a credible company — not a blank personal account.</div></div>
+    <div class="rule-row"><div class="rule-dot" style="background:#BA7517;"></div><div class="rule-text"><strong>Use voice notes sparingly, only after rapport is established.</strong> A 30-second voice note from someone they already know feels personal. From a stranger it feels intrusive. Never open with a voice note.</div></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function wa_showTab(id){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('pane-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+function wa_toggleScript(id){
+  const b=document.getElementById(id);
+  b.classList.toggle('open');
+}
+function wa_copyMsg(id,btn){
+  const el=document.getElementById(id);
+  const text=el.innerText.replace('Copy','').trim();
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000);
+  });
+}
+document.getElementById('s1').classList.add('open');
+</script>

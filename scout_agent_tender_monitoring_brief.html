@@ -1,0 +1,585 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary);}
+.page-title{font-size:17px;font-weight:500;margin-bottom:4px;}
+.page-sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:1.4rem;}
+.tab-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:1.2rem;}
+.tab{padding:5px 13px;border-radius:999px;font-size:12px;font-weight:500;border:0.5px solid var(--color-border-tertiary);cursor:pointer;color:var(--color-text-secondary);background:transparent;}
+.tab.active{background:var(--color-background-info);color:var(--color-text-info);border-color:transparent;}
+.pane{display:none;}.pane.active{display:block;}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:10px;}
+.sec{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;padding-bottom:6px;border-bottom:0.5px solid var(--color-border-tertiary);}
+.portal-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:12px;}
+.portal-head{padding:12px 16px;display:flex;align-items:flex-start;gap:12px;border-bottom:0.5px solid var(--color-border-tertiary);}
+.portal-badge{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.portal-name{font-size:13px;font-weight:500;margin-bottom:2px;}
+.portal-url{font-size:11px;color:var(--color-text-info);text-decoration:none;}
+.portal-url:hover{text-decoration:underline;}
+.portal-body{padding:12px 16px;}
+.portal-row{display:flex;gap:10px;margin-bottom:7px;align-items:flex-start;font-size:12px;}
+.portal-row:last-child{margin-bottom:0;}
+.pr-label{color:var(--color-text-secondary);min-width:100px;flex-shrink:0;font-size:11px;}
+.pr-val{color:var(--color-text-primary);line-height:1.5;}
+.freq-badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:999px;}
+.f-daily{background:#EAF3DE;color:#3B6D11;}
+.f-weekly{background:#FAEEDA;color:#854F0B;}
+.f-monthly{background:#E6F1FB;color:#185FA5;}
+.search-chip{display:inline-block;font-size:11px;font-weight:500;padding:3px 9px;border-radius:6px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);margin:2px 2px 2px 0;cursor:default;font-family:var(--font-mono,monospace);}
+.qual-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:10px;}
+.qual-card{background:var(--color-background-secondary);border-radius:10px;padding:11px 13px;}
+.qc-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
+.qc-pass{font-size:12px;color:var(--color-text-success);margin-bottom:3px;display:flex;gap:6px;align-items:flex-start;line-height:1.5;}
+.qc-fail{font-size:12px;color:var(--color-text-danger);margin-bottom:3px;display:flex;gap:6px;align-items:flex-start;line-height:1.5;}
+.dot-pass{width:6px;height:6px;border-radius:50%;background:var(--color-text-success);flex-shrink:0;margin-top:5px;}
+.dot-fail{width:6px;height:6px;border-radius:50%;background:var(--color-text-danger);flex-shrink:0;margin-top:5px;}
+.timeline-row{display:flex;gap:0;margin-bottom:10px;}
+.tl-item{flex:1;border:0.5px solid var(--color-border-tertiary);border-right:none;padding:10px 12px;font-size:12px;}
+.tl-item:first-child{border-radius:8px 0 0 8px;}
+.tl-item:last-child{border-radius:0 8px 8px 0;border-right:0.5px solid var(--color-border-tertiary);}
+.tl-time{font-size:10px;font-weight:500;color:var(--color-text-secondary);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
+.tl-action{font-size:11px;color:var(--color-text-primary);line-height:1.5;}
+.step-row{display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start;}
+.step-row:last-child{border-bottom:none;}
+.step-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;background:var(--color-background-info);color:var(--color-text-info);}
+.step-title{font-size:13px;font-weight:500;margin-bottom:2px;}
+.step-body{font-size:11px;color:var(--color-text-secondary);line-height:1.6;}
+.code-block{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:10px 14px;font-family:var(--font-mono,monospace);font-size:11px;line-height:1.8;color:var(--color-text-primary);margin:8px 0;white-space:pre;}
+.alert-row{display:flex;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start;}
+.alert-row:last-child{border-bottom:none;}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.alert-title{font-size:12px;font-weight:500;margin-bottom:2px;}
+.alert-body{font-size:11px;color:var(--color-text-secondary);line-height:1.5;}
+.priority-table{width:100%;border-collapse:collapse;font-size:12px;}
+.priority-table th{text-align:left;padding:7px 10px;background:var(--color-background-secondary);font-size:11px;font-weight:500;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary);}
+.priority-table td{padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:top;}
+.priority-table tr:last-child td{border-bottom:none;}
+.p-badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:999px;}
+.p1{background:#FCEBEB;color:#A32D2D;}
+.p2{background:#FAEEDA;color:#854F0B;}
+.p3{background:#EAF3DE;color:#3B6D11;}
+.p4{background:var(--color-background-secondary);color:var(--color-text-secondary);}
+.act-btn{font-size:11px;padding:5px 12px;border-radius:999px;border:0.5px solid var(--color-border-secondary);cursor:pointer;background:transparent;color:var(--color-text-secondary);margin-top:10px;margin-right:6px;}
+.act-btn:hover{background:var(--color-background-secondary);}
+.warn-box{background:var(--color-background-warning);border:0.5px solid var(--color-border-warning);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--color-text-warning);line-height:1.6;margin-bottom:10px;}
+.warn-box strong{font-weight:500;}
+.success-box{background:var(--color-background-success);border:0.5px solid var(--color-border-success);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--color-text-success);line-height:1.6;margin-bottom:10px;}
+.success-box strong{font-weight:500;}
+.hsn-row{display:grid;grid-template-columns:100px 1fr 80px;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);padding:7px 10px;font-size:12px;}
+.hsn-row:last-child{border-bottom:none;}
+.hsn-code{font-family:var(--font-mono,monospace);font-weight:500;color:var(--color-text-info);}
+</style>
+
+<div style="padding:1rem 0;">
+
+<div class="page-title">Scout Agent — Tender Monitoring Brief</div>
+<div class="page-sub">KI Imago · Bangalore educational institution furniture tenders · Daily operating manual</div>
+
+<div class="tab-bar">
+  <button class="tab active" onclick="show('portals')">Portals & search terms</button>
+  <button class="tab" onclick="show('qualify')">Qualify a tender</button>
+  <button class="tab" onclick="show('daily')">Daily routine</button>
+  <button class="tab" onclick="show('respond')">Respond to a tender</button>
+  <button class="tab" onclick="show('hsn')">HSN & GeM codes</button>
+  <button class="tab" onclick="show('escalate')">Escalation rules</button>
+</div>
+
+<!-- PORTALS TAB -->
+<div id="pane-portals" class="pane active">
+
+  <div class="success-box"><strong>Priority order:</strong> GeM is checked first and most often — it is where government-aided colleges must buy from. KPPP is second for Karnataka state-funded institutions. CPPP covers central government bodies (IISc, ISI, ISRO). Individual institution portals catch what the aggregators miss.</div>
+
+  <div class="portal-card">
+    <div class="portal-head">
+      <div class="portal-badge" style="background:#E6F1FB;color:#185FA5;">🏛</div>
+      <div>
+        <div class="portal-name">GeM — Government e-Marketplace <span class="freq-badge f-daily">Check daily</span></div>
+        <a href="https://mkp.gem.gov.in" target="_blank" class="portal-url">mkp.gem.gov.in → Search → Custom Bids & Reverse Auction</a>
+      </div>
+    </div>
+    <div class="portal-body">
+      <div class="portal-row"><div class="pr-label">What it covers</div><div class="pr-val">All central & state govt ministries, autonomous bodies, PSUs. Includes govt-aided colleges like UVCE, BIT, BMCRI, ISI, ISRO training centres. Mandatory for these institutions by Ministry of Finance order.</div></div>
+      <div class="portal-row"><div class="pr-label">Search terms</div><div class="pr-val">
+        <span class="search-chip">school furniture</span>
+        <span class="search-chip">educational furniture</span>
+        <span class="search-chip">classroom furniture</span>
+        <span class="search-chip">library furniture</span>
+        <span class="search-chip">student chair</span>
+        <span class="search-chip">student desk</span>
+        <span class="search-chip">lab furniture</span>
+        <span class="search-chip">college furniture</span>
+        <span class="search-chip">seminar furniture</span>
+        <span class="search-chip">cafeteria furniture</span>
+        <span class="search-chip">9401</span>
+        <span class="search-chip">9403</span>
+      </div></div>
+      <div class="portal-row"><div class="pr-label">Filter by</div><div class="pr-val">State: Karnataka → Category: Furniture → Status: Live bids only → Sort by: Closing date ascending</div></div>
+      <div class="portal-row"><div class="pr-label">Buyer types to watch</div><div class="pr-val">Universities, Autonomous Bodies, Educational Institutions, Research Organisations, Central PSUs in Bangalore</div></div>
+      <div class="portal-row"><div class="pr-label">GeM bid modes</div><div class="pr-val">Direct Purchase (under ₹25K/item) — no bid needed, just list. L1 Purchase (₹25K–₹5L) — your price must be lowest. Bidding/Reverse Auction (above ₹5L) — monitor these daily. Custom Bids — institution specifies exact requirements; most relevant for large orders.</div></div>
+      <div class="portal-row"><div class="pr-label">Alert setup</div><div class="pr-val">Create a GeM Seller account → go to "Bid Alerts" → set keyword + category alerts. GeM emails you when a matching bid is published. Do not rely on this alone — do manual checks too.</div></div>
+    </div>
+  </div>
+
+  <div class="portal-card">
+    <div class="portal-head">
+      <div class="portal-badge" style="background:#EAF3DE;color:#3B6D11;">🌿</div>
+      <div>
+        <div class="portal-name">KPPP — Karnataka Public Procurement Portal <span class="freq-badge f-daily">Check daily</span></div>
+        <a href="https://eproc.karnataka.gov.in" target="_blank" class="portal-url">eproc.karnataka.gov.in → Live Tenders → Education</a>
+      </div>
+    </div>
+    <div class="portal-body">
+      <div class="portal-row"><div class="pr-label">What it covers</div><div class="pr-val">Karnataka state government departments, state universities (Bangalore University, VTU), state-funded autonomous colleges, BBMP, KUIDFC, state PSUs. Covers VTU-affiliated government engineering colleges.</div></div>
+      <div class="portal-row"><div class="pr-label">Search terms</div><div class="pr-val">
+        <span class="search-chip">furniture</span>
+        <span class="search-chip">chairs</span>
+        <span class="search-chip">tables</span>
+        <span class="search-chip">desks</span>
+        <span class="search-chip">benches</span>
+        <span class="search-chip">classroom</span>
+        <span class="search-chip">library</span>
+        <span class="search-chip">college</span>
+        <span class="search-chip">vidyalaya</span>
+        <span class="search-chip">college furniture</span>
+      </div></div>
+      <div class="portal-row"><div class="pr-label">Department filter</div><div class="pr-val">Higher Education Dept, Department of Public Instruction, Technical Education Dept, VTU, Bangalore University, Individual colleges</div></div>
+      <div class="portal-row"><div class="pr-label">Registration needed</div><div class="pr-val">Yes — register as a bidder at eproc.karnataka.gov.in with DSC (Digital Signature Certificate). One-time activity. Required before you can download tender documents or submit bids.</div></div>
+      <div class="portal-row"><div class="pr-label">Aggregator shortcut</div><div class="pr-val">Use <a href="https://bidassist.com" target="_blank" class="portal-url">bidassist.com</a> or <a href="https://tendersplus.com" target="_blank" class="portal-url">tendersplus.com</a> to get KPPP alerts by keyword without logging into the portal daily — saves ~30 min/day.</div></div>
+    </div>
+  </div>
+
+  <div class="portal-card">
+    <div class="portal-head">
+      <div class="portal-badge" style="background:#FAEEDA;color:#854F0B;">🇮🇳</div>
+      <div>
+        <div class="portal-name">CPPP — Central Public Procurement Portal <span class="freq-badge f-daily">Check daily</span></div>
+        <a href="https://eprocure.gov.in" target="_blank" class="portal-url">eprocure.gov.in → Tenders → Search by keyword + location</a>
+      </div>
+    </div>
+    <div class="portal-body">
+      <div class="portal-row"><div class="pr-label">What it covers</div><div class="pr-val">Central government ministries and their subordinate bodies. Key Bangalore targets: IISc, ISI Bangalore, ISRO/VSSC training centres, DRDO labs, defence establishments, central autonomous institutions.</div></div>
+      <div class="portal-row"><div class="pr-label">Search terms</div><div class="pr-val">
+        <span class="search-chip">furniture</span>
+        <span class="search-chip">chairs</span>
+        <span class="search-chip">office furniture</span>
+        <span class="search-chip">training furniture</span>
+        <span class="search-chip">seating</span>
+        <span class="search-chip">workstation</span>
+      </div></div>
+      <div class="portal-row"><div class="pr-label">Location filter</div><div class="pr-val">State: Karnataka → City: Bengaluru → Organisation: [leave blank for all]</div></div>
+      <div class="portal-row"><div class="pr-label">Value range</div><div class="pr-val">Focus on tenders above ₹5 lakh estimated value. Below this threshold, most central bodies use GeM direct purchase — no tender needed.</div></div>
+    </div>
+  </div>
+
+  <div class="portal-card">
+    <div class="portal-head">
+      <div class="portal-badge" style="background:#EEEDFE;color:#534AB7;">🏫</div>
+      <div>
+        <div class="portal-name">Individual institution tender pages <span class="freq-badge f-weekly">Check weekly</span></div>
+        <span style="font-size:11px;color:var(--color-text-secondary);">College websites → Procurement / Tenders / Notice Board section</span>
+      </div>
+    </div>
+    <div class="portal-body">
+      <div class="portal-row"><div class="pr-label">Why this matters</div><div class="pr-val">Private deemed universities (Christ, PES, Jain, Reva) are NOT on GeM or KPPP. They publish tenders only on their own websites or sometimes only on physical notice boards. These tenders are invisible to aggregators and have far less competition.</div></div>
+      <div class="portal-row"><div class="pr-label">Priority pages to bookmark</div><div class="pr-val">Christ University → Administration → Tenders | PES University → About → Procurement | Jain University → Administration | MS Ramaiah Institute → Administration → Tenders | RVCE → Administration | BMS College → Principal's Office</div></div>
+      <div class="portal-row"><div class="pr-label">What to look for</div><div class="pr-val">Pages titled: Tenders, Quotations, Procurement Notices, NIT (Notice Inviting Tender), Limited Tender. Also check PDF notice boards — many colleges scan and upload physical notices as PDFs.</div></div>
+      <div class="portal-row"><div class="pr-label">Automation tip</div><div class="pr-val">Set up Google Alerts for: <span class="search-chip">"[College Name]" tender furniture</span> and <span class="search-chip">"[College Name]" quotation furniture</span> for each of your top 20 targets.</div></div>
+    </div>
+  </div>
+
+  <div class="portal-card">
+    <div class="portal-head">
+      <div class="portal-badge" style="background:#FAECE7;color:#993C1D;">📰</div>
+      <div>
+        <div class="portal-name">Tender aggregator services <span class="freq-badge f-daily">Supplement — not replace</span></div>
+        <span style="font-size:11px;color:var(--color-text-secondary);">BidAssist · TendersPlus · TendersOnTime · TenderDetail</span>
+      </div>
+    </div>
+    <div class="portal-body">
+      <div class="portal-row"><div class="pr-label">What they do</div><div class="pr-val">Scrape GeM, KPPP, CPPP, and 500+ other portals into one searchable database. Email and WhatsApp alerts by keyword. Paid subscriptions (₹2,000–8,000/month) but save 1–2 hours of manual checking daily.</div></div>
+      <div class="portal-row"><div class="pr-label">Recommended</div><div class="pr-val"><strong>BidAssist</strong> (bidassist.com) — best coverage of Karnataka portals, mobile app available, WhatsApp alerts. Good for volume monitoring. Use alongside direct portal checks, not instead of them.</div></div>
+      <div class="portal-row"><div class="pr-label">Limitation</div><div class="pr-val">Aggregators miss institution-specific tenders published only on college websites. Always maintain the weekly manual check of individual institution pages for your top 20 targets.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- QUALIFY TAB -->
+<div id="pane-qualify" class="pane">
+
+  <div class="warn-box"><strong>Speed is the constraint.</strong> Most tenders have 7–21 day windows from publication to closing. The Scout Agent must qualify a tender and escalate within 24 hours of discovery — not within a week.</div>
+
+  <div class="card">
+    <div class="sec">The 6-question qualification test — answer all 6 before escalating</div>
+
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Is the buyer a Bangalore educational institution or research body?</div>
+        <div class="step-body">Check the organisation name and address in the tender header. Must be in Bengaluru or Bengaluru Rural district. Schools, colleges, universities, research institutes, and their affiliated training centres all qualify. Pure government department offices (PWD, BBMP roads) do not — even if they're furnishing an office.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Is the product category within KI Imago's manufacturing range?</div>
+        <div class="step-body">KI Imago makes: student chairs, writing pad chairs, classroom desks, student school desks, cafeteria furniture, seminar tables, folding tables, library furniture, office workstations, waiting chairs. KI Imago does NOT make: construction materials, IT equipment, cleaning supplies, stationery, curtains, air conditioning, flooring. If the tender is for multiple categories bundled together (furniture + IT + flooring), check if you can bid for the furniture lot only.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Is the estimated value above ₹2 lakh?</div>
+        <div class="step-body">Below ₹2 lakh: the margin after bid preparation cost and delivery rarely justifies the effort unless it's a relationship-building pilot. ₹2–10 lakh: moderate value, worth bidding if the institution is on the target list. Above ₹10 lakh: high priority — escalate immediately to CEO Agent. Above ₹50 lakh: flag as strategic — CEO Agent must be informed within 6 hours of discovery.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Is the closing date more than 5 working days away?</div>
+        <div class="step-body">Less than 5 working days remaining: flag as urgent — bid preparation may not be feasible. Escalate anyway so CEO Agent can decide whether to attempt a fast-track bid or skip. More than 5 days: normal processing. More than 14 days: comfortable window — schedule bid preparation in the week's plan rather than treating as urgent.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">5</div>
+      <div>
+        <div class="step-title">Are KI Imago's eligibility credentials likely to qualify?</div>
+        <div class="step-body">Download the tender document and check Section 3 (Eligibility Criteria). Common requirements: minimum annual turnover (KI Imago: ₹25–100 Cr — confirm exact figure), years in business (incorporated 2010 — 14+ years), GST registration (confirmed: 29AAECK0473E1ZN), PAN (confirm), experience certificates (prior supply orders to educational institutions), IS/BIS certification (confirm which products are certified). If any eligibility criterion is clearly not met — flag as INELIGIBLE and move on. Do not attempt ineligible bids.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">6</div>
+      <div>
+        <div class="step-title">Is the technical specification compatible with KI Imago products?</div>
+        <div class="step-body">Read the BoQ (Bill of Quantities) and technical specifications in the tender. Check: dimensions (seat height, table height, weight capacity), materials (polypropylene, leatherite, metal frame), finish (powder-coated, chrome), certifications required (IS:1303 for chairs, IS:4535 for tables — confirm with factory). If the spec is written for a specific competitor's product (very specific dimensions, brand-like requirements), note this as a "restrictive spec" and flag — you may still win if you can demonstrate equivalence, but the risk is higher.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">Qualification scoring — what to put in the escalation report</div>
+    <div class="qual-grid">
+      <div class="qual-card">
+        <div class="qc-label" style="color:var(--color-text-success);">Bid — strong signals</div>
+        <div class="qc-pass"><div class="dot-pass"></div>Bangalore educational institution confirmed</div>
+        <div class="qc-pass"><div class="dot-pass"></div>Value above ₹5 lakh</div>
+        <div class="qc-pass"><div class="dot-pass"></div>12+ days to closing</div>
+        <div class="qc-pass"><div class="dot-pass"></div>Product specs match KI Imago range</div>
+        <div class="qc-pass"><div class="dot-pass"></div>Eligibility criteria met</div>
+        <div class="qc-pass"><div class="dot-pass"></div>Institution is on target list</div>
+      </div>
+      <div class="qual-card">
+        <div class="qc-label" style="color:var(--color-text-danger);">Skip — red flags</div>
+        <div class="qc-fail"><div class="dot-fail"></div>Outside Bengaluru / Bengaluru Rural</div>
+        <div class="qc-fail"><div class="dot-fail"></div>Value below ₹1 lakh</div>
+        <div class="qc-fail"><div class="dot-fail"></div>Less than 3 working days to closing</div>
+        <div class="qc-fail"><div class="dot-fail"></div>Product category not in KI range</div>
+        <div class="qc-fail"><div class="dot-fail"></div>Turnover or certification requirement not met</div>
+        <div class="qc-fail"><div class="dot-fail"></div>Spec clearly written for a named competitor</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="act-btn" onclick="sendPrompt('Give me a tender qualification template — a one-page form the Scout Agent fills in for each furniture tender discovered, covering all 6 qualification criteria with fields for portal name, tender ID, buyer, value, closing date, product match, eligibility, and recommended action')">Generate qualification form template ↗</button>
+</div>
+
+<!-- DAILY ROUTINE TAB -->
+<div id="pane-daily" class="pane">
+  <div class="card">
+    <div class="sec">Daily monitoring routine — 45 minutes total, every working day</div>
+
+    <div class="timeline-row">
+      <div class="tl-item"><div class="tl-time">8:00–8:15 AM</div><div class="tl-action">GeM check. Search all 12 terms. Filter: Karnataka, Education, Live bids. Log any new tenders in the Tender Register. Flag closings within 7 days as urgent.</div></div>
+      <div class="tl-item"><div class="tl-time">8:15–8:30 AM</div><div class="tl-action">KPPP check. Log in to eproc.karnataka.gov.in → Live Tenders → Education dept filter. Search furniture keywords. Download BOQ for any qualifying tender.</div></div>
+      <div class="tl-item"><div class="tl-time">8:30–8:40 AM</div><div class="tl-action">CPPP check. eprocure.gov.in → search furniture + Bengaluru. Focus on IISc, ISI, ISRO, DRDO as buyers. Flag any matching tender.</div></div>
+      <div class="tl-item"><div class="tl-time">8:40–8:45 AM</div><div class="tl-action">Check BidAssist/TendersPlus alerts from overnight. Verify any flagged tenders against the qualification criteria. Update Tender Register.</div></div>
+    </div>
+
+    <div class="sec" style="margin-top:1rem;">Weekly additions — Monday morning, 20 minutes</div>
+    <div class="step-row">
+      <div class="step-num" style="background:var(--color-background-warning);color:var(--color-text-warning);">M</div>
+      <div>
+        <div class="step-title">Manual check of top 20 institution websites</div>
+        <div class="step-body">Check the Tenders/Procurement/Notice Board page of each priority institution. Look for NIT (Notice Inviting Tender), quotation requests, and limited tender notices. These are invisible to aggregators. Check: Christ University, PES University, RVCE, MSRIT, BMS College, Jain University, Reva University, NMIT, CMRIT, NPS Group, Azim Premji University, and any institution currently in active outreach conversations.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num" style="background:var(--color-background-warning);color:var(--color-text-warning);">M</div>
+      <div>
+        <div class="step-title">Google News sweep</div>
+        <div class="step-body">Search: <span class="search-chip">Bangalore college furniture tender</span> <span class="search-chip">Karnataka school furniture procurement</span> <span class="search-chip">VTU furniture</span>. Also check: <span class="search-chip">[College Name] renovation</span> for each institution in active pipeline. Any news of renovation = flag to Intel Agent immediately.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num" style="background:var(--color-background-warning);color:var(--color-text-warning);">M</div>
+      <div>
+        <div class="step-title">Review and update the Tender Register</div>
+        <div class="step-body">Update status of all open tenders: submitted / won / lost / withdrawn / deadline passed. Feed win/loss data back to CEO Agent for pipeline review. Log any competitor bids observed (GeM shows all bidders after closing) — this builds competitive intelligence over time.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">The Tender Register — what to log for every tender found</div>
+    <div class="code-block">Tender ID        : [GeM/KPPP/CPPP reference number]
+Portal           : [GeM / KPPP / CPPP / Institution website]
+Institution      : [Name]
+Tender title     : [Exact title from portal]
+Category         : [Classroom / Library / Cafeteria / Lab / Office / Mixed]
+Estimated value  : ₹[amount] ([source: portal / BoQ calculation])
+Published date   : [DD-MM-YYYY]
+Closing date     : [DD-MM-YYYY] — [X] working days remaining
+EMD required     : ₹[amount] / Not required
+Qualification    : [PASS / FAIL / REVIEW]
+Fail reasons     : [if FAIL — list criteria not met]
+Escalated to     : [CEO Agent / Not escalated]
+Escalation time  : [DD-MM-YYYY HH:MM]
+Status           : [New / Bid prep / Submitted / Won / Lost]
+Notes            : [Any relevant context — restrictive specs, known competitors, etc.]</div>
+  </div>
+</div>
+
+<!-- RESPOND TAB -->
+<div id="pane-respond" class="pane">
+
+  <div class="warn-box"><strong>The Scout Agent's job ends at escalation.</strong> Bid preparation, pricing, and submission are handled by the CEO Agent with input from the factory (lead time, capacity) and finance (pricing). The Scout's role is to find, qualify, and hand off — fast.</div>
+
+  <div class="card">
+    <div class="sec">What happens after the Scout escalates a qualified tender</div>
+
+    <div class="priority-table" style="margin-top:0;">
+      <table class="priority-table">
+        <thead>
+          <tr>
+            <th>Tender value</th>
+            <th>Escalation SLA</th>
+            <th>Who acts</th>
+            <th>Bid prep time target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Above ₹50 lakh</td>
+            <td><span class="p-badge p1">Within 6 hours</span></td>
+            <td>CEO Agent + Director</td>
+            <td>5 working days</td>
+          </tr>
+          <tr>
+            <td>₹10–50 lakh</td>
+            <td><span class="p-badge p2">Within 24 hours</span></td>
+            <td>CEO Agent</td>
+            <td>4 working days</td>
+          </tr>
+          <tr>
+            <td>₹2–10 lakh</td>
+            <td><span class="p-badge p3">Within 48 hours</span></td>
+            <td>CEO Agent</td>
+            <td>3 working days</td>
+          </tr>
+          <tr>
+            <td>Below ₹2 lakh</td>
+            <td><span class="p-badge p4">Weekly batch</span></td>
+            <td>Admin / Outreach Agent</td>
+            <td>2 working days</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">Standard bid document checklist — what the factory and finance team must provide</div>
+
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Technical compliance statement</div>
+        <div class="step-body">For each item in the BoQ: confirm your product model number, dimensions, material, weight capacity, and IS/BIS certification. If a spec deviation exists (e.g. slightly different dimension), state it explicitly with justification — do not hide deviations. Tender committees reject bids with undisclosed deviations after the fact.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Financial documents</div>
+        <div class="step-body">GST registration certificate, PAN, audited financials for last 2–3 years (to prove turnover), bank solvency certificate (some tenders require this), EMD (Earnest Money Deposit) — typically 2% of bid value via DD or bank guarantee.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Experience certificates</div>
+        <div class="step-body">Supply order copies or completion certificates from at least 3 prior institutional clients. If limited India institutional references are available, include manufacturing tenure, international KI brand association, and factory capability documents. Build this evidence file proactively — don't scramble for it when a tender appears.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Pricing and BoQ</div>
+        <div class="step-body">Unit price per item inclusive of GST, delivery to site, and installation. Always include a "Make in India" declaration if products are locally manufactured — this activates the 20% purchase preference in government tenders. State delivery lead time: "2–4 weeks from PO date, from Bengaluru manufacturing facility."</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">5</div>
+      <div>
+        <div class="step-title">Warranty and after-sales terms</div>
+        <div class="step-body">State warranty period (5 years), what is covered (manufacturing defects, frame failure, surface peeling), response time for service calls (48 hours — local Bengaluru factory), and spare parts availability. This is a scored criterion in many education tenders — not just a formality.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">The spec-in strategy — how to influence a tender before it's published</div>
+    <div class="alert-row">
+      <div class="alert-dot" style="background:#639922;"></div>
+      <div>
+        <div class="alert-title">What spec-in means</div>
+        <div class="alert-body">When the Intel Agent's relationship work results in a campus visit or audit, the HOD or Admin Officer who writes the purchase indent often asks "what should we specify?" — this is your chance to suggest dimensions, materials, and quality benchmarks that your products naturally meet and competitors may not. A tender written with your specs is effectively pre-won before it opens.</div>
+      </div>
+    </div>
+    <div class="alert-row">
+      <div class="alert-dot" style="background:#639922;"></div>
+      <div>
+        <div class="alert-title">What to suggest (without naming your brand)</div>
+        <div class="alert-body">Chair height: 18.5" seat height. Frame: 18-gauge powder-coated steel tube. Seat: high-density polypropylene, minimum 4mm thickness. Warranty: minimum 5 years. Certification: IS:1303 compliance required. Origin: Manufactured within Karnataka preferred (triggers local preference). These are your product specs — stated as quality requirements, not brand requirements.</div>
+      </div>
+    </div>
+    <div class="alert-row">
+      <div class="alert-dot" style="background:#BA7517;"></div>
+      <div>
+        <div class="alert-title">The legal boundary</div>
+        <div class="alert-body">Specification suggestions must be based on genuine quality and safety rationale — not purely to exclude competitors. Suggesting IS:1303 certification is legitimate quality assurance. Suggesting a very specific proprietary dimension that only your exact product meets is restrictive and can invalidate the tender if challenged. Stay on the right side of this line.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HSN TAB -->
+<div id="pane-hsn" class="pane">
+  <div class="card">
+    <div class="sec">HSN codes — use these in GeM listings, invoices, and tender documents</div>
+    <div style="background:var(--color-background-secondary);border-radius:8px;overflow:hidden;">
+      <div style="display:grid;grid-template-columns:100px 1fr 80px;gap:0;padding:7px 10px;border-bottom:0.5px solid var(--color-border-tertiary);">
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);">HSN Code</div>
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);">Description</div>
+        <div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);">GST Rate</div>
+      </div>
+      <div class="hsn-row"><div class="hsn-code">9401</div><div>Seats — chairs, stools, benches (all seating that can become beds). Covers: Maestro Chair, Durastack Chair, Learn-2 Chair, Rover Chair, Strive Stool, all student seating</div><div style="font-size:11px;">18%</div></div>
+      <div class="hsn-row"><div class="hsn-code">940110</div><div>Aircraft seats</div><div style="font-size:11px;">18%</div></div>
+      <div class="hsn-row"><div class="hsn-code">940180</div><div>Other seats — most school/college chairs fall here</div><div style="font-size:11px;">18%</div></div>
+      <div class="hsn-row"><div class="hsn-code">9403</div><div>Other furniture and parts — all non-seating. Covers: student desks, training tables, cafeteria tables, library tables, computer tables, folding tables, office workstations, storage units</div><div style="font-size:11px;">18%</div></div>
+      <div class="hsn-row"><div class="hsn-code">940310</div><div>Metal furniture for offices — office workstations, filing cabinets</div><div style="font-size:11px;">18%</div></div>
+      <div class="hsn-row"><div class="hsn-code">940320</div><div>Other metal furniture — most steel-frame classroom and cafeteria tables</div><div style="font-size:11px;">18%</div></div>
+      <div class="hsn-row"><div class="hsn-code">940350</div><div>Wooden furniture — wooden desks, library shelving, wooden tables</div><div style="font-size:11px;">18%</div></div>
+      <div class="hsn-row"><div class="hsn-code">940389</div><div>Other furniture of other materials — plastic/composite furniture, mixed-material items</div><div style="font-size:11px;">18%</div></div>
+      <div class="hsn-row"><div class="hsn-code">940490</div><div>Mattresses and bedding — hostel/dorm mattresses if supplied</div><div style="font-size:11px;">12%</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">GeM product category mapping — use these category IDs when listing products</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px;">Search these exact terms in GeM seller portal → Product Management → Add Product to find the correct category tree.</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      <span class="search-chip">Office Furniture</span>
+      <span class="search-chip">Educational Furniture</span>
+      <span class="search-chip">School Furniture</span>
+      <span class="search-chip">Chair - Student</span>
+      <span class="search-chip">Desk - Student</span>
+      <span class="search-chip">Table - Training</span>
+      <span class="search-chip">Bench - School</span>
+      <span class="search-chip">Chair - Writing Pad</span>
+      <span class="search-chip">Table - Cafeteria</span>
+      <span class="search-chip">Chair - Cafeteria</span>
+      <span class="search-chip">Workstation - Office</span>
+      <span class="search-chip">Storage - Pedestal</span>
+      <span class="search-chip">Table - Folding</span>
+      <span class="search-chip">Chair - Waiting</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">Make in India declaration — copy this text into every government bid</div>
+    <div class="code-block">We, Krueger International Furniture Systems Private Limited (CIN: U36100KA2010PTC053773,
+GST: 29AAECK0473E1ZN), hereby declare that all furniture items quoted in this bid are
+manufactured at our facility located at 55, Bommasandra-Jigni Link Road, Jigni,
+Bengaluru – 562106, Karnataka, India.
+
+The products qualify as "Class I Local Supplier" under the Public Procurement
+(Preference to Make in India) Order, 2017, with local content exceeding 50%.
+
+We are eligible for purchase preference as per the Make in India policy applicable
+to Government procurement.</div>
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-top:6px;">Note: Verify "Class I / Class II Local Supplier" classification with your CA before including this. Local content calculation must be documented.</div>
+  </div>
+</div>
+
+<!-- ESCALATION TAB -->
+<div id="pane-escalate" class="pane">
+  <div class="card">
+    <div class="sec">When the Scout Agent escalates immediately — no waiting</div>
+    <div class="alert-row">
+      <div class="alert-dot" style="background:#E24B4A;"></div>
+      <div><div class="alert-title">Tender above ₹50 lakh, closing within 14 days</div><div class="alert-body">This is the highest-value scenario. Alert CEO Agent within 6 hours. Include: tender ID, portal link, BoQ download link, estimated value, closing date, and your 6-question qualification assessment. Do not wait for the daily report.</div></div>
+    </div>
+    <div class="alert-row">
+      <div class="alert-dot" style="background:#E24B4A;"></div>
+      <div><div class="alert-title">Any tender from IISc, IIM-B, NLSIU, or Azim Premji University</div><div class="alert-body">These are A+ priority institutions. Even a small tender from them — a pilot order for one seminar room — is strategically valuable as a reference installation. Escalate regardless of value.</div></div>
+    </div>
+    <div class="alert-row">
+      <div class="alert-dot" style="background:#E24B4A;"></div>
+      <div><div class="alert-title">A tender closing in less than 5 working days, any value above ₹5 lakh</div><div class="alert-body">Fast-closing tenders require immediate decision. CEO Agent needs to decide within 2 hours: attempt fast-track bid or skip. Give them all qualification data immediately so they can decide without further research.</div></div>
+    </div>
+    <div class="alert-row">
+      <div class="alert-dot" style="background:#BA7517;"></div>
+      <div><div class="alert-title">A tender with a spec that looks written for a competitor</div><div class="alert-body">Flag as "restrictive spec — review needed." Include the specific dimension or requirement that seems non-standard. CEO Agent decides whether to bid with a deviation note or use the opportunity to build a relationship with the institution for the next cycle.</div></div>
+    </div>
+    <div class="alert-row">
+      <div class="alert-dot" style="background:#BA7517;"></div>
+      <div><div class="alert-title">A corrigendum (amendment) to a tender already in bid prep</div><div class="alert-body">If specs, quantities, or closing dates change after you've started bid preparation, escalate immediately. Corrigenda can make a bid ineligible or change the pricing model entirely. Never submit against an old spec after a corrigendum is published.</div></div>
+    </div>
+    <div class="alert-row">
+      <div class="alert-dot" style="background:#639922;"></div>
+      <div><div class="alert-title">A tender from an institution currently in active outreach relationship</div><div class="alert-body">This is the ideal convergence — Intel Agent and Outreach Agent have been building a relationship, and now a formal tender appears. Flag to CEO Agent and coordinate with Outreach Agent immediately. The relationship contact may share insights on committee preferences, budget constraints, or competing bids — this is legal and common in Indian procurement culture.</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">The escalation message format — send this to CEO Agent via WhatsApp or internal system</div>
+    <div class="code-block">🔔 TENDER ALERT — [PRIORITY: HIGH / MEDIUM / LOW]
+
+Portal        : [GeM / KPPP / CPPP / Institution website]
+Tender ID     : [Reference number]
+Institution   : [Name, type, location]
+Title         : [Exact tender title]
+Value         : ₹[estimated] ([source])
+Closing       : [DD-MM-YYYY] — [X] working days remaining
+EMD           : ₹[amount] / Not required
+
+Qualification : ✅ PASS (all 6 criteria met)
+  1. Bangalore edu institution: ✅
+  2. Product match: ✅ [specific products]
+  3. Value threshold: ✅
+  4. Closing window: ✅ [X days]
+  5. Eligibility: ✅ [any notes]
+  6. Spec compatible: ✅ [any notes]
+
+Documents     : [Link to downloaded BoQ and tender document]
+Relationship  : [Is this institution in active outreach? Y/N — if Y, tag Outreach Agent]
+
+Recommended action: [BID / SKIP / REVIEW]
+Scout sign-off: [Name] — [Timestamp]</div>
+  </div>
+
+  <button class="act-btn" onclick="sendPrompt('Build me a simple Google Sheets template for the KI Imago Tender Register — with columns for all fields in the escalation format, plus a dashboard tab showing open tenders by value, closing date, and status')">Build the Tender Register spreadsheet ↗</button>
+  <button class="act-btn" onclick="sendPrompt('Write the CEO Agent instructions for processing an escalated tender from the Scout Agent — what decisions to make, who to involve, and how to run the bid preparation process for a ₹20 lakh furniture tender at a Bangalore engineering college')">Write CEO Agent bid processing instructions ↗</button>
+</div>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('pane-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>

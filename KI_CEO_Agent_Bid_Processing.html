@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEO Agent — Bid Processing Instructions · KI Imago</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1114;
+    --ink-2: #3a3d42;
+    --ink-3: #6b6f76;
+    --paper: #f7f4ef;
+    --paper-2: #ede9e2;
+    --paper-3: #e2ddd5;
+    --accent: #c84b2f;
+    --accent-pale: #fdf0ec;
+    --teal: #1a6b5a;
+    --teal-pale: #e8f4f1;
+    --gold: #b8860b;
+    --gold-pale: #fdf8e8;
+    --purple: #534ab7;
+    --purple-pale: #eeedfe;
+    --green-pale: #eaf3de;
+    --green: #3b6d11;
+    --red-pale: #fcebeb;
+    --red: #a32d2d;
+    --rule: #d4cfc6;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── TOP BAR ── */
+  .top-bar {
+    background: var(--ink);
+    margin: 0 -24px 0;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .top-bar-logo { font-family: var(--serif); font-size: 16px; color: #fff; }
+  .top-bar-logo span { color: #e8845e; }
+  .top-bar-label { font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: .08em; text-transform: uppercase; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 48px;
+  }
+  .doc-label {
+    font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+  }
+  .doc-label::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--accent); }
+  .hero h1 { font-family: var(--serif); font-size: 42px; line-height: 1.1; color: var(--ink); margin-bottom: 16px; }
+  .hero p { font-size: 15px; color: var(--ink-2); max-width: 640px; line-height: 1.7; margin-bottom: 24px; }
+  .hero-meta {
+    display: flex; gap: 0; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden;
+  }
+  .hero-meta-item {
+    flex: 1; padding: 14px 18px; border-right: 1px solid var(--rule);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .hero-meta-item:last-child { border-right: none; }
+  .meta-label { font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .07em; }
+  .meta-val { font-size: 14px; font-weight: 500; color: var(--ink); }
+
+  /* ── SECTIONS ── */
+  section { margin-bottom: 52px; }
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  h2 { font-family: var(--serif); font-size: 28px; color: var(--ink); margin-bottom: 14px; line-height: 1.2; }
+  h3 { font-family: var(--serif); font-size: 20px; color: var(--ink); margin-bottom: 10px; margin-top: 28px; }
+  p { color: var(--ink-2); margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── DECISION MATRIX ── */
+  .decision-matrix {
+    width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 13px;
+  }
+  .decision-matrix th {
+    background: var(--ink); color: rgba(255,255,255,.7); font-size: 11px; font-weight: 500;
+    letter-spacing: .07em; text-transform: uppercase; padding: 10px 14px; text-align: left;
+  }
+  .decision-matrix td { padding: 11px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .decision-matrix tr:hover td { background: var(--paper-2); }
+  .decision-matrix td:first-child { font-weight: 500; }
+
+  /* ── STEP CARDS ── */
+  .steps { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+  .step {
+    display: grid; grid-template-columns: 52px 1fr;
+    border: 1px solid var(--rule); border-bottom: none; background: var(--paper);
+  }
+  .step:first-child { border-radius: 8px 8px 0 0; }
+  .step:last-child { border-bottom: 1px solid var(--rule); border-radius: 0 0 8px 8px; }
+  .step-num {
+    display: flex; align-items: flex-start; justify-content: center;
+    padding-top: 18px; font-family: var(--serif); font-size: 22px;
+    color: var(--accent); border-right: 1px solid var(--rule);
+  }
+  .step-content { padding: 16px 20px; }
+  .step-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+  .step-body { font-size: 13px; color: var(--ink-2); line-height: 1.7; }
+  .step-sla {
+    display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 8px;
+    border-radius: 999px; margin-left: 8px; vertical-align: middle;
+  }
+  .sla-red { background: var(--red-pale); color: var(--red); }
+  .sla-amber { background: var(--gold-pale); color: var(--gold); }
+  .sla-green { background: var(--green-pale); color: var(--green); }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; margin: 18px 0; display: flex; flex-direction: column; gap: 8px; }
+  .checklist li {
+    display: flex; gap: 10px; align-items: flex-start; font-size: 13px;
+    color: var(--ink-2); line-height: 1.6;
+    padding: 10px 14px; background: var(--paper-2); border-radius: 6px;
+  }
+  .checklist li::before {
+    content: '□'; font-size: 15px; color: var(--ink-3); flex-shrink: 0; margin-top: -1px;
+  }
+  .checklist li strong { color: var(--ink); font-weight: 500; }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-left: 4px solid; padding: 14px 18px; border-radius: 0 6px 6px 0;
+    margin: 20px 0; font-size: 13px; line-height: 1.7;
+  }
+  .callout-red { border-color: var(--accent); background: var(--accent-pale); color: var(--ink-2); }
+  .callout-red strong { color: var(--accent); font-weight: 500; }
+  .callout-teal { border-color: var(--teal); background: var(--teal-pale); color: var(--ink-2); }
+  .callout-teal strong { color: var(--teal); font-weight: 500; }
+  .callout-gold { border-color: var(--gold); background: var(--gold-pale); color: var(--ink-2); }
+  .callout-gold strong { color: var(--gold); font-weight: 500; }
+  .callout-purple { border-color: var(--purple); background: var(--purple-pale); color: var(--ink-2); }
+  .callout-purple strong { color: var(--purple); font-weight: 500; }
+
+  /* ── TEMPLATE BLOCKS ── */
+  .template-block {
+    background: var(--ink); border-radius: 8px; padding: 20px 22px;
+    margin: 18px 0; font-family: monospace; font-size: 12px;
+    color: rgba(255,255,255,.75); line-height: 1.9; white-space: pre-wrap;
+  }
+  .template-block .field { color: #e8845e; }
+  .template-block .key { color: #9fe1cb; font-weight: 500; }
+
+  /* ── PRICING TABLE ── */
+  .pricing-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+  .pricing-table th {
+    background: var(--teal); color: rgba(255,255,255,.85);
+    font-size: 11px; font-weight: 500; letter-spacing: .06em;
+    text-transform: uppercase; padding: 9px 12px; text-align: left;
+  }
+  .pricing-table td { padding: 9px 12px; border-bottom: 1px solid var(--rule); }
+  .pricing-table tr:nth-child(even) td { background: var(--paper-2); }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--rule); margin: 40px 0; }
+  .divider-accent { height: 3px; background: linear-gradient(90deg, var(--accent) 0%, #e8845e 50%, var(--teal) 100%); margin: 0 -24px 48px; }
+
+  /* ── ESCALATION BADGE ── */
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    padding: 3px 10px; border-radius: 999px;
+  }
+  .b-red { background: var(--red-pale); color: var(--red); }
+  .b-amber { background: var(--gold-pale); color: var(--gold); }
+  .b-green { background: var(--green-pale); color: var(--green); }
+  .b-blue { background: #e6f1fb; color: #185fa5; }
+  .b-purple { background: var(--purple-pale); color: var(--purple); }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--paper-2); border: 1px solid var(--rule); border-radius: 8px;
+    padding: 20px 24px; margin: 32px 0;
+  }
+  .toc-title { font-size: 12px; font-weight: 500; color: var(--ink-3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
+  .toc a {
+    display: block; font-size: 13px; color: var(--teal); text-decoration: none;
+    padding: 3px 0; border-bottom: 1px solid var(--rule);
+  }
+  .toc a:last-child { border-bottom: none; }
+  .toc a:hover { color: var(--accent); }
+  .toc a span { color: var(--ink-3); margin-right: 8px; font-size: 11px; }
+
+  /* ── FOOTER ── */
+  footer {
+    margin: 0 -24px; padding: 24px 24px;
+    background: var(--ink); margin-top: 60px;
+    display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;
+  }
+  .footer-brand { font-family: var(--serif); font-size: 14px; color: #fff; margin-bottom: 4px; }
+  .footer-brand span { color: #e8845e; }
+  .footer-detail { font-size: 11px; color: rgba(255,255,255,.35); line-height: 1.7; }
+  .footer-version { font-size: 11px; color: rgba(255,255,255,.35); }
+
+  @media print {
+    body { max-width: 100%; padding: 0 16px; }
+    .top-bar { margin: 0; }
+    .step { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-logo">KI <span>Imago</span></div>
+  <div class="top-bar-label">Internal Operations Document — Confidential</div>
+</div>
+
+<div class="divider-accent"></div>
+
+<div class="hero">
+  <div class="doc-label">CEO Agent Operating Manual</div>
+  <h1>Bid Processing Instructions</h1>
+  <p>What the CEO Agent does from the moment a qualified tender lands from the Scout Agent to the moment the bid is submitted, tracked, and learned from. This document covers every decision, every stakeholder, and every document in between.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="meta-label">Entity</span>
+      <span class="meta-val">KI Imago — Krueger International Furniture Systems Pvt. Ltd.</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="meta-label">GST</span>
+      <span class="meta-val">29AAECK0473E1ZN</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="meta-label">Factory</span>
+      <span class="meta-val">Bommasandra-Jigni, Bengaluru</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="meta-label">Version</span>
+      <span class="meta-val">1.0 — April 2025</span>
+    </div>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">Contents</div>
+  <a href="#receive"><span>01</span> Receiving an escalation from Scout Agent</a>
+  <a href="#decide"><span>02</span> The bid/no-bid decision</a>
+  <a href="#factory"><span>03</span> Factory capacity check</a>
+  <a href="#stakeholders"><span>04</span> Who to involve — and when</a>
+  <a href="#prepare"><span>05</span> Bid preparation — step by step</a>
+  <a href="#price"><span>06</span> Pricing strategy and the Make in India advantage</a>
+  <a href="#submit"><span>07</span> Submission and post-submission</a>
+  <a href="#outcome"><span>08</span> Win and loss processing</a>
+  <a href="#relationship"><span>09</span> The relationship angle — tenders are not transactional</a>
+  <a href="#templates"><span>10</span> Ready-to-use templates</a>
+</div>
+
+
+<!-- ── 01 RECEIVING ── -->
+<section id="receive">
+  <div class="section-label">Step 01</div>
+  <h2>Receiving an escalation from Scout Agent</h2>
+
+  <p>The Scout Agent sends an escalation message via WhatsApp (and logs it in the Tender Register). The CEO Agent's first job is to acknowledge, read, and triage within the SLA window — not to start preparing the bid.</p>
+
+  <div class="callout callout-red">
+    <strong>SLA clock starts the moment the Scout Agent's message is sent</strong> — not when the CEO Agent reads it. Missing an SLA is a process failure. If the CEO Agent is unavailable, escalation should be forwarded to a designated backup immediately.
+  </div>
+
+  <table class="decision-matrix">
+    <thead>
+      <tr>
+        <th>Tender Value</th>
+        <th>Acknowledge SLA</th>
+        <th>Bid Decision SLA</th>
+        <th>Who decides</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Above ₹50 lakh</td>
+        <td><span class="badge b-red">Within 2 hours</span></td>
+        <td><span class="badge b-red">Within 6 hours</span></td>
+        <td>CEO Agent + Director / Owner</td>
+      </tr>
+      <tr>
+        <td>₹10 lakh – ₹50 lakh</td>
+        <td><span class="badge b-amber">Within 4 hours</span></td>
+        <td><span class="badge b-amber">Within 24 hours</span></td>
+        <td>CEO Agent</td>
+      </tr>
+      <tr>
+        <td>₹2 lakh – ₹10 lakh</td>
+        <td><span class="badge b-green">Same business day</span></td>
+        <td><span class="badge b-green">Within 48 hours</span></td>
+        <td>CEO Agent</td>
+      </tr>
+      <tr>
+        <td>Below ₹2 lakh</td>
+        <td>Weekly batch review</td>
+        <td>Weekly batch</td>
+        <td>Admin / CEO Agent lightweight review</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>When an escalation is received, the CEO Agent immediately does three things before anything else: reads the Scout's qualification assessment in full, downloads the tender document if not already attached, and checks the Tender Register to confirm the row has been logged.</p>
+</section>
+
+
+<!-- ── 02 DECIDE ── -->
+<section id="decide">
+  <div class="section-label">Step 02</div>
+  <h2>The bid / no-bid decision</h2>
+
+  <p>The Scout Agent has already done the 6-question qualification check. The CEO Agent's decision adds three further filters that the Scout cannot assess — capacity, strategic fit, and pricing viability.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Is the Scout's qualification assessment complete and correct?</div>
+        <div class="step-body">Skim the tender document to verify the Scout's 6-point assessment. Pay particular attention to eligibility criteria and technical specs — these are where errors most often occur. If the qualification is wrong (Scout passed a tender that should have failed), mark as SKIP, update the Tender Register, and send the Scout Agent feedback on why.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Does the factory have capacity to fulfil within the tender's delivery window?</div>
+        <div class="step-body">Call or message the factory directly. Ask: what is the current order backlog, and can we deliver [quantity from BoQ] within [delivery window in tender]? If the factory says no — do not bid. Winning a tender you cannot deliver is worse than not bidding. See Section 03 for the capacity check protocol.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Can we price competitively while maintaining margin?</div>
+        <div class="step-body">Quick margin check: calculate the estimated cost to produce and deliver the BoQ quantity (factory cost + delivery + installation + EMD opportunity cost). If the margin at a competitive price is below 12%, flag for discussion before proceeding. Government tenders are L1 — someone will always go lower. Do not win at a loss to build a reference.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Is this a strategic relationship tender?</div>
+        <div class="step-body">Check: is this institution in the active outreach pipeline? Has the Outreach Agent already met the Registrar or HOD? If yes — this tender is strategic regardless of value. A ₹3 lakh tender at IISc is worth bidding at thin margin because the reference is priceless. Flag this context to the factory and finance team when requesting pricing.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Make the decision and update the Tender Register</div>
+        <div class="step-body">BID: update status to "Bid Prep", assign to Bid Tracker sheet, notify factory and finance. NO BID: update status to "Skipped", record reason in Notes column. This data is valuable — over time, skip reasons reveal patterns (always losing on price, always missing EMD, always spec mismatch) that inform strategy.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-teal">
+    <strong>When in doubt, bid.</strong> The cost of preparing a bid is a few days of effort. The cost of missing a tender from a strategic target institution is a full procurement cycle — typically 6–12 months until the next one. Err toward bidding unless there is a clear, specific reason not to.
+  </div>
+</section>
+
+
+<!-- ── 03 FACTORY ── -->
+<section id="factory">
+  <div class="section-label">Step 03</div>
+  <h2>Factory capacity check</h2>
+
+  <p>This is the most frequently skipped step and the most common cause of delivery failures. The CEO Agent must confirm capacity before the bid decision — not after.</p>
+
+  <div class="callout callout-red">
+    <strong>Never assume the factory has capacity.</strong> If multiple bids are in preparation simultaneously, the factory may be at or near capacity. Always ask explicitly.
+  </div>
+
+  <h3>The capacity check questions — ask these exactly</h3>
+
+  <div class="template-block"><span class="key">To: Factory Manager / Production Head</span>
+<span class="key">Subject: Capacity check — tender bid [Tender ID]</span>
+
+We have a tender for: <span class="field">[Institution name]</span>
+BoQ summary: <span class="field">[e.g. 120 Maestro Chairs MSP + 40 Hurry Up folding tables]</span>
+Required delivery date: <span class="field">[date from tender, usually 30-60 days post-PO]</span>
+Estimated PO date (if we win): <span class="field">[closing date + 15 days approx]</span>
+
+Questions:
+1. Can we produce this quantity within this window at current order load?
+2. Are there any raw material constraints (steel tube, polypropylene stock)?
+3. Is there any planned factory downtime in this period?
+4. What is the realistic delivery lead time from PO date?
+
+Please confirm by: <span class="field">[time — same day for P1/P2 tenders]</span></div>
+
+  <table class="decision-matrix">
+    <thead>
+      <tr><th>Factory response</th><th>CEO Agent action</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>"Yes, no problem"</td>
+        <td>Proceed to bid. Log confirmed delivery lead time in the bid document.</td>
+      </tr>
+      <tr>
+        <td>"Yes, but tight — 3–4 weeks not 2"</td>
+        <td>Check if tender's delivery window allows 4 weeks. If yes, bid with 4-week stated lead time. If no, skip or request an extension via the tender corrigendum process (only possible before closing).</td>
+      </tr>
+      <tr>
+        <td>"No capacity for 6+ weeks"</td>
+        <td>Do not bid. Update Tender Register: Skipped — capacity constraint. Notify Scout Agent to monitor for next tender from same institution.</td>
+      </tr>
+      <tr>
+        <td>No response within SLA</td>
+        <td>Escalate to Director. Do not bid without a capacity confirmation. Missing this step and winning is more damaging than not bidding.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ── 04 STAKEHOLDERS ── -->
+<section id="stakeholders">
+  <div class="section-label">Step 04</div>
+  <h2>Who to involve — and when</h2>
+
+  <p>Bid preparation is a team activity. The CEO Agent coordinates; it does not do everything. Here is who does what and the sequence they are engaged.</p>
+
+  <table class="decision-matrix">
+    <thead>
+      <tr>
+        <th>Stakeholder</th>
+        <th>Role in bid</th>
+        <th>When engaged</th>
+        <th>What they provide</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Factory Manager</strong></td>
+        <td>Capacity, lead time, IS certification</td>
+        <td>Immediately — before bid decision</td>
+        <td>Capacity confirmation, delivery date, product certification documents, manufacturing specs for technical compliance</td>
+      </tr>
+      <tr>
+        <td><strong>Finance / Accounts</strong></td>
+        <td>Pricing, documents, EMD</td>
+        <td>Within 24 hours of bid decision</td>
+        <td>Unit cost breakdown, GST calculation, audited financials, turnover certificate, bank solvency letter, EMD demand draft or bank guarantee</td>
+      </tr>
+      <tr>
+        <td><strong>Outreach Agent</strong></td>
+        <td>Relationship intelligence</td>
+        <td>Immediately if institution is in pipeline</td>
+        <td>Contact name and relationship status at the institution, any informal intelligence on competitors bidding, committee preferences, budget constraints revealed in conversation</td>
+      </tr>
+      <tr>
+        <td><strong>Intel Agent</strong></td>
+        <td>Institution background</td>
+        <td>Within 24 hours of bid decision</td>
+        <td>NAAC grade, current infrastructure status, past tender history on GeM/KPPP, decision-maker names if not already known</td>
+      </tr>
+      <tr>
+        <td><strong>Director / Owner</strong></td>
+        <td>Final approval</td>
+        <td>Tenders above ₹50 lakh only</td>
+        <td>Approval to bid, strategic positioning guidance, relationship contacts at board / trust level if available</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-gold">
+    <strong>Intelligence from the Outreach Agent is legally permitted and commonly used in Indian procurement.</strong> If the HOD at an institution has told your Outreach Agent "our budget is around ₹8 lakh" or "the committee prefers stainless steel frames," this information can inform your pricing and technical spec — there is nothing improper about using relationship intelligence to bid more accurately. What is not permitted is accessing bid documents from competitors or influencing the evaluation committee directly.
+  </div>
+</section>
+
+
+<!-- ── 05 PREPARE ── -->
+<section id="prepare">
+  <div class="section-label">Step 05</div>
+  <h2>Bid preparation — step by step</h2>
+
+  <p>Once the bid decision is made and the Bid Tracker sheet is open, the CEO Agent works through the 8-item checklist in sequence. Items 1–4 can run in parallel. Items 5–8 depend on items 1–4 being complete.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Read the BoQ and technical specifications in full <span class="sla-green sla">Day 1</span></div>
+        <div class="step-body">Do not skim. Read every line of the BoQ and the technical specifications section. Note: dimensions required, material grades, certification requirements, finish specifications, any non-standard items. Create a compliance table: each BoQ item in one column, your matching product in the second column, any deviation in the third. If there is a deviation — note it now; do not discover it after submission.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Draft the technical compliance statement <span class="sla-green sla">Day 1–2</span></div>
+        <div class="step-body">For each line item in the BoQ, write one paragraph: "Item: [description]. Our product: [product name and model]. Dimensions: [match or note deviation]. Material: [match]. IS certification: [confirm IS number]. Finish: [match]. Warranty: 5 years from date of delivery." For any deviation, add: "Deviation: [what is different]. Justification: [why equivalent or superior]." Unsigned deviations are the leading cause of bid rejection at technical evaluation stage.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Collect all financial and eligibility documents <span class="sla-amber sla">Day 1–2</span></div>
+        <div class="step-body">Build a master document folder (physical or digital) for this bid containing: GST registration certificate, PAN card, audited P&amp;L for last 3 years (turnover must meet the tender's minimum requirement), MSME/Udyam certificate if registered, IS/BIS certification copies for relevant products, past supply orders or completion certificates from at least 3 institutional clients, and bank account details for payment. Missing any single document is grounds for rejection. Keep this folder updated quarterly so it is ready for any new tender without scrambling.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Arrange EMD — Earnest Money Deposit <span class="sla-amber sla">Day 2–3</span></div>
+        <div class="step-body">Most tenders above ₹10 lakh require an EMD — typically 2% of the estimated bid value, paid via Demand Draft (DD) payable to the institution's account, or a Bank Guarantee from a scheduled bank. This takes 1–2 banking days. Do not leave EMD to the day before closing. If the bid decision is made on Day 1, request the EMD from the bank on Day 1 or Day 2. EMD is refunded to unsuccessful bidders within 30–60 days of tender closing; budget for this working capital implication when multiple bids are active simultaneously.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Prepare the Make in India declaration <span class="sla-green sla">Day 2</span></div>
+        <div class="step-body">Use the standard declaration template (Section 10 of this document). Have it signed by an authorised signatory. Verify with the CA that the local content percentage is accurate and documentable before including this — a false declaration disqualifies the bid and can result in debarment. If the local content calculation is uncertain, do not include the declaration; bid without it rather than risk disqualification.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <div class="step-title">Finalise pricing and fill the BoQ <span class="sla-amber sla">Day 2–3</span></div>
+        <div class="step-body">See Section 06 for full pricing strategy. The BoQ must be filled exactly as the tender requires — do not add extra rows, do not change the format, do not leave any cell blank. Every unit price must be exclusive of GST, with GST stated separately in the format the tender specifies. Total price must be stated both in figures and in words (e.g., "Rupees Eight Lakh Fifty Thousand Only"). Any arithmetic error in the BoQ — even a minor one — can cause your bid to be rejected at the price evaluation stage.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <div class="step-title">Compile and review the complete bid package <span class="sla-red sla">Day 3–4</span></div>
+        <div class="step-body">Assemble: Cover letter (use template in Section 10), technical compliance statement, financial documents folder, experience certificates, IS certification copies, MII declaration, completed BoQ with pricing, EMD instrument. Review checklist: every item ticked? Every document signed? Every page numbered if required? Every self-attested copy stamped? This review takes 2–3 hours if done properly. Do not skip it to save time on the last day.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">8</div>
+      <div class="step-content">
+        <div class="step-title">Submit — with 24 hours to spare <span class="sla-red sla">Day 4–5</span></div>
+        <div class="step-body">Never submit in the final 2 hours before the portal deadline. Portal systems crash; internet fails; DSC tokens malfunction; last-minute document errors are discovered. A rule: if a bid cannot be submitted with at least 24 hours remaining on the clock, the CEO Agent must decide whether to submit an imperfect bid or skip. An imperfect bid submitted on time is better than a perfect bid that missed the deadline. After submission, take a screenshot of the confirmation receipt and file it in the bid folder.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── 06 PRICE ── -->
+<section id="price">
+  <div class="section-label">Step 06</div>
+  <h2>Pricing strategy and the Make in India advantage</h2>
+
+  <p>Pricing a government tender is different from pricing a private sale. Government tender evaluation is almost always L1 — the lowest technically compliant bid wins. Private institution tenders have more latitude for quality-based evaluation, but price still matters significantly.</p>
+
+  <h3>The four inputs to the pricing calculation</h3>
+
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Input</th>
+        <th>Source</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Factory cost per unit</strong></td>
+        <td>Factory Manager</td>
+        <td>Raw materials + labour + overhead. Must be current — do not use 6-month-old cost sheets. Steel prices fluctuate.</td>
+      </tr>
+      <tr>
+        <td><strong>Delivery &amp; installation</strong></td>
+        <td>Factory / Logistics</td>
+        <td>Vehicle cost to site + installation labour. For Bengaluru institutions: typically ₹15,000–40,000 per delivery, spread across the order value.</td>
+      </tr>
+      <tr>
+        <td><strong>EMD opportunity cost</strong></td>
+        <td>Finance</td>
+        <td>EMD is locked for 30–90 days. Factor in the cost of tying up this working capital — small but real for large tenders.</td>
+      </tr>
+      <tr>
+        <td><strong>Target margin</strong></td>
+        <td>CEO Agent / Director</td>
+        <td>Standard: 18–25% gross margin. Strategic relationship tender: can go to 12%. Never below 10% — below this, a delivery problem or cost overrun turns the order into a loss.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>The Make in India price preference — how it works</h3>
+
+  <p>Under the Public Procurement (Preference to Make in India) Order 2017, KI Imago as a domestic manufacturer qualifies for purchase preference in government tenders. This means:</p>
+
+  <div class="callout callout-teal">
+    <strong>In a GeM or KPPP tender:</strong> if KI Imago's bid qualifies as a "Class I Local Supplier" (local content ≥ 50%), and a foreign or import-dependent supplier bids lower, the government buyer must still purchase from KI Imago if the price difference is within 20%. Concretely: if an importer bids ₹1,00,000 and KI Imago bids ₹1,18,000 — KI Imago wins under Make in India preference. This is a structural competitive advantage that must be stated in every government bid.
+  </div>
+
+  <h3>Pricing for L1 vs committee evaluation</h3>
+
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Tender type</th>
+        <th>Pricing approach</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>GeM / KPPP — government, L1</strong></td>
+        <td>Price at floor: factory cost + delivery + 14–18% margin</td>
+        <td>Assume at least 3 competitors. Price to win, not to maximize. Use MII preference to justify slightly higher price than importers.</td>
+      </tr>
+      <tr>
+        <td><strong>Private institution — committee evaluation</strong></td>
+        <td>Price at market: factory cost + delivery + 20–28% margin</td>
+        <td>Quality, warranty, local service, and brand story can differentiate. Lead with total cost of ownership, not unit price. Price 10–15% above cheapest alternatives.</td>
+      </tr>
+      <tr>
+        <td><strong>Strategic relationship tender</strong></td>
+        <td>Price at floor minus 5% for the relationship</td>
+        <td>Winning matters more than margin for pilot/reference orders. Clear this with Director before submitting at below-standard margin.</td>
+      </tr>
+      <tr>
+        <td><strong>Competitor intelligence available</strong></td>
+        <td>Price at known competitor's price minus ₹50–100/unit</td>
+        <td>Use data from Competitor Intel sheet. Do not undercut by more than 10% — signals distress or quality concerns to evaluation committees.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ── 07 SUBMIT ── -->
+<section id="submit">
+  <div class="section-label">Step 07</div>
+  <h2>Submission and post-submission</h2>
+
+  <h3>On submission day</h3>
+  <ul class="checklist">
+    <li><strong>Log in to the portal with DSC</strong> (Digital Signature Certificate) — ensure DSC is valid and token is plugged in and recognised before the submission window</li>
+    <li><strong>Upload all documents</strong> in the exact format and file size limits specified — PDF only unless specified otherwise; file names must match what the portal expects</li>
+    <li><strong>Fill the online BoQ form</strong> on the portal — this is separate from your BoQ document and must match it exactly</li>
+    <li><strong>Submit EMD</strong> online (GeM accepts NEFT; KPPP may require physical DD — confirm 3 days in advance)</li>
+    <li><strong>Click Submit, not Save</strong> — a saved but not submitted bid is a missed bid</li>
+    <li><strong>Screenshot the submission receipt</strong> with timestamp — file in the bid folder immediately</li>
+    <li><strong>Update Tender Register</strong> status from "Bid Prep" to "Submitted"</li>
+    <li><strong>Notify the Outreach Agent</strong> if the institution is in the relationship pipeline — they should know a bid has been submitted so they can manage the relationship appropriately during evaluation</li>
+  </ul>
+
+  <h3>During the evaluation period</h3>
+
+  <div class="callout callout-purple">
+    <strong>Do not contact the evaluation committee during the evaluation period.</strong> This is both against procurement rules and counterproductive — it signals nervousness and can be grounds for disqualification. The Outreach Agent may maintain normal relationship contact with the institution, but must not ask about or reference the tender evaluation. The only legitimate contact is to respond to a query from the institution (often via the portal's clarification mechanism).
+  </div>
+
+  <p>Check the portal daily for: corrigenda (amendments to specs or closing date), clarification requests from the institution (must be answered within 24 hours), and evaluation results (posted on the portal after technical evaluation).</p>
+
+  <h3>If a corrigendum is published after submission</h3>
+
+  <p>Read it immediately. If it changes specifications, quantities, or evaluation criteria, assess whether your submitted bid is still compliant. If not, check whether the portal allows resubmission (most portals do before the closing date). If the corrigendum extends the closing date, this does not automatically require resubmission — but it does signal the institution may be struggling to get competitive bids, which could mean lower competition.</p>
+</section>
+
+
+<!-- ── 08 OUTCOME ── -->
+<section id="outcome">
+  <div class="section-label">Step 08</div>
+  <h2>Win and loss processing</h2>
+
+  <h3>If you win</h3>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Acknowledge the award within 48 hours</div>
+        <div class="step-body">Send a formal letter of acceptance to the institution. This is a legal requirement in most tender conditions. Missing this can cause the award to lapse. Also call the Registrar or Admin Officer to congratulate and confirm next steps — this is the first act of the delivery relationship.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Place the production order with the factory immediately</div>
+        <div class="step-body">Share the PO from the institution with the factory manager within 24 hours of receiving it. Confirm the delivery date. Create a delivery tracking entry. The clock on the delivery commitment starts from the PO date — not from when you feel ready. Be proactive about communicating any production changes to the institution before they ask.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Photograph the installation for the case study library</div>
+        <div class="step-body">Get explicit written permission from the institution to use photographs of the installation for marketing purposes. If granted: photograph every space comprehensively, document the institution name, space type, product range, and installation date. This becomes a case study for the Outreach Agent and the Space Insight Report for subsequent institutions of the same type. A photographed installation is worth more than 20 cold emails.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Update all systems</div>
+        <div class="step-body">Tender Register: status = Won, outcome = Won. Competitor Intel sheet: log any competitor bid prices visible on the portal. Invoice and track payment — most institutions pay 30–90 days after GRN. Notify the Outreach Agent to maintain the relationship for the next procurement cycle at this institution.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>If you lose</h3>
+
+  <p>Losing a tender is a data event, not a failure event. The CEO Agent must extract maximum learning from every loss.</p>
+
+  <ul class="checklist">
+    <li><strong>Download the comparative statement</strong> from the portal (if published — GeM publishes all bid prices after closing). Log competitor names and prices in the Competitor Intel sheet.</li>
+    <li><strong>Identify the loss reason:</strong> Lost — Price (competitor's price was lower), Lost — Tech (disqualified on technical grounds), Lost — Eligibility (disqualified on documents). Each requires a different response.</li>
+    <li>If lost on price: check whether Make in India preference was correctly claimed. If not claimed and the margin was within 20%, this may have been a preventable loss.</li>
+    <li>If lost on technical grounds: request a copy of the evaluation report (you are entitled to this under GFR rules for government tenders). Understand exactly which spec failed. Fix it for the next bid.</li>
+    <li><strong>Notify the Outreach Agent.</strong> A loss is not the end of the relationship. The Outreach Agent should maintain contact — the winning vendor will eventually disappoint, and KI Imago must be positioned as the credible alternative when that happens.</li>
+    <li><strong>Never approach the institution to complain about the result.</strong> This burns relationships permanently. Approach instead with: "Congratulations on completing your procurement. We'd love to be considered for your next requirement — may we schedule a visit to understand your upcoming needs?"</li>
+  </ul>
+</section>
+
+
+<!-- ── 09 RELATIONSHIP ── -->
+<section id="relationship">
+  <div class="section-label">Step 09</div>
+  <h2>The relationship angle — tenders are not transactional</h2>
+
+  <p>The biggest mistake in institutional furniture sales is treating tenders as isolated events. Every tender is an episode in a multi-year relationship with an institution. The CEO Agent must think in terms of the relationship lifecycle, not the individual bid.</p>
+
+  <div class="callout callout-gold">
+    <strong>The procurement cycle reality:</strong> A Bangalore engineering college replaces significant furniture every 4–6 years. A single win means you are in the running for all future cycles. A single bad delivery means you are excluded from all future cycles. The value of delivering on time and to spec is not just the invoice — it is the discounted value of 3–4 future procurement cycles from the same institution.
+  </div>
+
+  <h3>How tenders and outreach interact</h3>
+
+  <p>The ideal sequence is: Outreach Agent builds relationship → Intel Agent identifies upcoming procurement → CEO Agent ensures KI Imago is spec'd into the indent → Scout Agent monitors for the tender → CEO Agent submits a winning bid. This is the spec-in strategy. When it works, you are not bidding competitively — you are confirming a pre-decided purchase.</p>
+
+  <p>The second-best sequence is: Scout Agent finds a live tender → Outreach Agent leverages any existing relationship contacts for intelligence → CEO Agent submits a well-informed bid. This is competitive bidding with a relationship advantage.</p>
+
+  <p>The worst sequence — and the one most vendors use — is blind tender monitoring with no prior relationship, submitting a generic bid, and hoping for L1. This wins occasionally but builds nothing.</p>
+
+  <h3>After every tender — regardless of outcome</h3>
+
+  <p>The CEO Agent sends a brief update to the Outreach Agent: "We bid on [institution] for [category]. Result: [Won/Lost/Pending]. Key learning: [one sentence]." The Outreach Agent uses this to calibrate their relationship approach. A win means deepen the relationship toward the next cycle. A loss means maintain the relationship and position for the next cycle. Silence after a tender is a missed opportunity in both cases.</p>
+</section>
+
+
+<!-- ── 10 TEMPLATES ── -->
+<section id="templates">
+  <div class="section-label">Step 10</div>
+  <h2>Ready-to-use templates</h2>
+
+  <h3>Cover letter — standard bid submission</h3>
+
+  <div class="template-block"><span class="field">Date: [DD Month YYYY]</span>
+
+<span class="field">To,
+The [Tender Committee / Registrar / Principal]
+[Institution Name]
+[Address]</span>
+
+<span class="key">Subject: Submission of bid for [Exact Tender Title] — Tender Ref: [Tender ID]</span>
+
+Dear Sir/Madam,
+
+We, Krueger International Furniture Systems Private Limited (KI Imago), are pleased
+to submit our bid for the above-referenced tender.
+
+We are a Bengaluru-based manufacturer of institutional furniture, operating from our
+facility at 55, Bommasandra-Jigni Link Road, Jigni, Bengaluru — 562106, Karnataka.
+All items quoted herein are manufactured at this facility, with delivery in 2–4 weeks
+from purchase order date.
+
+Our bid includes:
+  1. Completed Bill of Quantities with unit prices and total value
+  2. Technical compliance statement for each line item
+  3. Copies of IS/BIS certifications for relevant products
+  4. Financial and eligibility documents as specified
+  5. Make in India declaration (if applicable)
+  6. EMD of ₹<span class="field">[amount]</span> via <span class="field">[DD/Bank Guarantee]</span> No. <span class="field">[number]</span>
+     dated <span class="field">[date]</span>, payable to <span class="field">[institution]</span>
+
+We warrant all supplied furniture against manufacturing defects for a period of
+five (5) years from the date of delivery, with service support from our Bengaluru facility.
+
+We confirm that our bid remains valid for <span class="field">[90/120]</span> days from the closing date.
+
+Yours sincerely,
+
+<span class="field">[Authorised Signatory Name]
+[Designation]</span>
+Krueger International Furniture Systems Private Limited
+GST: 29AAECK0473E1ZN | CIN: U36100KA2010PTC053773
++91 80 4765 9651 | kiimago.com</div>
+
+  <h3>Make in India declaration</h3>
+
+  <div class="template-block">DECLARATION — PUBLIC PROCUREMENT (PREFERENCE TO MAKE IN INDIA) ORDER, 2017
+
+We, Krueger International Furniture Systems Private Limited (CIN: U36100KA2010PTC053773,
+GST: 29AAECK0473E1ZN), hereby declare that:
+
+1. All furniture items quoted in this bid are designed, manufactured, and quality-checked
+   at our facility: 55, Bommasandra-Jigni Link Road, Jigni, Bengaluru — 562106, Karnataka.
+
+2. The local content in the quoted products exceeds 50% of the ex-factory price,
+   as calculated per the Ministry of Commerce and Industry guidelines.
+
+3. We qualify as a "Class I Local Supplier" as defined in the above Order.
+
+4. We are entitled to the purchase preference applicable to Class I Local Suppliers
+   in government procurement, as mandated under the said Order.
+
+5. This declaration is true and accurate. Any misrepresentation will make us liable to
+   such penalties as may be prescribed under applicable law.
+
+Signed:
+<span class="field">[Name]
+[Designation]
+[Date]</span>
+Krueger International Furniture Systems Private Limited</div>
+
+  <h3>Win notification to Outreach Agent</h3>
+
+  <div class="template-block"><span class="key">To: Outreach Agent</span>
+<span class="key">Subject: TENDER WIN — [Institution] — action required</span>
+
+Institution  : <span class="field">[Name]</span>
+Tender       : <span class="field">[Title and ID]</span>
+Value        : ₹<span class="field">[amount]</span>
+Delivery by  : <span class="field">[date]</span>
+
+Action for Outreach Agent:
+• Contact <span class="field">[Registrar/Admin Officer name]</span> within 48 hours to introduce
+  the delivery team and confirm the installation date
+• Request written permission for photography during installation
+• Begin nurturing relationship toward the next procurement cycle
+• Note: DO NOT mention tender evaluation or competitors during this contact
+
+CEO Agent note: <span class="field">[any relevant relationship context]</span></div>
+
+  <h3>Loss notification to Outreach Agent</h3>
+
+  <div class="template-block"><span class="key">To: Outreach Agent</span>
+<span class="key">Subject: TENDER RESULT — [Institution] — relationship maintenance needed</span>
+
+Institution  : <span class="field">[Name]</span>
+Tender       : <span class="field">[Title and ID]</span>
+Result       : Lost (<span class="field">[price / technical / eligibility]</span>)
+Winner       : <span class="field">[Competitor name if known]</span>
+Their price  : ₹<span class="field">[if known from portal]</span> vs our ₹<span class="field">[bid price]</span>
+Learning     : <span class="field">[one line — e.g. "undercut by 12%, no MII preference claimed"]</span>
+
+Action for Outreach Agent:
+• Maintain normal contact with <span class="field">[contact name]</span> — do not reference the tender
+• Next outreach hook: congratulate them on completing procurement; ask about
+  the next requirement (hostel furniture, new classroom block, etc.)
+• Target: get back into a relationship position before next tender cycle
+  (typically <span class="field">[estimated next cycle date]</span>)
+
+CEO Agent note: <span class="field">[any context — e.g. "competitor delivered late last time — monitor"]</span></div>
+</section>
+
+
+<div class="divider"></div>
+
+<footer>
+  <div>
+    <div class="footer-brand">KI <span>Imago</span> — Krueger International Furniture Systems Pvt. Ltd.</div>
+    <div class="footer-detail">
+      55, Bommasandra-Jigni Link Road, Jigni, Bengaluru — 562106, Karnataka<br>
+      GST: 29AAECK0473E1ZN &nbsp;·&nbsp; CIN: U36100KA2010PTC053773 &nbsp;·&nbsp; +91 80 4765 9651
+    </div>
+  </div>
+  <div class="footer-version">
+    Internal document · Version 1.0<br>
+    Tender Response Workflow · April 2025<br>
+    Review every 6 months or after any major tender loss
+  </div>
+</footer>
+
+</body>
+</html>
